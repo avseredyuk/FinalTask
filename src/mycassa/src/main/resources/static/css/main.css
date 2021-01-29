@@ -1,0 +1,15 @@
+.greeting{
+	height:300px;
+
+	margin: 0 auto;
+}
+
+.sectionMainContent{
+	width: 60%;
+	margin: 0 auto;
+	text-align:center;
+}
+
+#signin{
+	color:white;	
+}

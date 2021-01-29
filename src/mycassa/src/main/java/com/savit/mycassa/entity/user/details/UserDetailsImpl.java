@@ -26,7 +26,6 @@ public class UserDetailsImpl implements UserDetails {
 		Set<Role> roles = user.getRoles();
 		List <SimpleGrantedAuthority> authorities = 
 				new ArrayList<>();
-		
 		roles
 			.stream()
 				.forEach(a -> authorities.add(

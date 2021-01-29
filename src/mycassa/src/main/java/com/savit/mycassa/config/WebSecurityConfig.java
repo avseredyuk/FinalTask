@@ -1,5 +1,6 @@
 package com.savit.mycassa.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -20,38 +21,37 @@ import lombok.AllArgsConstructor;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	
+	@Autowired
 	private final UserService userService;
+	
+	@Autowired
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
-	
-	
 	
 
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http
-			.csrf().disable()
-			.authorizeRequests()
-					.antMatchers("/welcome").hasAnyAuthority("USER", "CASHIER", "SENIOR_CASHIER", "COMMODITY_EXPERT")
-					.antMatchers("/products").hasAnyAuthority("CASHIER", "SENIOR_CASHIER", "COMMODITY_EXPERT")
-					.antMatchers("/admin", "/newProduct").hasAnyAuthority("COMMODITY_EXPERT")
-					.antMatchers("/cassier/**", "/newSell").hasAnyAuthority("CASHIER")
-					.antMatchers("/senior-cassier", "cashierlist").hasAnyAuthority("SENIOR_CASHIER")
-					.antMatchers("/registration/")
-					.permitAll()
-					.anyRequest().authenticated()
-				.and()
-					.exceptionHandling().accessDeniedPage("/unauthorized")
-				.and()
-					.formLogin()
-					.loginPage("/login")
-					.defaultSuccessUrl("/welcome")
-					.failureUrl("/login?error")
-					.permitAll()
-				.and()
-					.logout()
-					.permitAll()
-					.logoutSuccessUrl("/welcome");
+		http.csrf().disable()
+		.authorizeRequests()
+		.antMatchers("/css/**","/js/**","/images/**").permitAll()
+		.antMatchers("/registration", "/login", "/welcome").permitAll()
+		
+		.antMatchers("/products/newSell").hasAnyAuthority("CASHIER")
+		.antMatchers("/products/newProducts").hasAnyAuthority("COMMODITY_EXPERT")
+		.antMatchers("/products").hasAnyAuthority("COMMODITY_EXPERT", "CASHIER")
+		.antMatchers("/statistics/**", "/cashiers/**").hasAuthority("SENIOR_CASHIER")
+		
+		.anyRequest().authenticated()
+//			.and()
+//		.exceptionHandling().accessDeniedPage("/unauthorized")
+			.and()
+		.formLogin().permitAll()
+		.loginPage("/login")
+        .loginProcessingUrl("/perform-login")
+        .defaultSuccessUrl("/welcome",true)
+			.and()
+		.logout().permitAll()
+		.logoutSuccessUrl("/welcome");
 	}
 	
 	
@@ -68,6 +68,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		provider.setUserDetailsService(userService);
 		return provider;
 	}
+	
+	
+
 	
 	
 }
