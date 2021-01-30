@@ -27,29 +27,34 @@
 		<div class="text-center">
 			<form class="form-signin" name="f" th:action="@{/perform-login}" method="post">
 				<h1 class="h3 mb-3 font-weight-normal" th:text="#{sign.in.please}">Please sign in</h1>
-				<div th:if="${param.error}" class="alert alert-error" th:text="#{sign.in.invalidinput}">
+				<div th:if="${param.error}" class="alert alert-danger" th:text="#{sign.in.invalidinput}">
 					Неправильные имя и пароль.
 				</div>
+				<!--
 				<div th:if="${param.logout}" class="alert alert-success">
 					You have been logged out.
 				</div>
+				-->
 				<input type="email" id="inputEmail" class="form-control" name="username"
 					th:placeholder="#{user.input.email}" autofocus>
 				<input type="password" id="inputPassword" class="form-control" name="password"
-					th:placeholder="#{user.input.password}" >
+					th:placeholder="#{user.input.password}">
 				<button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{sign.in}">Sign in</button>
-				<form th:action="@{/registration}" method="post">
-				<br>
-							<label th:text="#{sign.in.donthaveaccount}">Do not have an account yet?</label>
-							<button class="btn btn-primary my-2 my-sm-0" type="submit"
-								th:text="#{sign.up}">Sign up</button>
-				</form>
-				<div class="checkbox mb-3">
+
+
+
+				<!--<div class="checkbox mb-3">
 					<label>
 						<a href="/registration"></a>
 					</label>
-				</div>
-				<p class="mt-5 mb-3 text-muted">&copy; MyCassa 2021-2022</p>
+				</div>-->
+			</form>
+			<br>
+			<form th:action="@{/registration}">
+				<label th:text="#{sign.in.donthaveaccount}">Do not have an account yet?</label>
+				<p>
+					<button class="btn btn-primary my-2 my-sm-0" type="submit" th:text="#{sign.up}">Sign up</button>
+				</p>
 			</form>
 		</div>
 	</div>
@@ -60,7 +65,7 @@
 </body>
 
 <footer>
-
+	<div th:insert="~{footer :: copy}"></div>
 </footer>
 
 </html>

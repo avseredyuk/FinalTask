@@ -30,12 +30,15 @@
 			<p th:text="#{greeting.subtitle}">We provide new technologies that were available only to network giants.
 			</p>
 			<p>
-				<a class="btn btn-primary btn-lg" 
-				href="" 
-				
-				role="button" 
-				th:text="#{welcome.start}">Get started &raquo;
+				<a class="btn btn-primary btn-lg" href="/products"
+					sec:authorize="hasAnyAuthority('COMMODITY_EXPERT', 'CASHIER')" role="button"
+					th:text="#{welcome.start}">Get started &raquo;
 				</a>
+
+				<a class="btn btn-primary btn-lg" href="/statistics" sec:authorize="hasAnyAuthority('SENIOR_CASHIER')"
+					role="button" th:text="#{welcome.start}">Get started &raquo;
+				</a>
+
 			</p>
 		</div>
 	</div>
@@ -81,7 +84,9 @@
 	</section>
 
 
-	<footer class="fixed-bottom bg-primary">
+	<footer class="fixed-bottom ">
+
+		<div th:insert="~{footer :: copy}"></div>
 
 	</footer>
 

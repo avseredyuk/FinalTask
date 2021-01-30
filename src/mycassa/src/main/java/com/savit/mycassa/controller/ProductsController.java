@@ -19,7 +19,7 @@ public class ProductsController {
 	@Autowired
 	private final UserService userService;
 
-	@GetMapping("/")
+	@GetMapping
 	public String getProducts() {
 		return "products";
 	}
