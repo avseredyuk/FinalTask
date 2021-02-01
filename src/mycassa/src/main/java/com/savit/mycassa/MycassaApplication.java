@@ -12,10 +12,6 @@ public class MycassaApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(MycassaApplication.class, args);
-//		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-//		String encodedPassword = bCryptPasswordEncoder
-//				.encode("dsa");
-//		System.out.println(encodedPassword);
 	}
 
 }

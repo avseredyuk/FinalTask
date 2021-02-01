@@ -21,12 +21,47 @@
 	<header>
 		<div th:insert="~{fragments/header :: copy}"></div>
 	</header>
-	products
 
+	<div class="sectionMainContent">
+		PRODUCTS
+		<span class="border border-light">
+			<table class="table table-hover w-50 p-3">
+				<thead class="thead-light">
+					<tr>
+
+						<th th:text="#{product.title}">Title</th>
+						<th th:text="#{product.ean}">Ean</th>
+						<th th:text="#{product.cost}">Cost</th>
+						<th th:text="#{product.store}">Quantity</th>
+						<th th:text="#{product.measure}">Measure</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr scope="row" th:each="productData: ${productsData.productsData}">
+						<td th:text="${productData.title}" />
+						<th th:text="${productData.ean}" />
+						<td th:text="${productData.cost}" />
+						<td th:text="${productData.quantityInStore}" />
+						<td th:text="${productData.measure}" />
+					</tr>
+				</tbody>
+			</table>
+		</span>
+
+	</div>
+
+	<form th:action="@{/products/new}">
+		<p>
+			<button class="btn btn-primary my-2 my-sm-0" type="submit" th:text="#{product.add}">
+			New product</button>
+		</p>
+	</form>
+
+
+	<footer>
+		<div th:insert="~{fragments/footer :: copy}"></div>
+	</footer>
 </body>
 
-<footer>
-	<div th:insert="~{fragments/footer :: copy}"></div>
-</footer>
 
 </html>

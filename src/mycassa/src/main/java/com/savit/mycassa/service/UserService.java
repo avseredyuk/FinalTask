@@ -65,7 +65,7 @@ public class UserService implements UserDetailsService {
 		boolean isPresent = us.isPresent();
 
 		if (isPresent) {
-			log.info(" >> such user is exists: {}", us.get().toString());
+			log.error(" >> such user is exists: {}", us.get().toString());
 			throw new IllegalStateException("===== user with such email is exists =====	");
 		}
 
