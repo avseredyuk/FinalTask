@@ -1,10 +1,7 @@
 package com.savit.mycassa.entity.user.details;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.Collections;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,23 +13,15 @@ import com.savit.mycassa.entity.user.User;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
+
 public class UserDetailsImpl implements UserDetails {
 
 	private User user;
-	
-	
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		Set<Role> roles = user.getRoles();
-		List <SimpleGrantedAuthority> authorities = 
-				new ArrayList<>();
-		roles
-			.stream()
-				.forEach(a -> authorities.add(
-						new SimpleGrantedAuthority(a.getName())));
-		System.out.println(roles);
-		
-		return authorities;
+		SimpleGrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().name());
+		return Collections.singletonList(authority);
 	}
 
 	@Override
@@ -65,7 +54,22 @@ public class UserDetailsImpl implements UserDetails {
 		return true;
 	}
 
-
-
+	public String getFirstName() {
+		return this.user.getFirstName();
+	}
+	
+	public String getLastName() {
+		return this.user.getLastName();
+	}
+	
+	public Role getRole() {
+		return this.user.getRole();
+	}
+	
+	
+	
+	public String toString() {
+		return String.format("User:{email:%s,password:%s,firstName:%s,lastName:%s,role:%s}", user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName(), user.getRole().name());
+	}
 
 }

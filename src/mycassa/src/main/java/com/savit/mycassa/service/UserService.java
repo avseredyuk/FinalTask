@@ -1,9 +1,12 @@
 package com.savit.mycassa.service;
 
-import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.savit.mycassa.dto.UserData;
+import com.savit.mycassa.dto.UsersData;
 import com.savit.mycassa.entity.user.Role;
 import com.savit.mycassa.entity.user.User;
 import com.savit.mycassa.entity.user.details.UserDetailsImpl;
@@ -22,14 +26,29 @@ import lombok.AllArgsConstructor;
 @Service
 public class UserService implements UserDetailsService {
 
+	private static final Logger log = LoggerFactory.getLogger(UserDetailsService.class);
+
 	@Autowired
 	private final UserRepository userRepository;
 
 	@Autowired
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
-//
-//	@Autowired
-//	private final EmailValidator emailValidator;
+
+	public Optional<UserData> getPrincipal() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication.getPrincipal() instanceof UserDetailsImpl)) {
+			return Optional.empty();
+		} 
+		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+		log.info("getPrincipal USER: {}", userDetails.toString());
+		UserData ud = UserData.builder()
+				.firstName(userDetails.getFirstName())
+				.lastName(userDetails.getLastName())
+				.email(userDetails.getUsername())
+				.role(userDetails.getRole().name()).build();
+		
+		return Optional.of(ud);
+	}
 
 	@Override
 	public UserDetails loadUserByUsername(String email) {
@@ -41,27 +60,28 @@ public class UserService implements UserDetailsService {
 
 	public void signUpUser(UserData userData) {
 
-//		boolean isValidEmail = emailValidator.test(userDTO.getEmail());
-//
-//		if (!isValidEmail) {
-//			throw new IllegalStateException("email is not valid");
-//		}
+		Optional<User> us = userRepository.findByEmail(userData.getEmail());
 
-		boolean isPresent = userRepository.findByEmail(userData.getEmail()).isPresent();
+		boolean isPresent = us.isPresent();
 
-		if (!isPresent) {
-			throw new IllegalStateException("user with such email is exists");
+		if (isPresent) {
+			log.info(" >> such user is exists: {}", us.get().toString());
+			throw new IllegalStateException("===== user with such email is exists =====	");
 		}
 
 		String encPassword = bCryptPasswordEncoder.encode(userData.getPassword());
 
 		User user = new User(userData.getEmail(), encPassword, userData.getFirstName(), userData.getLastName(),
-				Set.of(new Role(3, "CASHIER")));
+				Role.valueOf(userData.getRole()));
+
+		userRepository.save(user);
+		log.info(" >> new user: {}", user.toString());
 
 	}
 
-	public List<User> getUsers() {
-		return userRepository.findAll();
-	}
+    public UsersData getAllUsersCashiers() {
+        return new UsersData(userRepository.findByRole(Role.CASHIER));
+        
+    }
 
 }

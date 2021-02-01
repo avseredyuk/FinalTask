@@ -34,8 +34,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable()
 		.authorizeRequests()
 		.antMatchers("/css/**","/js/**","/images/**").permitAll()
-		.antMatchers("/registration", "/welcome").permitAll()
-		
+		.antMatchers("/registration", "/welcome", "/login").permitAll()
+		.antMatchers("/profile/**").hasAnyAuthority("CASHIER", "COMMODITY_EXPERT", "SENIOR_CASHIER")
 		.antMatchers("/products/newSell").hasAnyAuthority("CASHIER")
 		.antMatchers("/products/newProducts").hasAnyAuthority("COMMODITY_EXPERT")
 		.antMatchers("/products").hasAnyAuthority("COMMODITY_EXPERT", "CASHIER")
@@ -48,7 +48,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.formLogin().permitAll()
 		.loginPage("/login")
         .loginProcessingUrl("/perform-login")
-        .defaultSuccessUrl("/welcome",true)
+        .defaultSuccessUrl("/profile",true)
 			.and()
 		.logout().permitAll()
 		.logoutSuccessUrl("/welcome");
