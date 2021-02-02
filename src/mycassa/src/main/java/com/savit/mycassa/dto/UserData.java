@@ -25,24 +25,24 @@ public class UserData {
 
 	private static final String REGEX = "(([^<>()\\\\.,;:\\s@\"]+(\\.[^<>()\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))";
 	
-	@NotBlank(message = "{sign.up}")
-	@Size(max = 30)
+	@NotBlank(message = "{firstName.valid.notblank}")
+	@Size(max = 30, message = "{firstName.valid.max}")
 	private  String firstName;
 	
-	@NotBlank
-	@Size(max = 30)
+	@NotBlank(message = "{lastName.valid.notblank}")
+	@Size(max = 30, message = "{lastName.valid.max}")
 	private  String lastName;
 	
-	@NotBlank
-	@Size(max = 30)
-	@Email(regexp = REGEX)
+	@NotBlank(message = "{email.valid.notblank}")
+	@Size(max = 30, message = "{email.valid.max}")
+	@Email(regexp = REGEX, message = "{email.valid.email}")
 	private  String email;
 	
-	@NotBlank
-	@Size(max = 40)
+	@NotBlank(message = "{password.valid.notblank}")
+	@Size(max = 30, message = "{password.valid.max}")
 	private  String password;
 	
-	@NotBlank
+	@NotBlank(message = "{role.valid.notblank}")
 	private String role;
 	
 }

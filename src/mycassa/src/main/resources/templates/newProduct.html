@@ -52,7 +52,7 @@
 				<div class=" mb-4 justify-content-center">
 					<input type="number" class="form-control"
 						th:classappend="${#fields.hasErrors('quantityInStore')} ? is-invalid : (${productData.quantityInStore != null} ? is-valid)"
-						th:placeholder="#{product.store}" name="quantityInStore" th:value="*{quantityInStore}"
+						th:placeholder="#{product.quantityInStore}" name="quantityInStore" th:value="*{quantityInStore}"
 						th:errorClass="is-invalid">
 					<div th:if="${#fields.hasErrors('quantityInStore')}" th:errors="*{quantityInStore}" class="invalid-feedback">Invalid
 						Invalid quantityInStore</div>
@@ -60,7 +60,7 @@
 
 
 				<div class="mb-4 d-flex justify-content-center">
-					<label class="custom-label" >Measure</label>
+					<label class="custom-label" th:text="#{product.measure}">Measure</label>
 					<div class="custom-control custom-radio mx-2">
 						<input type="radio" checked id="customRadio1" name="measure" class="custom-control-input" value="KILOGRAM">
 						<label class="custom-control-label" for="customRadio1" th:text="#{product.measure.kg}">KILOGRAM</label>
@@ -73,7 +73,7 @@
 				
 
 			
-				<button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{sign.up}">Sign up</button>
+				<button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{product.add}">Add product</button>
 			</form>
 		</div>
 

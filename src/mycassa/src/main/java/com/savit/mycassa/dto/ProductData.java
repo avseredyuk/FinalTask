@@ -23,22 +23,22 @@ import lombok.ToString;
 public class ProductData {
 	
 	
-	@NotBlank
-	@Size(max = 50)
+	@NotBlank(message = "{title.valid.notblank}")
+	@Size(max = 70, message = "{title.valid.max}")
 	private String title;
 	
 	private String ean;
 	
-	@NotNull
+	@NotNull(message = "{cost.valid.notnull}")
 	@Positive
 	private Long cost;
 	
-	@NotNull
-	@Positive
+	@NotNull(message = "{quantityInStore.valid.notnull}")
+	@Positive(message = "{quantityInStore.valid.positive}")
 	private Long quantityInStore;
 	
-	@NotBlank
-	@Pattern(regexp = "(KILOGRAM|PIECE)")
+	@NotBlank(message = "{measure.valid.notblank}")
+//	@Pattern(regexp = "(KILOGRAM|PIECE)", message = "{measure.valid.pattern}")
 	private String measure;
 
 }

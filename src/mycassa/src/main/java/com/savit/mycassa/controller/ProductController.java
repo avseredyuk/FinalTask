@@ -40,7 +40,7 @@ public class ProductController {
 								@RequestParam(required = false, defaultValue = "ean") String filterField,
 			  					@RequestParam(required = false, defaultValue = "DESC") String direction,
 			  					@RequestParam(required = false, defaultValue = "1") String page,
-			  					@RequestParam(required = false, defaultValue = "5") String size,
+			  					@RequestParam(required = false, defaultValue = "2") String size,
 			  					@RequestParam(required = false, defaultValue = "") String searchQuery,
 			  					Model model) {
 		
@@ -51,6 +51,7 @@ public class ProductController {
 		return "products";
 	}
 	
+
 	@GetMapping("/new")
 	public String getNewProductForm(@ModelAttribute ProductData productData,  Model model) {
 		model.addAttribute("productData", productData);
