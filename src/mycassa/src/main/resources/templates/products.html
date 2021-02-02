@@ -26,15 +26,44 @@
 
 
 
-		<div class="m-xl-5 d-flex justify-content-center">
+		<div class="productsMainFrame">
 
-			<form action="/action_page.php" method="get">
-				<label for="fname">First name:</label>
-				<input type="text" id="fname" name="fname"><br><br>
-				<label for="lname">Last name:</label>
-				<input type="text" id="lname" name="lname"><br><br>
-				<input type="submit" value="Submit">
-			</form>
+			<div class="d-inline d-flex justify-content-center">
+
+				<div class="d-flex justify-content-start w-75">
+					<div class=" input-group">
+						<input type="text" class="form-control" th:placeholder="#{input.partof.ean.or.title}"
+							aria-describedby="basic-addon1">
+						<div class="input-group-append">
+							<button class="btn btn-primary" type="button" th:text="#{find}"> </button>
+						</div>
+					</div>
+				</div>
+
+					<form th:action="@{/products}">
+				<div class="d-flex justify-content-end">
+						<select class="w-25 custom-select" th:name="filterField">
+							<option  value="ean" th:selected="${#strings.equals(productsData.filterField, 'ean')}  ? 'selected'" th:text="#{product.ean}">ean</option>
+							<option value="title" th:selected="${#strings.equals(productsData.filterField, 'title')}  ? 'selected'" th:text="#{product.title}">product title</option>
+							<option value="cost" th:selected="${#strings.equals(productsData.filterField, 'cost')}  ? 'selected'" th:text="#{product.cost}">cost</option>
+							<option value="quantityInStore" th:selected="${#strings.equals(productsData.filterField, 'quantity')}  ? 'selected'" th:text="#{product.quantity}">quantity</option>
+							<option value="measure" th:selected="${#strings.equals(productsData.filterField, 'measure')}  ? 'selected'" th:text="#{product.measure}">measure</option>
+						</select>
+
+						<select class="w-25 ml-4  custom-select" th:name="direction">
+							<option value="DESC" th:selected="${#strings.equals(productsData.direction, 'DESC')}  ? 'selected'" th:text="#{descending}">descending</option>
+							<option value="ASC" th:selected="${#strings.equals(productsData.direction, 'ASC')}  ? 'selected'" th:text="#{ascending}">ascending</option>
+						</select>
+				<button class="btn btn-primary"  type="submit" th:text="#{apply.filters}"></button>
+
+				</div>
+					</form>
+
+
+
+
+			</div>
+
 
 		</div>
 
@@ -72,37 +101,34 @@
 		</div>
 
 		<div class="m-xl-5 d-flex justify-content-center">
-			<div th:if="${productsData.productsData.getTotalPages() > 0}">
+			<div th:if="${productsData.productsData.hasContent()}">
 
 				<nav>
-					<ul class="pagination flex-wrap">
-						<li
-							th:class="${productsData.productsData.getNumber() > 0 ? 'page-item' : 'page-item disabled'}">
-							<a th:href="@{/products(page='0')}" class="page-link"><b>&laquo;</b></a>
+					<ul class="pagination flex-wrap" 
+						th:with="pageUrlPrefix = '/products?filterField=' + ${productsData.filterField} + '&amp;direction=' + ${productsData.direction}">
+						<li th:class="${!productsData.productsData.isFirst() ? 'page-item' : 'page-item disabled'}">
+							<a th:href="@{${pageUrlPrefix}(page='1 ')}" class="page-link"><b>&laquo;</b></a>
 						</li>
 
-						<li
-							th:class="${productsData.productsData.getNumber() > 0 ? 'page-item' : 'page-item disabled'}">
-							<a th:href="@{/products(page=${productsData.productsData.getNumber()-1})}"
+						<li th:class="${!productsData.productsData.isFirst() ? 'page-item' : 'page-item disabled'}">
+							<a th:href="@{${pageUrlPrefix}(page=${productsData.productsData.getNumber()})}"
 								class="page-link"><b>‹</b></a>
 						</li>
 
 
-						<li th:each="i: ${#numbers.sequence(0, productsData.productsData.getTotalPages()-1)}"
-							th:class="${productsData.productsData.getNumber() != i ? 'page-item' : 'page-item active'}">
-							<a th:href="@{/products(page=${i})}" class="page-link">[[${i+1}]]</a>
+						<li th:each="i: ${#numbers.sequence(1, productsData.productsData.getTotalPages())}"
+							th:class="${productsData.productsData.getNumber()+1 != i ? 'page-item' : 'page-item active'}">
+							<a th:href="@{${pageUrlPrefix}(page=${i})}" class="page-link">[[${i}]]</a>
 						</li>
 
 
-						<li
-							th:class="${productsData.productsData.getNumber()+1 < productsData.productsData.getTotalPages() ? 'page-item' : 'page-item disabled'}">
-							<a th:href="@{/products(page=${productsData.productsData.getNumber()+1})}"
+						<li th:class="${!productsData.productsData.isLast() ? 'page-item' : 'page-item disabled'}">
+							<a th:href="@{${pageUrlPrefix}(page=${productsData.productsData.getNumber()+2})}"
 								class="page-link"><b>›</b></a>
 						</li>
 
-						<li
-							th:class="${productsData.productsData.getNumber()+1 < productsData.productsData.getTotalPages() ? 'page-item' : 'page-item disabled'}">
-							<a th:href="@{/products(page=${productsData.productsData.getTotalPages()-1})}"
+						<li th:class="${!productsData.productsData.isLast() ? 'page-item' : 'page-item disabled'}">
+							<a th:href="@{${pageUrlPrefix}(page=${productsData.productsData.getTotalPages()})}"
 								class="page-link"><b>&raquo;</b></a>
 						</li>
 					</ul>

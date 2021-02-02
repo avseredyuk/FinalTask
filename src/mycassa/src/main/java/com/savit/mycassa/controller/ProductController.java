@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.savit.mycassa.dto.ProductData;
 import com.savit.mycassa.dto.ProductsData;
@@ -34,14 +35,19 @@ public class ProductController {
 	@Autowired
 	private final ProductService productService;
 
-	@GetMapping()
-	public String getProducts(@PageableDefault(sort = {"ean"}, direction = Sort.Direction.DESC, value = 5 ) 
-									Pageable pageable, Model model) {
+	@GetMapping
+	public String getProducts(
+								@RequestParam(required = false, defaultValue = "ean") String filterField,
+			  					@RequestParam(required = false, defaultValue = "DESC") String direction,
+			  					@RequestParam(required = false, defaultValue = "1") String page,
+			  					@RequestParam(required = false, defaultValue = "5") String size,
+			  					@RequestParam(required = false, defaultValue = "") String searchQuery,
+			  					Model model) {
 		
-		
-		ProductsData productsData = productService.getAllProducts(pageable);
-//		productsData.getProductsData().hasContent()
+		log.info("[PAGINATION] Input params: filterField:[{}], direction:[{}], page:[{}], size:[{}], searchQuery:[{}]", filterField, direction, page, size, searchQuery);
+		ProductsData productsData = productService.getAllProducts(filterField, direction, page, size, searchQuery);
 		model.addAttribute("productsData", productsData);
+		log.info("[PAGINATION] Output params {}", productsData.toString());
 		return "products";
 	}
 	

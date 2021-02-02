@@ -19,4 +19,10 @@ import lombok.ToString;
 @ToString
 public class ProductsData {
 	private Page<Product> productsData;
+	
+	private String filterField;
+	
+	private String direction;
+	
+	private String searchQuery;
 }
