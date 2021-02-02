@@ -3,10 +3,10 @@ package com.savit.mycassa.controller;
 
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,38 +20,44 @@ import com.savit.mycassa.dto.ProductsData;
 import com.savit.mycassa.service.ProductService;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
-@PreAuthorize("hasAnyAuthority('COMMODITY_EXPERT', 'CASHIER')")
-
+//@PreAuthorize("hasAnyAuthority('COMMODITY_EXPERT', 'CASHIER')")
+@RequestMapping("/products")
 @AllArgsConstructor
+@Slf4j
 public class ProductController {
 	
-	private static final Logger log = LoggerFactory.getLogger(ProductController.class);
+	
 
 	@Autowired
 	private final ProductService productService;
 
-	@GetMapping("/products")
-	public String getProducts(@ModelAttribute ProductsData productsData,  Model model) {
-		productsData = productService.getAllProducts();
+	@GetMapping()
+	public String getProducts(@PageableDefault(sort = {"ean"}, direction = Sort.Direction.DESC, value = 5 ) 
+									Pageable pageable, Model model) {
+		
+		
+		ProductsData productsData = productService.getAllProducts(pageable);
+//		productsData.getProductsData().hasContent()
 		model.addAttribute("productsData", productsData);
 		return "products";
 	}
 	
-	@GetMapping("/products/new")
+	@GetMapping("/new")
 	public String getNewProductForm(@ModelAttribute ProductData productData,  Model model) {
 		model.addAttribute("productData", productData);
-		return "products";
+		return "newProduct";
 	}
 	
 	
-	@PostMapping("/products/new")
+	@PostMapping("/new")
 	public String getNewProductForm(@Valid @ModelAttribute ProductData productData,
 											BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			log.error(" >> productData: {}", productData.toString());
-			return "/new";
+			return "newProduct";
 		}
 		log.info(" >> productData: {}", productData.toString());
 		

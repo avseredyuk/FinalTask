@@ -24,16 +24,16 @@ public class ProductData {
 	
 	
 	@NotBlank
-	@Size(max = 40)
+	@Size(max = 50)
 	private String title;
 	
 	private String ean;
 	
-	@NotBlank
+	@NotNull
 	@Positive
 	private Long cost;
 	
-	@NotBlank
+	@NotNull
 	@Positive
 	private Long quantityInStore;
 	

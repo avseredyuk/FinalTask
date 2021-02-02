@@ -1,6 +1,6 @@
 package com.savit.mycassa.dto;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 import com.savit.mycassa.entity.product.Product;
 
@@ -18,5 +18,5 @@ import lombok.ToString;
 @Builder
 @ToString
 public class ProductsData {
-	private List<Product> productsData;
+	private Page<Product> productsData;
 }

@@ -23,39 +23,105 @@
 	</header>
 
 	<div class="sectionMainContent">
-		PRODUCTS
-		<span class="border border-light">
-			<table class="table table-hover w-50 p-3">
-				<thead class="thead-light">
-					<tr>
 
-						<th th:text="#{product.title}">Title</th>
-						<th th:text="#{product.ean}">Ean</th>
-						<th th:text="#{product.cost}">Cost</th>
-						<th th:text="#{product.store}">Quantity</th>
-						<th th:text="#{product.measure}">Measure</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr scope="row" th:each="productData: ${productsData.productsData}">
-						<td th:text="${productData.title}" />
-						<th th:text="${productData.ean}" />
-						<td th:text="${productData.cost}" />
-						<td th:text="${productData.quantityInStore}" />
-						<td th:text="${productData.measure}" />
-					</tr>
-				</tbody>
-			</table>
-		</span>
+
+
+		<div class="m-xl-5 d-flex justify-content-center">
+
+			<form action="/action_page.php" method="get">
+				<label for="fname">First name:</label>
+				<input type="text" id="fname" name="fname"><br><br>
+				<label for="lname">Last name:</label>
+				<input type="text" id="lname" name="lname"><br><br>
+				<input type="submit" value="Submit">
+			</form>
+
+		</div>
+
+
+
+		<div class="m-xl-5 d-flex justify-content-center">
+			<div style="text-align:left;">
+				<table class="table table-hover">
+					<thead class="thead-light">
+						<tr>
+
+							<th th:text="#{product.ean}">Ean</th>
+							<th th:text="#{product.title}">Title</th>
+							<th th:text="#{product.cost}">Cost</th>
+							<th th:text="#{product.store}">Quantity</th>
+							<th th:text="#{product.measure}">Measure</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr scope="row" th:each="productData: ${productsData.productsData}">
+							<td th:text="${productData.ean}" />
+							<td th:text="${productData.title}" />
+							<td th:text="${productData.cost}" />
+							<td th:text="${productData.quantityInStore}" />
+							<td th:text="${productData.measure}" />
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+
+
+
+
+		</div>
+
+		<div class="m-xl-5 d-flex justify-content-center">
+			<div th:if="${productsData.productsData.getTotalPages() > 0}">
+
+				<nav>
+					<ul class="pagination flex-wrap">
+						<li
+							th:class="${productsData.productsData.getNumber() > 0 ? 'page-item' : 'page-item disabled'}">
+							<a th:href="@{/products(page='0')}" class="page-link"><b>&laquo;</b></a>
+						</li>
+
+						<li
+							th:class="${productsData.productsData.getNumber() > 0 ? 'page-item' : 'page-item disabled'}">
+							<a th:href="@{/products(page=${productsData.productsData.getNumber()-1})}"
+								class="page-link"><b>‹</b></a>
+						</li>
+
+
+						<li th:each="i: ${#numbers.sequence(0, productsData.productsData.getTotalPages()-1)}"
+							th:class="${productsData.productsData.getNumber() != i ? 'page-item' : 'page-item active'}">
+							<a th:href="@{/products(page=${i})}" class="page-link">[[${i+1}]]</a>
+						</li>
+
+
+						<li
+							th:class="${productsData.productsData.getNumber()+1 < productsData.productsData.getTotalPages() ? 'page-item' : 'page-item disabled'}">
+							<a th:href="@{/products(page=${productsData.productsData.getNumber()+1})}"
+								class="page-link"><b>›</b></a>
+						</li>
+
+						<li
+							th:class="${productsData.productsData.getNumber()+1 < productsData.productsData.getTotalPages() ? 'page-item' : 'page-item disabled'}">
+							<a th:href="@{/products(page=${productsData.productsData.getTotalPages()-1})}"
+								class="page-link"><b>&raquo;</b></a>
+						</li>
+					</ul>
+
+				</nav>
+			</div>
+
+		</div>
 
 	</div>
 
-	<form th:action="@{/products/new}">
-		<p>
-			<button class="btn btn-primary my-2 my-sm-0" type="submit" th:text="#{product.add}">
-			New product</button>
-		</p>
-	</form>
+
+
+	<a th:href="@{/products/new}">
+
+		<div class="btn btn-primary my-2 my-sm-0" th:text="#{product.add}">New product</div>
+	</a>
+
+
 
 
 	<footer>

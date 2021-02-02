@@ -27,7 +27,7 @@
 		<div class="sectionMainContent">
 			<form class="form-signup" method="post" th:action="@{/products/new}" th:object="${productData}">
 				<h1 class="h3 mb-3 font-weight-normal" th:text="#{product.add}">New product</h1>
-				<div class="form-row">
+				
 					<div class="mb-4 justify-content-center">
 						<input type="text" class="form-control"
 							th:classappend="${#fields.hasErrors('title')} ? is-invalid : (${productData.title != null} ? is-valid)"
@@ -38,50 +38,36 @@
 							Invalid
 							Title</div>
 					</div>
-				</div>
 				
-				<div class="form-row">
 					<div class="mb-4 justify-content-center">
 						<input type="number" class="form-control"
 							th:classappend="${#fields.hasErrors('cost')} ? is-invalid  : (${productData.cost != null} ? is-valid)"
-							th:placeholder="#{user.input.lastName}" name="cost" th:value="*{cost}"
+							th:placeholder="#{product.cost}" name="cost" th:value="*{cost}"
 							th:errorClass="is-invalid">
 						<div th:if="${#fields.hasErrors('cost')}" th:errors="*{cost}" class="invalid-feedback">
 							Invalid Сost</div>
 					</div>
 
-				</div>
 
 				<div class=" mb-4 justify-content-center">
-					<input type="email" class="form-control"
-						th:classappend="${#fields.hasErrors('email')} ? is-invalid : (${userData.email != null} ? is-valid)"
-						th:placeholder="#{user.input.email}" name="email" th:value="*{email}"
+					<input type="number" class="form-control"
+						th:classappend="${#fields.hasErrors('quantityInStore')} ? is-invalid : (${productData.quantityInStore != null} ? is-valid)"
+						th:placeholder="#{product.store}" name="quantityInStore" th:value="*{quantityInStore}"
 						th:errorClass="is-invalid">
-					<div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="invalid-feedback">Invalid
-						Email</div>
+					<div th:if="${#fields.hasErrors('quantityInStore')}" th:errors="*{quantityInStore}" class="invalid-feedback">Invalid
+						Invalid quantityInStore</div>
 				</div>
 
 
-				<div class=" mb-4 justify-content-center">
-					<input type="password" class="form-control"
-						th:classappend="${#fields.hasErrors('password')} ? is-invalid : (${userData.password != null} ? is-valid)"
-						th:placeholder="#{user.input.password}" name="password" th:value="*{password}"
-						th:errorClass="is-invalid">
-					<div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="invalid-feedback">
-						Invalid Password</div>
-				</div>
 				<div class="mb-4 d-flex justify-content-center">
+					<label class="custom-label" >Measure</label>
 					<div class="custom-control custom-radio mx-2">
-						<input type="radio" checked id="customRadio1" name="role" class="custom-control-input" value="CASHIER">
-						<label class="custom-control-label" for="customRadio1" th:text="#{role.cashier}">Cashier</label>
+						<input type="radio" checked id="customRadio1" name="measure" class="custom-control-input" value="KILOGRAM">
+						<label class="custom-control-label" for="customRadio1" th:text="#{product.measure.kg}">KILOGRAM</label>
 					</div>
 					<div class="custom-control custom-radio mx-2">
-						<input type="radio" id="customRadio2" name="role" class="custom-control-input"  value="SENIOR_CASHIER" th:field="*{role}">
-						<label class="custom-control-label" for="customRadio2" th:text="#{role.seniorcashier}">Seinor cashier</label>
-					</div>
-					<div class="custom-control custom-radio mx-2">
-						<input type="radio" id="customRadio3" name="role" class="custom-control-input" value="COMMODITY_EXPERT" th:field="*{role}">
-						<label class="custom-control-label" for="customRadio3" th:text="#{role.commodityexpert}">Commodity expert</label>
+						<input type="radio" id="customRadio2" name="measure" class="custom-control-input"  value="PIECE" th:field="*{measure}">
+						<label class="custom-control-label" for="customRadio2" th:text="#{product.measure.piece}">PIECE</label>
 					</div>
 				</div>
 				

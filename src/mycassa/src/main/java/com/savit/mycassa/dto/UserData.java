@@ -25,16 +25,16 @@ public class UserData {
 
 	private static final String REGEX = "(([^<>()\\\\.,;:\\s@\"]+(\\.[^<>()\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))";
 	
-	@NotBlank
-	@Size(max = 40)
+	@NotBlank(message = "{sign.up}")
+	@Size(max = 30)
 	private  String firstName;
 	
 	@NotBlank
-	@Size(max = 40)
+	@Size(max = 30)
 	private  String lastName;
 	
 	@NotBlank
-	@Size(max = 40)
+	@Size(max = 30)
 	@Email(regexp = REGEX)
 	private  String email;
 	
