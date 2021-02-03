@@ -6,6 +6,8 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -40,8 +42,11 @@ public class Session {
 	@Column(nullable = false)
 	private LocalDateTime startedAt;
 	
-	@Column(nullable = false)
+	@Column
 	private LocalDateTime endedAt;
+	
+	@Enumerated(EnumType.STRING)
+	private StatusSession statusSession;
 	
 	@OneToMany(mappedBy = "session", cascade = CascadeType.ALL)
 	private Set<Sale> sales;
@@ -50,10 +55,10 @@ public class Session {
     @JoinColumn(name = "user_id")
     private User user;
 
-	public Session(LocalDateTime startedAt, LocalDateTime endedAt, Set<Sale> sales) {
+	public Session(LocalDateTime startedAt, StatusSession statusSession) {
 		this.startedAt = startedAt;
-		this.endedAt = endedAt;
-		this.sales = sales;
+		this.statusSession = statusSession;
+
 	}
 	
 	

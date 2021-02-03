@@ -1,12 +1,11 @@
 package com.savit.mycassa.controller;
 
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.savit.mycassa.dto.ProductData;
 import com.savit.mycassa.dto.ProductsData;
+import com.savit.mycassa.entity.user.Role;
 import com.savit.mycassa.service.ProductService;
 
 import lombok.AllArgsConstructor;
@@ -40,7 +40,7 @@ public class ProductController {
 								@RequestParam(required = false, defaultValue = "ean") String filterField,
 			  					@RequestParam(required = false, defaultValue = "DESC") String direction,
 			  					@RequestParam(required = false, defaultValue = "1") String page,
-			  					@RequestParam(required = false, defaultValue = "2") String size,
+			  					@RequestParam(required = false, defaultValue = "10") String size,
 			  					@RequestParam(required = false, defaultValue = "") String searchQuery,
 			  					Model model) {
 		
@@ -48,6 +48,14 @@ public class ProductController {
 		ProductsData productsData = productService.getAllProducts(filterField, direction, page, size, searchQuery);
 		model.addAttribute("productsData", productsData);
 		log.info("[PAGINATION] Output params {}", productsData.toString());
+
+//		return Role.COMMODITY_EXPERT
+//				.equals(
+//						SecurityContextHolder.getContext().getAuthentication()
+//							.getAuthorities().stream()
+//								.findFirst().get().toString()
+//				) ? "products" :
+//					"redirect:/selling";
 		return "products";
 	}
 	
@@ -70,6 +78,14 @@ public class ProductController {
 		
 		productService.saveProduct(productData);
 
+		return "redirect:/products";
+	}
+	
+	@PostMapping("/sale")
+	public String sellProduct() {
+		
+		
+		
 		return "redirect:/products";
 	}
 

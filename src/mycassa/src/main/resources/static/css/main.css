@@ -8,9 +8,28 @@
 	margin: 0px auto;
 }
 
+.formFrame{
+	max-width: 60%;
+	margin: 0px auto;
+}
+
+#defLinkHeader{
+	color:white;
+	text-decoration: none;
+}
+
+.findFrame{
+	max-width: 43.5%;
+	margin: 0px auto;
+}
 #signin{
 	color:white;	
 }
+
+.centerButton{
+	margin-top:100px;
+}
+
 .productsMainFrame{
 	margin-top:100px;
 }
