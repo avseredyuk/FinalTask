@@ -26,45 +26,12 @@
 	<div class="text-center">
 		<div class="sectionMainContent">
 			<form class="form-signup" method="post" th:action="@{/registration}" th:object="${userData}">
-				<h1 class="h3 mb-3 font-weight-normal" th:text="#{sign.up}">Please sign up</h1>
-
-				<div class="form-row">
-					<div class="col-md-6 mb-4 justify-content-center">
-						<input type="text" class="form-control"
-							th:classappend="${#fields.hasErrors('firstName')} ? is-invalid : (${userData.firstName != null} ? is-valid)"
-							th:placeholder="#{user.input.firstName}" name="firstName" th:value="*{firstName}"
-							th:errorClass="is-invalid" autofocus>
-						<div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"
-							class="invalid-feedback">
-							Invalid
-							First name</div>
-
-					</div>
-					<div class="col-md-6 mb-4 justify-content-center">
-						<input type="text" class="form-control"
-							th:classappend="${#fields.hasErrors('lastName')} ? is-invalid  : (${userData.lastName != null} ? is-valid)"
-							th:placeholder="#{user.input.lastName}" name="lastName" th:value="*{lastName}"
-							th:errorClass="is-invalid">
-						<div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="invalid-feedback">
-							Invalid Last name</div>
-					</div>
-
-				</div>
-
-				<div class=" mb-4 justify-content-center">
-					<input type="email" class="form-control"
-						th:classappend="${#fields.hasErrors('email')} ? is-invalid : (${userData.email != null} ? is-valid)"
-						th:placeholder="#{user.input.email}" name="email" th:value="*{email}"
-						th:errorClass="is-invalid">
-					<div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="invalid-feedback">Invalid
-						Email</div>
-				</div>
+				<h1 class="h3 mb-3 font-weight-normal" th:text="#{product.buy} +' ' + ${productData.title}"></h1>
 
 
 				
 
 			
-				<button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{sign.up}">Sign up</button>
 			</form>
 		</div>
 

@@ -35,9 +35,8 @@ public class ProductController {
 	@Autowired
 	private final ProductService productService;
 
-	@GetMapping("/{sessionId}")
+	@GetMapping()
 	public String getProducts(
-								@PathVariable(required = false) Optional <Long> sessionId,
 								@RequestParam(required = false, defaultValue = "ean") String filterField,
 			  					@RequestParam(required = false, defaultValue = "DESC") String direction,
 			  					@RequestParam(required = false, defaultValue = "1") String page,
@@ -45,16 +44,11 @@ public class ProductController {
 			  					@RequestParam(required = false, defaultValue = "") String searchQuery,
 			  					Model model) {
 		
-		log.info("[PAGINATION] Input params: filterField:[{}], direction:[{}], page:[{}], size:[{}], searchQuery:[{}], sessionId: [{}]", 
-				filterField, direction, page, size, searchQuery, sessionId);
-		ProductsData productsData = productService.getAllProducts(filterField, direction, page, size, searchQuery);
-		model.addAttribute("productsData", productsData);
-		log.info("[PAGINATION] Output params {}", productsData.toString());
-		
-		if(sessionId.isEmpty()) {
-			return "products";			
-		}
-		return "products/"+sessionId;
+		log.info("[PAGINATION] Input params: filterField:[{}], direction:[{}], page:[{}], size:[{}], searchQuery:[{}]", 
+				filterField, direction, page, size, searchQuery);
+		model.addAttribute("productsData", productService.getAllProducts(filterField, direction, page, size, searchQuery));
+
+		return "products";
 
 	}
 	
@@ -80,13 +74,12 @@ public class ProductController {
 		return "redirect:/products";
 	}
 	
-	@GetMapping("/sale")
-	public String sellProduct(@ModelAttribute ProductData productData,  Model model) {
+	@GetMapping("/sale/{ean}")
+	public String sellProduct(@PathVariable String ean,  Model model) {
 		
+		model.addAttribute("productData", productService.getProductByEan(ean));
 		
-		
-		
-		return "redirect:/products";
+		return "addproduct";
 	}
 
 

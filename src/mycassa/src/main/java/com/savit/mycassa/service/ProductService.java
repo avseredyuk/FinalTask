@@ -1,7 +1,7 @@
 package com.savit.mycassa.service;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,7 +15,6 @@ import com.savit.mycassa.dto.ProductsData;
 import com.savit.mycassa.entity.product.Measure;
 import com.savit.mycassa.entity.product.Product;
 import com.savit.mycassa.repository.ProductRepository;
-import com.savit.mycassa.util.Constants;
 import com.savit.mycassa.util.Validator;
 
 import lombok.AllArgsConstructor;
@@ -57,25 +56,36 @@ public class ProductService {
 	
 	
 	public ProductsData getAllProducts(String filterField, String direction, String pageS, String sizeS, String searchQuery) {
-		//TODO: input params
 		Pageable pageable = buildPageable(filterField, direction, pageS, sizeS);
 		
 		Page<Product> products = searchQuery.isBlank() ? 
 				productRepository.findAll(pageable) : 	
 				productRepository.findByEanContainsIsOrTitleContainsIs(searchQuery, pageable);
 
-
-//		if(products.getSort().get().findFirst().isEmpty()) {
-//			log.error("[PAGINATION ERROR] Page: {}, PerPage: {}", pageable.getPageNumber(), pageable.getPageSize());
-//			throw new NoSuchElementException("{choose.the.params}");
-//		}
-		
 		log.info("[PAGINATION] Page: [{}], PerPage: [{}], Sorted by field:[{}], Ordered by:[{}]", 
 				pageable.getPageNumber(), pageable.getPageSize());
 		pageable.getSort().get().forEach(a -> log.info("[PAGINATION] Sorted by field:{}, Ordered by:{}", a.getProperty(), a.getDirection().toString()));
 		
 		return new ProductsData(products, filterField,direction,searchQuery);
 		
+	}
+
+
+	public ProductData getProductByEan(String ean) {
+		
+		Optional<Product> product = productRepository.findByEan(ean);
+		
+		if(product.isEmpty()) {
+			throw new NoSuchElementException(String.format("No product with ean %s", ean));
+		}
+		
+		return ProductData.builder()
+				.title(product.get().getTitle())
+				.ean(product.get().getEan())
+				.cost(product.get().getCost())
+				.quantityInStore(product.get().getQuantityInStore())
+				.measure(product.get().getMeasure().name()).build();
+				
 	}
 	
 

@@ -106,7 +106,7 @@
 								<td th:text="${productData.quantityInStore}" />
 								<td th:text="${productData.measure}" />
 								<td>
-									<a th:href="@{/products/sale/{ean}(productId=${productData.ean},session)}"
+									<a th:href="@{/products/sale/{ean}(ean=${productData.ean})}"
 									 class="btn btn-primary" role="button" aria-pressed="true">+</a>
 								</td>
 

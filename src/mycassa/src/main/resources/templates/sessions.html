@@ -37,12 +37,12 @@
 				</thead>
 
 				<tbody>
-					<tr scope="row" th:each="sessionData, index : ${sessionsData.sessionsData}">
-						<td th:text="${index}" />
+					<tr scope="row" th:each="sessionData : ${sessionsData.sessionsData}">
+						<td th:text="${sessionData.id}" />
 						<td th:text="${#temporals.format(sessionData.startedAt, 'dd-MM-yyyy HH:mm')}"/>
 						<td th:text="${sessionData.statusSession}" />
 						<td th:if="${sessionData.statusSession.name == 'OPENED'}">
-							<a th:href="@{/products/{sessionId}(sessionId=${session.id})}">go</a>
+							<a th:href="@{/products}">go</a>
 						 </td> 
 
 						

@@ -30,13 +30,9 @@ public class CashierController {
 	
 	 @GetMapping("/sessions/new") public String startSession(Model model) {
 		 try {
-			 log.info("SESSIONS insert new");
-			 SessionData sessionData = sessionService.createNewSession();
-			 model.addAttribute("sessionData", sessionData);
-			 log.info("redirect:/products");
-			 return "redirect:/products/"+sessionData;
+			 model.addAttribute("sessionData", sessionService.createNewSession());
+			 return "redirect:/products";
 		 }catch(Exception ex) {
-			 
 			 return "redirect:/sessions";
 		 }
 	 }
@@ -44,10 +40,9 @@ public class CashierController {
 
 	@GetMapping("/sessions")
 	public String createSessionForUser(Model model){
-			log.info("SESSIONS rollback");
-		 SessionsData sessionsData = sessionService.getAllAuthUserOpenedSessions();
-//		 sessionsData.getSessionsData().stream().forEach(a -> log.info(" >> Session ITEM : {}", a.toString()));
-		 model.addAttribute("sessionsData", sessionsData);
+		log.info("SESSIONS rollback");
+		SessionsData sessionsData = sessionService.getAllAuthUserOpenedSessions();
+		model.addAttribute("sessionsData", sessionsData);
 		return "sessions";
 	} 
 
