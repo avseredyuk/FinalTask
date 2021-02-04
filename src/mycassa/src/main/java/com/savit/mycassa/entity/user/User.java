@@ -14,7 +14,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+
 import com.savit.mycassa.entity.session.Session;
+import com.savit.mycassa.entity.user.details.UserDetailsImpl;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -73,7 +75,15 @@ public class User {
 		this.role = role;
 	}
 	
-	
+	public static User buildUser(UserDetailsImpl ud) {
+		return User.builder()
+							.id(ud.getId())
+							.email(ud.getUsername())
+							.password(ud.getPassword())
+							.firstName(ud.getFirstName())
+							.lastName(ud.getLastName())
+							.role(ud.getRole()).build();
+	}
 	
 }
 

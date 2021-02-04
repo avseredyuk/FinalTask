@@ -7,7 +7,7 @@
 	<link rel="stylesheet" th:href="@{/css/main.css}">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
 		integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
-	<title th:text="#{products}">Products</title>
+	<title th:text="#{sessions}">Sessions</title>
 </head>
 
 <body class="text-center">
@@ -23,32 +23,37 @@
 	</header>
 
 	<div class="sectionMainContent">
-		<div class="m-xl-5 d-flex justify-content-center centerButton">
-			<p>[[${sessionData.startedAt.getDayOfMonth()}]]
-			<p>
+
+
+		<div style="text-align:left;" class="mt-xl-5">
+			<table class="table table-hover">
+				<thead class="thead-light">
+					<tr>
+						<th th:text="#{session.number}">Number</th>
+						<th th:text="#{session.startedAt}">startedAt</th>
+						<th th:text="#{session.status}">status</th>
+						<th th:text="#{session.go}">Go</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr scope="row" th:each="sessionData, index : ${sessionsData.sessionsData}">
+						<td th:text="${index}" />
+						<td th:text="${#temporals.format(sessionData.startedAt, 'dd-MM-yyyy HH:mm')}"/>
+						<td th:text="${sessionData.statusSession}" />
+						<td th:if="${sessionData.statusSession.name == 'OPENED'}">
+							<a th:href="@{/products/{sessionId}(sessionId=${session.id})}">go</a>
+						 </td> 
+
+						
+
+					</tr>
+				</tbody>
+			</table>
 		</div>
 
 
-		<!-- products  -->
-		<div>
 
-
-
-
-
-
-		</div>
-		<!-- products  -->
-		<div>
-
-			<!-- Button trigger modal -->
-			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCentered">
-				Launch centered demo modal
-			</button>
-
-
-
-		</div>
 
 
 

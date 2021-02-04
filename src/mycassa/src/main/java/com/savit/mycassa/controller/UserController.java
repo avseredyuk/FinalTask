@@ -45,15 +45,13 @@ public class UserController {
 	}
 
 	@GetMapping("/profile/edit")
-	public String getUserEditForm(@ModelAttribute UserData userData,  Model model) {
-		Optional <UserData> userD = userService.getPrincipal();
-		if(userD.isPresent()) {
-			userData= userD.get();
-			model.addAttribute("userData", userData);
-			log.info(" >> userData-input: {}", userData.toString());
-			return "editUser";			
-		}
-		return "redirect:/login";
+	public String getUserEditForm(Model model) {
+		UserData userData = userService.getPrincipal();
+
+		model.addAttribute("userData", userData);
+		log.info(" >> userData-input: {}", userData.toString());
+		return "editUser";			
+		
 	}
 
 	@PutMapping("/profile/edit")
@@ -65,7 +63,7 @@ public class UserController {
 		}
 		log.info(" >> userDTO-valid: {}", userData.toString());
 		
-		String currEmail = userService.getPrincipal().get().getEmail();
+		String currEmail = userService.getPrincipal().getEmail();
 		
 		//TODO: password confirmation
 		//TODO: getting email from auth...ed user

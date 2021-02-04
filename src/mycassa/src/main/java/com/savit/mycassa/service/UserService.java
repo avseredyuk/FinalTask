@@ -21,12 +21,14 @@ import com.savit.mycassa.entity.user.details.UserDetailsImpl;
 import com.savit.mycassa.repository.UserRepository;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @AllArgsConstructor
+@Slf4j
 @Service
 public class UserService implements UserDetailsService {
 
-	private static final Logger log = LoggerFactory.getLogger(UserDetailsService.class);
+	
 
 	@Autowired
 	private final UserRepository userRepository;
@@ -34,12 +36,19 @@ public class UserService implements UserDetailsService {
 	@Autowired
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-	public Optional<UserData> getPrincipal() {
+	
+	public UserDetailsImpl getAuthUserDetails() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (!(authentication.getPrincipal() instanceof UserDetailsImpl)) {
-			return Optional.empty();
-		} 
 		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+		return userDetails;
+		
+	}
+	
+	
+	public UserData getPrincipal() {
+		
+		UserDetailsImpl userDetails = getAuthUserDetails();
+		
 		log.info("getPrincipal USER: {}", userDetails.toString());
 		UserData ud = UserData.builder()
 				.firstName(userDetails.getFirstName())
@@ -47,7 +56,7 @@ public class UserService implements UserDetailsService {
 				.email(userDetails.getUsername())
 				.role(userDetails.getRole().name()).build();
 		
-		return Optional.of(ud);
+		return ud;
 	}
 
 	@Override

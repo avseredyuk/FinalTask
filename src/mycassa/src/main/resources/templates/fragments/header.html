@@ -24,12 +24,15 @@
 					<li class="nav-item active" sec:authorize="hasAuthority('COMMODITY_EXPERT')">
 						<a class="nav-link" href="/products" th:text="#{products}">Products</a>
 					</li>
-					<form>
+					<li class="nav-item active" sec:authorize="hasAuthority('CASHIER')">
+						<a class="nav-link" th:href="@{/sessions/new}" th:text="#{session.new}">New session</a>
+					</li>
+					<!--<form th:action="@{/sessions/new}" type="post">
 					<li class="nav-item active" sec:authorize="hasAuthority('CASHIER')">
 						<button class="btn btn-link nav-item active defLink" id="defLinkHeader"  
 						th:text="#{session.new}" type"submit">New session</button>
 					</li>
-					</form>
+					</form>-->
 					<li class="nav-item active" sec:authorize="hasAnyAuthority('SENIOR_CASHIER')">
 						<a class="nav-link" href="/cashiers" th:text="#{сashiers}">Cashiers</a>
 					</li>

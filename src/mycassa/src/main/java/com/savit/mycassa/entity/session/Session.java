@@ -16,6 +16,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.savit.mycassa.entity.product.Sale;
 import com.savit.mycassa.entity.user.User;
@@ -27,7 +30,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name="sessions")
+@Table(name="sessions", uniqueConstraints= @UniqueConstraint(columnNames = {"user_id", "statusSession"}))
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
@@ -40,9 +43,11 @@ public class Session {
 	private Long id;
 	
 	@Column(nullable = false)
+	@DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss")
 	private LocalDateTime startedAt;
 	
 	@Column
+	@DateTimeFormat(pattern = "dd-MM-yyyy HH-mm-ss")
 	private LocalDateTime endedAt;
 	
 	@Enumerated(EnumType.STRING)

@@ -11,6 +11,7 @@ import com.savit.mycassa.entity.user.Role;
 import com.savit.mycassa.entity.user.User;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @AllArgsConstructor
 
@@ -22,6 +23,10 @@ public class UserDetailsImpl implements UserDetails {
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		SimpleGrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().name());
 		return Collections.singletonList(authority);
+	}
+	
+	public Long getId() {
+		return user.getId();
 	}
 
 	@Override

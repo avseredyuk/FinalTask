@@ -1,23 +1,23 @@
 package com.savit.mycassa.controller;
 
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.savit.mycassa.dto.ProductData;
 import com.savit.mycassa.dto.ProductsData;
-import com.savit.mycassa.entity.user.Role;
 import com.savit.mycassa.service.ProductService;
 
 import lombok.AllArgsConstructor;
@@ -35,8 +35,9 @@ public class ProductController {
 	@Autowired
 	private final ProductService productService;
 
-	@GetMapping
+	@GetMapping("/{sessionId}")
 	public String getProducts(
+								@PathVariable(required = false) Optional <Long> sessionId,
 								@RequestParam(required = false, defaultValue = "ean") String filterField,
 			  					@RequestParam(required = false, defaultValue = "DESC") String direction,
 			  					@RequestParam(required = false, defaultValue = "1") String page,
@@ -44,19 +45,17 @@ public class ProductController {
 			  					@RequestParam(required = false, defaultValue = "") String searchQuery,
 			  					Model model) {
 		
-		log.info("[PAGINATION] Input params: filterField:[{}], direction:[{}], page:[{}], size:[{}], searchQuery:[{}]", filterField, direction, page, size, searchQuery);
+		log.info("[PAGINATION] Input params: filterField:[{}], direction:[{}], page:[{}], size:[{}], searchQuery:[{}], sessionId: [{}]", 
+				filterField, direction, page, size, searchQuery, sessionId);
 		ProductsData productsData = productService.getAllProducts(filterField, direction, page, size, searchQuery);
 		model.addAttribute("productsData", productsData);
 		log.info("[PAGINATION] Output params {}", productsData.toString());
+		
+		if(sessionId.isEmpty()) {
+			return "products";			
+		}
+		return "products/"+sessionId;
 
-//		return Role.COMMODITY_EXPERT
-//				.equals(
-//						SecurityContextHolder.getContext().getAuthentication()
-//							.getAuthorities().stream()
-//								.findFirst().get().toString()
-//				) ? "products" :
-//					"redirect:/selling";
-		return "products";
 	}
 	
 
@@ -81,8 +80,9 @@ public class ProductController {
 		return "redirect:/products";
 	}
 	
-	@PostMapping("/sale")
-	public String sellProduct() {
+	@GetMapping("/sale")
+	public String sellProduct(@ModelAttribute ProductData productData,  Model model) {
+		
 		
 		
 		

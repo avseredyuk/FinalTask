@@ -2,6 +2,10 @@ package com.savit.mycassa.dto;
 
 import java.time.LocalDateTime;
 
+import org.springframework.data.domain.Page;
+
+import com.savit.mycassa.entity.product.Product;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -15,7 +19,6 @@ import lombok.ToString;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 @Builder
 @ToString
 public class SessionData {

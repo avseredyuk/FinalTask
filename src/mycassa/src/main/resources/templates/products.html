@@ -24,14 +24,10 @@
 
 	<div class="sectionMainContent">
 
-		<div th:if="${productsData.productsData.hasContent()}">
-
-
 			<div class="productsMainFrame">
 
 				<form th:action="@{/products}">
-
-					<div class="formFrame">
+					<div th:if="${productsData.productsData.hasContent()}" class="formFrame">
 						<div class="d-flex justify-content-center">
 							<select class="custom-select w-25" th:name="filterField">
 								<option value="ean"
@@ -44,7 +40,7 @@
 									th:selected="${#strings.equals(productsData.filterField, 'cost')}  ? 'selected'"
 									th:text="#{product.cost}">cost</option>
 								<option value="quantityInStore"
-									th:selected="${#strings.equals(productsData.filterField, 'quantity')}  ? 'selected'"
+									th:selected="${#strings.equals(productsData.filterField, 'quantityInStore')}  ? 'selected'"
 									th:text="#{product.quantityInStore}">quantity</option>
 								<option value="measure"
 									th:selected="${#strings.equals(productsData.filterField, 'measure')}  ? 'selected'"
@@ -82,7 +78,7 @@
 				</form>
 			</div>
 
-			<div class="m-xl-5 d-flex justify-content-center">
+			<div th:if="${productsData.productsData.hasContent()}" class="m-xl-5 d-flex justify-content-center">
 
 				<div style="text-align:left;">
 					<table class="table table-hover">
@@ -94,6 +90,7 @@
 								<th th:text="#{product.cost}">Cost</th>
 								<th th:text="#{product.store}">Quantity</th>
 								<th th:text="#{product.measure}">Measure</th>
+								<th th:text="#{action}">Action</th>
 							</tr>
 						</thead>
 
@@ -102,17 +99,20 @@
 
 
 							<tr scope="row" th:each="productData: ${productsData.productsData}"
-								sec:authorize="hasAnyAuthority('CASHIER')" data-toggle="modal"
-								data-target="#exampleModalCentered">
+								sec:authorize="hasAnyAuthority('CASHIER')">
 								<td th:text="${productData.ean}" />
 								<td th:text="${productData.title}" />
 								<td th:text="${productData.cost}" />
 								<td th:text="${productData.quantityInStore}" />
 								<td th:text="${productData.measure}" />
+								<td>
+									<a th:href="@{/products/sale/{ean}(productId=${productData.ean},session)}"
+									 class="btn btn-primary" role="button" aria-pressed="true">+</a>
+								</td>
 
-								<div th:insert="~{fragments/buymodal :: copy}"></div>
 
 							</tr>
+
 
 							<tr scope="row" th:each="productData: ${productsData.productsData}"
 								sec:authorize="hasAnyAuthority('COMMODITY_EXPERT')">
@@ -128,7 +128,7 @@
 
 			</div>
 
-			<div class="m-xl-5 d-flex justify-content-center">
+			<div th:if="${productsData.productsData.hasContent()}" class="m-xl-5 d-flex justify-content-center">
 				<div th:if="${productsData.productsData.hasContent()}">
 
 					<nav>
@@ -170,7 +170,7 @@
 
 
 
-		</div>
+		
 
 		<div class="m-xl-5 d-flex justify-content-center" th:if="${!productsData.productsData.hasContent()}">
 			No products
@@ -184,7 +184,7 @@
 
 		<a th:href="@{/products/new}">
 
-			<div class="btn btn-primary my-2 my-sm-0" th:text="#{product.add}">New product</div>
+			<div class="btn btn-primary my-2 my-sm-0" th:text="#{product.add}">No products for sale</div>
 		</a>
 
 	</div>
