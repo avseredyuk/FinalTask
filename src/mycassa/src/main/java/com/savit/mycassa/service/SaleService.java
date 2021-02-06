@@ -1,17 +1,20 @@
 package com.savit.mycassa.service;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.savit.mycassa.dto.SessionData;
-import com.savit.mycassa.dto.UserData;
+import com.savit.mycassa.dto.SaleDTO;
+import com.savit.mycassa.dto.SalesDTO;
+import com.savit.mycassa.entity.product.Product;
+import com.savit.mycassa.entity.product.Sale;
 import com.savit.mycassa.entity.session.Session;
-import com.savit.mycassa.entity.session.StatusSession;
-import com.savit.mycassa.entity.user.User;
+import com.savit.mycassa.repository.ProductRepository;
 import com.savit.mycassa.repository.SaleRepository;
+import com.savit.mycassa.repository.SessionRepository;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +25,48 @@ import lombok.extern.slf4j.Slf4j;
 public class SaleService {
 	
 	
+	
+	@Autowired
+	private final UserService userService;
+	
+	
 	@Autowired
 	private final SaleRepository saleRepository;
+	
+	@Autowired
+	private final ProductRepository productRepository;
+	
+	@Autowired
+	private final SessionRepository sessionRepository;
+
+	@Transactional(rollbackFor = Exception.class)
+	public Sale newProductSale(String ean, SaleDTO saleDTO) {
+		
+		Product product = productRepository.findByEan(ean).get();
+		
+		Session session = sessionRepository.findOneNotClosedByUserId(userService.getAuthUserDetails().getId()).get();
+		
+		product.setQuantityInStore(product.getQuantityInStore() - saleDTO.getQuantityToBuy());
+		
+		return saleRepository.save(new Sale(saleDTO.getQuantityToBuy(), product, session));
+		
+		
+	}
+
+	public SalesDTO getAllSessionSales() {
+		
+		Session session = sessionRepository.findOneNotClosedByUserId(userService.getAuthUserDetails().getId()).get();
+		
+		List<Sale> sales = saleRepository.findAllBySessionIdAndByUserId(session.getId());
+		
+		Long totalPrice = 0L;
+		
+		for(Sale sale : sales) {
+			totalPrice+=sale.getQuantity() * sale.getProduct().getCost();			
+		}
+
+		return new SalesDTO(sales, totalPrice );
+	}
 	
 //
 //	public SessionData addSale(UserData userData) {

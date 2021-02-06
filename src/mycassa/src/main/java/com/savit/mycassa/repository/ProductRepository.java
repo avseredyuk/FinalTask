@@ -1,5 +1,6 @@
 package com.savit.mycassa.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -19,4 +20,13 @@ public interface ProductRepository  extends JpaRepository<Product, Long> {
 	Page <Product> findByEanContainsIsOrTitleContainsIs(String searchQuery, Pageable pageable);
 
 	Optional<Product> findByEan(String ean);
+
+//	
+//	select * from products 
+//	inner join 
+//	(select products.id as pid,  products.quantity_in_store-sum(quantity) as tempquantity from sales  
+//			inner join products ON products.id = sales.product_id group by(products.id)) as d
+//	on products.id = pid ;
+
+	
 }

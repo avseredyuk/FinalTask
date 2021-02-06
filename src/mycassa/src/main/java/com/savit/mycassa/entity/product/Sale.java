@@ -32,7 +32,7 @@ public class Sale {
 	private Long id;
 	
 	@Column(nullable = false)
-	private Integer quantity;
+	private Long quantity;
 	
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
@@ -42,7 +42,7 @@ public class Sale {
     @JoinColumn(name = "session_id")
     private Session session;
 
-	public Sale(Integer quantity, Product product, Session session) {
+	public Sale(Long quantity, Product product, Session session) {
 		this.quantity = quantity;
 		this.product = product;
 		this.session = session;

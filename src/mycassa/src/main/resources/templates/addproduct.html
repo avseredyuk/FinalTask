@@ -23,20 +23,71 @@
 	</header>
 
 
-	<div class="text-center">
-		<div class="sectionMainContent">
-			<form class="form-signup" method="post" th:action="@{/registration}" th:object="${userData}">
-				<h1 class="h3 mb-3 font-weight-normal" th:text="#{product.buy} +' ' + ${productData.title}"></h1>
+
+	<div class="sectionMainContent">
+		<div class="d-flex justify-content-center">
+		
+		<div class="card w-50">
+			<form class="card-body" method="post" th:action="@{/products/sale/{ean}(ean=${productData.ean})}"
+				th:object="${saleDTO}">
 
 
+				<h3 class="card-title">
+					<span th:text="${productData.title}">
+					</span>
+				</h3>
+				<h6 class="card-subtitle mb-2 text-muted">
+					<span th:if="${productData.measure == 'PIECE'}">
+						<span
+							th:text="#{products.left} + ': ' + ${productData.quantityInStore} + ' ' + #{product.measure.piece}"></span>
+					</span>
+					<span th:if="${productData.measure == 'KILOGRAM'}">
+						<span
+							th:text="#{products.left} + ': ' + ${productData.quantityInStore} + #{product.measure.kg}"></span>
+					</span>
+				</h6>
+
+
+				<!-- input -->
+
+				<div class="card-text mt-3">
+					<input type="number" th:min="1" th:max="${productData.quantityInStore}" class="form-control"
+						th:classappend="${#fields.hasErrors('quantityToBuy')} ? is-invalid  : (${quantityToBuy != null} ? is-valid)"
+						th:placeholder="#{product.quantity.to.buy}" name="quantityToBuy" th:value="*{quantityToBuy}"
+						th:errorClass="is-invalid" autofocus />
+					<div th:if="${#fields.hasErrors('quantityToBuy')}" th:errors="*{quantityToBuy}"
+						class="invalid-feedback">
+						Invalid
+						quantityToBuy</div>
+				</div>
+
+
+				<!-- submit -->
+				<div class="d-flex justify-content-end mt-3 mb-3">
+					<a th:href="@{/products}" class="btn btn-secondary">Cancel</a>
+					<button type="submit" class="btn btn-primary ml-2">Buy</button>
+					
+					
 				
+				</div>
+				<!-- price per one -->
+				<div class="card-footer text-muted">
 
-			
+				<div class="d-flex justify-content-center">
+									<i th:text="#{price.per.one} + ': '"></i>
+					<b th:text="${productData.cost}"></b>
+					<i th:text="#{currency.uah}"></i>
+				</div>
+
+				</div>
+
 			</form>
+
+
 		</div>
-
-
 	</div>
+	</div>
+
 
 	<footer class="fixed-bottom ">
 		<div th:insert="~{fragments/footer :: copy}"></div>

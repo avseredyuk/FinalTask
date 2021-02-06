@@ -2,6 +2,8 @@ package com.savit.mycassa.service;
 
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.savit.mycassa.dto.UserData;
 import com.savit.mycassa.dto.UsersData;
@@ -19,6 +23,7 @@ import com.savit.mycassa.entity.user.Role;
 import com.savit.mycassa.entity.user.User;
 import com.savit.mycassa.entity.user.details.UserDetailsImpl;
 import com.savit.mycassa.repository.UserRepository;
+import com.savit.mycassa.util.exception.EmailExistsException;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -92,5 +97,25 @@ public class UserService implements UserDetailsService {
         return new UsersData(userRepository.findByRole(Role.CASHIER));
         
     }
+
+//	@Transactional(	propagation=Propagation.REQUIRED, rollbackFor = {Exception.class})
+	public void updateUser(@Valid UserData userData) throws Exception {
+		
+		
+
+			User user = User.builder().id(getAuthUserDetails().getId())
+					.email(userData.getEmail())
+					.firstName(userData.getFirstName())
+					.lastName(userData.getLastName())
+					.password(bCryptPasswordEncoder.encode(userData.getPassword()))
+					.role(getAuthUserDetails().getRole()).build();	
+			System.out.println("USRE: " + user);
+			
+			userRepository.save(user);
+
+		
+		
+		
+	}
 
 }

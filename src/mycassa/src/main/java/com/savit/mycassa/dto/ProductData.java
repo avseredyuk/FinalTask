@@ -22,6 +22,8 @@ import lombok.ToString;
 @ToString
 public class ProductData {
 	
+	Long id;
+	
 	
 	@NotBlank(message = "{title.valid.notblank}")
 	@Size(max = 70, message = "{title.valid.max}")

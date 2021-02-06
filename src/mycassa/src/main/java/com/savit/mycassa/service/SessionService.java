@@ -1,9 +1,6 @@
 package com.savit.mycassa.service;
 
-import java.sql.SQLException;
 import java.time.LocalDateTime;
-
-import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,15 +34,6 @@ public class SessionService {
 	private final UserService userService;
 	
 
-//	public SessionData addSession(UserData userData) {
-//		
-//		
-//		log.info(" >> new user: {}", session.toString());
-//		
-//		return new SessionData(session.getId(), session.getStartedAt(), session.getStatusSession().name());
-//	}
-
-
 	public SessionData getSessionById(Long sessionId) throws SessionNotFoundException {
 		
 		Session session =  sessionRepository.findById(sessionId)
@@ -60,13 +48,10 @@ public class SessionService {
 	public SessionData createNewSession() {
 		
 		UserDetailsImpl userDetails = userService.getAuthUserDetails();
-		User user = userRepository.findByEmail(userDetails.getUsername()).get();
-//		log.info(" >> get user: {}", user.toString());
 		Session session = sessionRepository.save(new Session(LocalDateTime.now(), StatusSession.OPENED));
-//		log.info(" >> new session without user: {}", session.toString());
+		User user = userRepository.findByEmail(userDetails.getUsername()).get();
 		session.setUser(user);
-//		session.getStartedAt().star
-//		log.info(" >> new session with user: {}", session.toString());
+		
 		return SessionData.builder().id(session.getId())
 				.status(session.getStatusSession().name())
 				.startedAt(session.getStartedAt()).build();
@@ -74,17 +59,9 @@ public class SessionService {
 	
 	public SessionsData getAllAuthUserOpenedSessions() {
 		
-//		log.info(" >> get all sessions method");
 		UserDetailsImpl userDetails = userService.getAuthUserDetails();
-//		log.info(" >> get userdatails: {}", userDetails.toString());
-//		log.info("userDetails: {}, {}", userDetails.getId(), StatusSession.OPENED.name());
-		SessionsData sessionsData = 
-//				new SessionsData(null);
-				new SessionsData(sessionRepository.findByUserAndByStatusSession(userDetails.getId(), StatusSession.OPENED));
-//		log.info("SESSIONSDATA: {}", sessionsData);
-//		sessionsData.getSessionsData().stream().forEach(a -> System.out.println(a));
-				
-		return sessionsData;
+		
+		return new SessionsData(sessionRepository.findListNotClosedByUserId(userDetails.getId()));	
 		
 	}
 	

@@ -1,6 +1,7 @@
 package com.savit.mycassa.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,7 +15,11 @@ import com.savit.mycassa.entity.user.User;
 public interface SessionRepository extends JpaRepository<Session, Long>  {
 	
 
-	@Query("SELECT s FROM Session AS s INNER JOIN FETCH s.user WHERE s.user.id = ?1 AND s.statusSession = ?2")
-	List<Session> findByUserAndByStatusSession(Long user_id, StatusSession statusSession);
+	@Query("SELECT s FROM Session AS s INNER JOIN FETCH s.user WHERE s.user.id = ?1 AND s.endedAt IS NULL")
+	List<Session> findListNotClosedByUserId(Long user_id);
+	
+	
+	@Query("SELECT s FROM Session AS s INNER JOIN FETCH s.user WHERE s.user.id = ?1 AND s.endedAt IS NULL")
+	Optional<Session> findOneNotClosedByUserId(Long user_id);
 
 }
