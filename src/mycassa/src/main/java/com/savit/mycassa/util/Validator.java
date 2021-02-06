@@ -5,6 +5,8 @@ import java.util.NoSuchElementException;
 
 import org.springframework.data.domain.Sort;
 
+import com.savit.mycassa.util.constants.Constants;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -15,7 +17,7 @@ public class Validator {
 			int pageI = Integer.parseInt(pageS);
 			int sizeI = Integer.parseInt(sizeS);
 		}catch(NumberFormatException ex) {
-			log.error("[VALIDATION ERROR] page: {} and/or size: {} can't formatted from string ot int", pageS, sizeS);
+			log.error("[VALIDATION ERROR] page: [{}] and  size: [{}] can't formatted from string to int", pageS, sizeS);
 			throw new NumberFormatException("{invalid.params.page.size}");
 		}
 	}

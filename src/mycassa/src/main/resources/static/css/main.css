@@ -1,3 +1,14 @@
+body {background-color: #E8F2FE !important;}
+
+
+table {
+  table-layout: fixed;
+}
+
+.titleColumn{
+	width:550px;
+}
+
 
 
 .greeting{
@@ -8,6 +19,12 @@
 .sectionMainContent{
 	max-width: 1200px;
 	margin: 0px auto;
+}
+
+.labelForInput{
+	text-align:left; 
+	font-size:15px; 
+	float:left;
 }
 
 .formFrame{

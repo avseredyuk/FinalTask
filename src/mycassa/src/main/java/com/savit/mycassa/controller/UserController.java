@@ -44,7 +44,7 @@ public class UserController {
 	@GetMapping("/profile/edit")
 	public String getUserEditForm(Model model) {
 		UserData userData = userService.getPrincipal();
-		
+		//FIXME replace all getPrincipal except getId()
 		model.addAttribute("userData", userData);
 
 		return "editUser";			
@@ -66,7 +66,6 @@ public class UserController {
 			userService.updateUser(userData);
 			
 		} catch (Exception e) {
-			
 			bindingResult.rejectValue("email", "such.email.exists", "such.email.exists");
 			return "editUser";	
 		}

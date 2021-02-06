@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import com.savit.mycassa.entity.session.Session;
 
@@ -19,7 +20,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name="sales")
+@Table(name="sales", uniqueConstraints= @UniqueConstraint(columnNames = {"product_id", "session_id"}))
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString

@@ -55,11 +55,11 @@
 					</div>
 					<div th:if="${productsData.productsData.hasContent()}" class=" mr-5">
 							<select class="ml-1  custom-select" th:name="direction">
-								<option value="DESC"
-									th:selected="${#strings.equals(productsData.direction, 'DESC')}  ? 'selected'"
+								<option value="desc"
+									th:selected="${#strings.equals(productsData.direction, 'desc')}  ? 'selected'"
 									th:text="#{descending}">descending</option>
-								<option value="ASC"
-									th:selected="${#strings.equals(productsData.direction, 'ASC')}  ? 'selected'"
+								<option value="asc"
+									th:selected="${#strings.equals(productsData.direction, 'asc')}  ? 'selected'"
 									th:text="#{ascending}">ascending</option>
 							</select>
 					</div>							
@@ -89,13 +89,13 @@
 
 			<div th:if="${productsData.productsData.hasContent()}" class="d-flex justify-content-center shadow p-3 bg-light rounded">
 
-				<div class=" d-flex">
-					<table class="table">
+				<div class="">
+					<table class="table table-hover">
 						<thead class="thead-light">
 							<tr>
 
 								<th th:text="#{product.ean}">Ean</th>
-								<th th:text="#{product.title}">Title</th>
+								<th class="titleColumn" th:text="#{product.title}">Title</th>
 								<th th:text="#{product.cost}">Cost</th>
 								<th th:text="#{product.quantityInStore}">Quantity</th>
 								<th th:text="#{product.measure}">Measure</th>
@@ -108,7 +108,7 @@
 							<tr scope="row" th:each="productData: ${productsData.productsData}"
 								sec:authorize="hasAnyAuthority('CASHIER')">
 								<td th:text="${productData.ean}" />
-								<td th:text="${productData.title}" />
+								<td class="titleColumn" th:text="${productData.title}" />
 								<td th:text="${productData.cost}" />
 								<td th:text="${productData.quantityInStore}" />
 								<td th:text="${productData.measure}" />
@@ -132,13 +132,13 @@
 
 							<tr scope="row" th:each="productData: ${productsData.productsData}"
 								sec:authorize="hasAnyAuthority('COMMODITY_EXPERT')">
-								<td th:text="${productData.ean}" />
-								<td th:text="${productData.title}" />
+								<td  th:text="${productData.ean}" />
+								<td class="titleColumn" th:text="${productData.title}" />
 								<td th:text="${productData.cost}" />
 								<td th:text="${productData.quantityInStore}" />
 								<td th:text="${productData.measure}" />
 								<td>
-									<a  th:href="@{/product/edit/{ean}(ean=${productData.ean})}" class="btn bi bi-pencil-square"></a>
+									<a  th:href="@{/products/edit/{ean}(ean=${productData.ean})}" class="btn bi bi-pencil-square"></a>
 								</td>
 							</tr>
 						</tbody>
@@ -156,7 +156,7 @@
 					+ ${productsData.direction} + '&amp;searchQuery=' 
 					+ ${productsData.searchQuery}">
 							<li th:class="${!productsData.productsData.isFirst() ? 'page-item' : 'page-item disabled'}">
-								<a th:href="@{${pageUrlPrefix}(page='1 ')}" class="page-link"><b>&laquo;</b></a>
+								<a th:href="@{${pageUrlPrefix}(page='1')}" class="page-link"><b>&laquo;</b></a>
 							</li>
 
 							<li th:class="${!productsData.productsData.isFirst() ? 'page-item' : 'page-item disabled'}">
@@ -216,7 +216,7 @@
 
 
 
-	<footer class="fixed-bottom ">
+	<footer>
 		<div th:insert="~{fragments/footer :: copy}"></div>
 	</footer>
 		

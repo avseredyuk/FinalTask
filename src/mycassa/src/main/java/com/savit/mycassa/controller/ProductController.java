@@ -1,6 +1,5 @@
 package com.savit.mycassa.controller;
 
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +19,7 @@ import com.savit.mycassa.dto.SaleDTO;
 import com.savit.mycassa.entity.product.Sale;
 import com.savit.mycassa.service.ProductService;
 import com.savit.mycassa.service.SaleService;
+import com.savit.mycassa.util.exception.CashierHasNotPermissionException;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,129 +30,95 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 @Slf4j
 public class ProductController {
-	
-	
 
 	@Autowired
 	private final ProductService productService;
-	
+
 	@Autowired
 	private final SaleService saleService;
 
 	@GetMapping()
-	public String getProducts(
-								@RequestParam(required = false, defaultValue = "ean") String filterField,
-			  					@RequestParam(required = false, defaultValue = "DESC") String direction,
-			  					@RequestParam(required = false, defaultValue = "1") String page,
-			  					@RequestParam(required = false, defaultValue = "5") String size,
-			  					@RequestParam(required = false, defaultValue = "") String searchQuery,
-			  					Model model) {
-		
-		log.info("[PAGINATION] Input params: filterField:[{}], direction:[{}], page:[{}], size:[{}], searchQuery:[{}]", 
+	public String getProductsPage(@RequestParam(required = false, defaultValue = "ean") String filterField,
+			@RequestParam(required = false, defaultValue = "desc") String direction,
+			@RequestParam(required = false, defaultValue = "1") String page,
+			@RequestParam(required = false, defaultValue = "5") String size,
+			@RequestParam(required = false, defaultValue = "") String searchQuery, Model model) {
+
+		log.info("[PAGINATION] Input params: filterField:[{}], direction:[{}], page:[{}], size:[{}], searchQuery:[{}]",
 				filterField, direction, page, size, searchQuery);
-		model.addAttribute("productsData", productService.getAllProducts(filterField, direction, page, size, searchQuery));
+		model.addAttribute("productsData",
+				productService.getAllProducts(filterField, direction, page, size, searchQuery));
 
 		return "products";
 
 	}
-	
-	
+
 	@GetMapping("/edit/{ean}")
-	public String getUpdateProductForm(@PathVariable String ean, Model model) {
-		
+	public String getUpdateProductPage(@PathVariable String ean, Model model) {
+
 		ProductData productData = productService.getProductByEan(ean);
-		
+
 		model.addAttribute("productData", productData);
-		
+
 		return "editProduct";
 	}
-	
-	
-	@PostMapping("/edit/{id}")
-	public String updateProduct(@PathVariable Long id, 
-								@Valid @ModelAttribute ProductData productData,
-									BindingResult bindingResult) {
-		if (bindingResult.hasErrors()) {
+
+	@PostMapping("/edit/{ean}")
+	public String updateProduct(@PathVariable String ean, @Valid @ModelAttribute ProductData productData,
+			BindingResult bindingResult) {
+		if (bindingResult.hasFieldErrors("quantityInStore") || bindingResult.hasFieldErrors("cost") || bindingResult.hasFieldErrors("title")) {
 			return "editProduct";
 		}
-		try {
-			productService.updateProduct(productData, id);			
-		}catch(Exception ex) {
-			//TODO: 
-		}
+
+		productService.updateProduct(productData, ean);
 
 		return "redirect:/products";
 	}
-	
 
 	@GetMapping("/new")
-	public String getNewProductForm(@ModelAttribute ProductData productData,  Model model) {
+	public String getNewProductPage(@ModelAttribute ProductData productData, Model model) {
 		model.addAttribute("productData", productData);
 		return "newProduct";
 	}
-	
-	
+
 	@PostMapping("/new")
-	public String getNewProductForm(@Valid @ModelAttribute ProductData productData,
-											BindingResult bindingResult) {
+	public String saveProduct(@Valid @ModelAttribute ProductData productData, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			log.error(" >> productData: {}", productData.toString());
 			return "newProduct";
 		}
 		log.info(" >> productData: {}", productData.toString());
-		
+
 		productService.saveProduct(productData);
 
 		return "redirect:/products";
 	}
-	
+
 	@GetMapping("/sale/{ean}")
-	public String sellProduct(@PathVariable String ean, SaleDTO saleDTO,  Model model) {
+	public String getSaleProductPage(@PathVariable String ean, SaleDTO saleDTO, Model model) {
 
 		model.addAttribute("saleDTO", saleDTO);
 		model.addAttribute("productData", productService.getProductByEan(ean));
-		
+
 		return "addproduct";
 	}
-	
+
 	@PostMapping("/sale/{ean}")
-	public String sellProduct(@PathVariable String ean,
-							@Valid @ModelAttribute  SaleDTO saleDTO,  
-							BindingResult bindingResult,
-							Model model) {
-		
+	public String saleProduct(@PathVariable String ean, @Valid @ModelAttribute SaleDTO saleDTO,
+			BindingResult bindingResult, Model model) {
+
 		if (bindingResult.hasErrors()) {
 			return "addproduct";
 		}
 
 		log.info("saleDTO: [{}], ean:{}", saleDTO, ean);
+		
 		try {
-			Sale sale = saleService.newProductSale(ean, saleDTO);		
-		}catch(Exception ex) {
-			bindingResult.addError(new ObjectError("saleDTO.quantityToBuy","Tooo much"));
-			return "addproduct";
+			Sale sale = saleService.newProductSale(ean, saleDTO);
+		} catch (Exception ex) {
+			throw new CashierHasNotPermissionException("{cashier.hasnt.add.product.to.check}");
 		}
 		return "redirect:/products";
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
 
 }

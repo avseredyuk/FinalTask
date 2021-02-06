@@ -52,14 +52,10 @@
 				<div class="form-inline my-2 my-lg-0">
 
 					<div class="form-inline my-2 my-lg-0" sec:authorize="isAnonymous()">
-						<form th:action="@{/login}">
-							<button class="btn btn-link my-2 my-sm-0" id="signin" type="submit"
-								th:text="#{sign.in}">Sign in</button>
-						</form>
 
-						<form th:action="@{/registration}">
-							<button class="mx-3 btn btn-success" type="submit" th:text="#{sign.up}">Sign up</button>
-						</form>
+						<a th:href="@{/login}" class="btn btn-link my-2 my-sm-0" id="signin"  th:text="#{sign.in}">Sign up</a>
+						<a th:href="@{/registration}" class="mx-3 btn btn-success " th:text="#{sign.up}">Sign up</a>
+
 					</div>
 					<div class="form-inline my-2 my-lg-0" sec:authorize="isAuthenticated()">
 						<div class="navbar-nav mr-auto">

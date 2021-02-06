@@ -26,7 +26,7 @@ public class ProductData {
 	
 	
 	@NotBlank(message = "{title.valid.notblank}")
-	@Size(max = 70, message = "{title.valid.max}")
+	@Size(max = 100, message = "{title.valid.max}")
 	private String title;
 	
 	private String ean;

@@ -1,4 +1,4 @@
-package com.savit.mycassa.util;
+package com.savit.mycassa.util.constants;
 
 public class Constants {
 	

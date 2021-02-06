@@ -28,66 +28,49 @@
 	<div class="text-center">
 		<div class="sectionMainContent">
 			<form class="form-signup" method="post" th:action="@{/products/edit/{ean}(ean=${productData.ean})}" th:object="${productData}">
-
-				<div class="form-row">
-					<div class="mb-4 justify-content-center">
-						
-					</div>
-					<div class="col-md-6 mb-4 justify-content-center">
+				<h1 class="h3 mb-3 font-weight-normal" th:text="#{product.edit}">Edit product</h1>
+				
+					<div class="mb-4">
+						<span class="ml-1 labelForInput" th:text="#{product.title}">title</span>
 						<input type="text" class="form-control"
-							th:classappend="${#fields.hasErrors('lastName')} ? is-invalid  : (${userData.lastName != null} ? is-valid)"
-							th:placeholder="#{user.input.lastName}" name="lastName" th:value="*{lastName}"
+							th:classappend="${#fields.hasErrors('title')} ? is-invalid  : (${productData.title != null} ? is-valid)"
+							th:placeholder="#{product.title}" name="title" th:value="*{title}"
 							th:errorClass="is-invalid">
-						<div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="invalid-feedback">
-							Invalid Last name</div>
+						<div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="invalid-feedback">
+							Invalid title</div>
+					</div>
+					
+					<div class="mb-4">
+						<span class="ml-1 labelForInput" th:text="#{product.cost}">Cost</span>
+						<input type="number" class="form-control"
+							th:classappend="${#fields.hasErrors('cost')} ? is-invalid  : (${productData.cost != null} ? is-valid)"
+							th:placeholder="#{product.cost}" name="cost" th:value="*{cost}"
+							th:errorClass="is-invalid">
+						<div th:if="${#fields.hasErrors('cost')}" th:errors="*{cost}" class="invalid-feedback">
+							Invalid Сost</div>
 					</div>
 
-				</div>
 
 				<div class=" mb-4 justify-content-center">
-					<input type="email" class="form-control"
-						th:classappend="${#fields.hasErrors('email')} ? is-invalid : (${userData.email != null} ? is-valid)"
-						th:placeholder="#{user.input.email}" name="email" th:value="*{email}"
+					<span class="ml-1 labelForInput " th:text="#{product.quantityInStore}">quantityInStore</span>
+					<input type="number" class="form-control"
+						th:classappend="${#fields.hasErrors('quantityInStore')} ? is-invalid : (${productData.quantityInStore != null} ? is-valid)"
+						th:placeholder="#{product.quantityInStore}" name="quantityInStore" th:value="*{quantityInStore}"
 						th:errorClass="is-invalid">
-					<div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="invalid-feedback">Invalid
-						Email</div>
-				</div>
-
-
-				<div class=" mb-4 justify-content-center">
-					<input type="password" class="form-control"
-						th:classappend="${#fields.hasErrors('password')} ? is-invalid : (${userData.password != null} ? is-valid)"
-						th:placeholder="#{user.input.password}" name="password" th:value="*{password}"
-						th:errorClass="is-invalid">
-					<div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="invalid-feedback">
-						Invalid Password</div>
-				</div>
-				<div class="mb-4 d-flex justify-content-center">
-					<div class="custom-control custom-radio mx-2">
-						<input type="radio" checked id="customRadio1" name="role" class="custom-control-input" value="CASHIER">
-						<label class="custom-control-label" for="customRadio1" th:text="#{role.cashier}">Cashier</label>
-					</div>
-					<div class="custom-control custom-radio mx-2">
-						<input type="radio" id="customRadio2" name="role" class="custom-control-input"  value="SENIOR_CASHIER" th:field="*{role}">
-						<label class="custom-control-label" for="customRadio2" th:text="#{role.seniorcashier}">Seinor cashier</label>
-					</div>
-					<div class="custom-control custom-radio mx-2">
-						<input type="radio" id="customRadio3" name="role" class="custom-control-input" value="COMMODITY_EXPERT" th:field="*{role}">
-						<label class="custom-control-label" for="customRadio3" th:text="#{role.commodityexpert}">Commodity expert</label>
-					</div>
+					<div th:if="${#fields.hasErrors('quantityInStore')}" th:errors="*{quantityInStore}" class="invalid-feedback">Invalid
+						Invalid quantityInStore</div>
 				</div>
 				
 
 			
-				<button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{sign.up}">Sign up</button>
+				<button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{product.edit}">Add product</button>
+			
 			</form>
 		</div>
-
-
 	</div>
 
 		
-	<footer ass="fixed-bottom ">
+	<footer>
 		<div th:insert="~{fragments/footer :: copy}"></div>
 	</footer>
 </body>

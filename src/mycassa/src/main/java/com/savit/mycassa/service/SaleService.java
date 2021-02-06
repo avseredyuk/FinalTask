@@ -1,6 +1,7 @@
 package com.savit.mycassa.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import com.savit.mycassa.dto.SalesDTO;
 import com.savit.mycassa.entity.product.Product;
 import com.savit.mycassa.entity.product.Sale;
 import com.savit.mycassa.entity.session.Session;
+import com.savit.mycassa.entity.session.StatusSession;
 import com.savit.mycassa.repository.ProductRepository;
 import com.savit.mycassa.repository.SaleRepository;
 import com.savit.mycassa.repository.SessionRepository;
@@ -44,10 +46,20 @@ public class SaleService {
 		
 		Product product = productRepository.findByEan(ean).get();
 		
-		Session session = sessionRepository.findOneNotClosedByUserId(userService.getAuthUserDetails().getId()).get();
+		Session session = sessionRepository.findByUserIdAndByStatus(userService.getAuthUserDetails().getId(), StatusSession.OPENED).get();
 		
 		product.setQuantityInStore(product.getQuantityInStore() - saleDTO.getQuantityToBuy());
 		
+//		Optional <Product> existedProduct = session.getSales()
+//												.stream()
+//												.filter(sale -> sale.getProduct().getId().equals(product.getId()))
+//												.findAny()
+//												.map(sale -> sale.getProduct());
+//		//TODO: bg  E8F2FE
+//		if(existedProduct.isPresent()) {
+//			return saleRepository.save(new Sale(saleDTO.getQuantityToBuy(), existedProduct.get(), session));
+//		}
+
 		return saleRepository.save(new Sale(saleDTO.getQuantityToBuy(), product, session));
 		
 		
