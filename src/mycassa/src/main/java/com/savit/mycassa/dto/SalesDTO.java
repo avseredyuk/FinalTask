@@ -3,6 +3,7 @@ package com.savit.mycassa.dto;
 import java.util.List;
 
 import com.savit.mycassa.entity.product.Sale;
+import com.savit.mycassa.entity.session.Session;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,8 +19,10 @@ import lombok.ToString;
 @Builder
 @ToString
 public class SalesDTO {
+	
+	private String sessionStatus;
 
-	private List<Sale> salesDTO;
+	private List<Sale> sales;
 	
 	private Long totalPrice;
 }

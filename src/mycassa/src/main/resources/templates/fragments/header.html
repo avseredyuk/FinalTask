@@ -25,7 +25,7 @@
 						<a class="nav-link" href="/products" th:text="#{products}">Products</a>
 					</li>
 					<li class="nav-item active" sec:authorize="hasAuthority('CASHIER')">
-						<a class="nav-link" th:href="@{/sessions/new}" th:text="#{session.new}">New session</a>
+						<a class="nav-link" th:href="@{/session/new}" th:text="#{session.new}">New session</a>
 					</li>
 					<!--<form th:action="@{/sessions/new}" type="post">
 					<li class="nav-item active" sec:authorize="hasAuthority('CASHIER')">
@@ -34,7 +34,7 @@
 					</li>
 					</form>-->
 					<li class="nav-item active" sec:authorize="hasAnyAuthority('SENIOR_CASHIER')">
-						<a class="nav-link" href="/cashiers" th:text="#{сashiers}">Cashiers</a>
+						<a class="nav-link" href="/session/requests" th:text="#{sessions}">sessions</a>
 					</li>
 
 					<li class="nav-item dropdown">

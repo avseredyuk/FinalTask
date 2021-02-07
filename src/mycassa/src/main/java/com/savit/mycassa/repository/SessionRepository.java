@@ -26,5 +26,8 @@ public interface SessionRepository extends JpaRepository<Session, Long>  {
 	
 	@Query("SELECT COUNT(s) FROM Session AS s INNER JOIN s.user WHERE s.user.id = ?1 AND s.endedAt IS NULL")
 	Integer findCountByUserIdAndNotEnded(Long id);
+	
+	@Query("SELECT s FROM Session AS s WHERE s.statusSession = ?1")
+	List<Session> findByStatusSession(StatusSession statusSession);
 
 }

@@ -19,6 +19,6 @@ import lombok.ToString;
 @ToString
 public class SessionsData {
 
-	private List<Session> sessionsData;
+	private List<Session> sessions;
 	
 }

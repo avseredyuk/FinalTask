@@ -6,13 +6,13 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.savit.mycassa.dto.SessionData;
 import com.savit.mycassa.dto.SessionsData;
 import com.savit.mycassa.entity.session.Session;
 import com.savit.mycassa.entity.session.StatusSession;
 import com.savit.mycassa.entity.user.User;
-import com.savit.mycassa.entity.user.details.UserDetailsImpl;
 import com.savit.mycassa.repository.SessionRepository;
 import com.savit.mycassa.repository.UserRepository;
 import com.savit.mycassa.util.exception.NoOpenedSessionException;
@@ -50,7 +50,7 @@ public class SessionService {
 		
 		
 		User userAuth = userService.getPrincipalUser();
-		
+		//TODO: replace titles prop
 		if(sessionRepository.findCountByUserIdAndNotEnded(userAuth.getId()) > 0) {
 			throw new Exception();
 		}
@@ -83,6 +83,22 @@ public class SessionService {
 				.status(session.get().getStatusSession().name())
 				.startedAt(session.get().getStartedAt()).build();
 		
+	}
+
+//FIXME is @Transactional need?
+	@Transactional
+	public void updateStatusSession(StatusSession status) throws NoOpenedSessionException  {
+		Optional<Session> session = sessionRepository.findByUserIdAndNotEnded(userService.getPrincipalUser().getId());
+
+		session.get().setStatusSession(status);
+		
+	}
+
+
+
+	public SessionsData getSessionsByStatus(StatusSession waiting) {
+		
+		return new SessionsData(sessionRepository.findByStatusSession(waiting));
 	}
 	
 

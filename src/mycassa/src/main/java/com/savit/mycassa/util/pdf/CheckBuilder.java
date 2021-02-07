@@ -150,7 +150,7 @@ public class CheckBuilder{
 
 	}
 
-	private static BufferedImage generateQRCode(String data, String charset, int height, int width){
+	private static BufferedImage generateQRCode(String data, String charset, int height, int width) throws CantPrintCheckException{
 
 		com.google.zxing.common.BitMatrix bitMatrix;
 		try {
@@ -158,7 +158,7 @@ public class CheckBuilder{
 					BarcodeFormat.QR_CODE, width, height);
 			return MatrixToImageWriter.toBufferedImage(bitMatrix);
 		} catch (UnsupportedEncodingException | com.google.zxing.WriterException e) {
-			return null; //FIXME
+			throw new CantPrintCheckException("Error in print check");
 		}
 
 	}

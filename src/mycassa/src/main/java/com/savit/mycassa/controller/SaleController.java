@@ -50,18 +50,7 @@ public class SaleController {
 	// TODO rename data to DTO
 	
 	
-	@GetMapping("/sales/check/overview")
-	public String getSalesList(Model model)  throws SessionNotStartedYetException{
-		
-		SalesDTO salesDTO =  saleService.getOpenedSessionSales();
-		
-		model.addAttribute("salesDTO", salesDTO);
-		
-		return "checkOverview";
-	}
-	
-	
-	
+
 	@GetMapping("/sales/new/{ean}")
 	public String getSaleProductPage(@PathVariable String ean, SaleDTO saleDTO, Model model) {
 		model.addAttribute("saleDTO", saleDTO);
@@ -103,9 +92,21 @@ public class SaleController {
 			        .headers(headers)
 			        .contentType(MediaType.APPLICATION_PDF)
 			        .body(new InputStreamResource(saleService.getCheck()));
-
-	
 	}
+	
+	
+	@GetMapping("/sales/check/overview")
+	public String getSalesList(Model model)  throws SessionNotStartedYetException{
+		
+		SalesDTO salesDTO =  saleService.getOpenedSessionSales();
+		
+		model.addAttribute("sales", salesDTO);
+		
+		return "checkOverview";
+	}
+	
+	
+	
 
 	
 	

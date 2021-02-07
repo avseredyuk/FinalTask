@@ -77,7 +77,7 @@ public class SaleService {
 			totalPrice+=sale.getQuantity() * sale.getProduct().getCost();			
 		}
 
-		return new SalesDTO(sales, totalPrice );
+		return new SalesDTO(session.get().getStatusSession().name(), sales, totalPrice );
 	}
 
 	@Transactional
