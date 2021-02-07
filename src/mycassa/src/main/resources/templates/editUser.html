@@ -58,7 +58,7 @@
 					<div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="invalid-feedback">Invalid
 						Email</div>
 				</div>
-				
+
 				<div class=" mb-4 justify-content-center">
 					<input type="password" class="form-control"
 						th:classappend="${#fields.hasErrors('password')} ? is-invalid : (${userData.password != null} ? is-valid)"
@@ -67,27 +67,32 @@
 					<div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="invalid-feedback">
 						Invalid Password</div>
 				</div>
-				
+
 				<div class="mb-4 d-flex justify-content-center">
-					<div class="custom-control custom-radio"  sec:authorize="hasAnyAuthority('CASHIER')" >
-						<input type="radio" checked id="customRadio1" name="role" class="custom-control-input" value="CASHIER" disabled>
+					<div class="custom-control custom-radio" sec:authorize="hasAnyAuthority('CASHIER')">
+						<input type="radio" checked id="customRadio1" name="role" class="custom-control-input"
+							value="CASHIER" disabled>
 						<label class="custom-control-label" for="customRadio1" th:text="#{role.cashier}">Cashier</label>
 					</div>
-					<div class="custom-control custom-radio"  sec:authorize="hasAnyAuthority('SENIOR_CASHIER')" >
-						<input type="radio" checked id="customRadio2" name="role" class="custom-control-input"  value="SENIOR_CASHIER" disabled>
-						<label class="custom-control-label" for="customRadio2" th:text="#{role.seniorcashier}">Seinor cashier</label>
+					<div class="custom-control custom-radio" sec:authorize="hasAnyAuthority('SENIOR_CASHIER')">
+						<input type="radio" checked id="customRadio2" name="role" class="custom-control-input"
+							value="SENIOR_CASHIER" disabled>
+						<label class="custom-control-label" for="customRadio2" th:text="#{role.seniorcashier}">Seinor
+							cashier</label>
 					</div>
-					<div class="custom-control custom-radio"  sec:authorize="hasAnyAuthority('COMMODITY_EXPERT')" >
-						<input type="radio" checked id="customRadio3" name="role" class="custom-control-input" value="COMMODITY_EXPERT" disabled>
-						<label class="custom-control-label" for="customRadio3" th:text="#{role.commodityexpert}">Commodity expert</label>
+					<div class="custom-control custom-radio" sec:authorize="hasAnyAuthority('COMMODITY_EXPERT')">
+						<input type="radio" checked id="customRadio3" name="role" class="custom-control-input"
+							value="COMMODITY_EXPERT" disabled>
+						<label class="custom-control-label" for="customRadio3"
+							th:text="#{role.commodityexpert}">Commodity expert</label>
 					</div>
 				</div>
-				
-				
+
+
 				<button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{edit}">Edit</button>
-<ul th:if="${#fields.hasErrors('*')}">
-  <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
-</ul>
+				<ul th:if="${#fields.hasErrors('*')}">
+					<li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+				</ul>
 			</form>
 		</div>
 	</div>

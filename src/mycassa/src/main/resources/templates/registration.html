@@ -71,21 +71,26 @@
 				</div>
 				<div class="mb-4 d-flex justify-content-center">
 					<div class="custom-control custom-radio mx-2">
-						<input type="radio" checked id="customRadio1" name="role" class="custom-control-input" value="CASHIER">
+						<input type="radio" checked id="customRadio1" name="role" class="custom-control-input"
+							value="CASHIER">
 						<label class="custom-control-label" for="customRadio1" th:text="#{role.cashier}">Cashier</label>
 					</div>
 					<div class="custom-control custom-radio mx-2">
-						<input type="radio" id="customRadio2" name="role" class="custom-control-input"  value="SENIOR_CASHIER" th:field="*{role}">
-						<label class="custom-control-label" for="customRadio2" th:text="#{role.seniorcashier}">Seinor cashier</label>
+						<input type="radio" id="customRadio2" name="role" class="custom-control-input"
+							value="SENIOR_CASHIER" th:field="*{role}">
+						<label class="custom-control-label" for="customRadio2" th:text="#{role.seniorcashier}">Seinor
+							cashier</label>
 					</div>
 					<div class="custom-control custom-radio mx-2">
-						<input type="radio" id="customRadio3" name="role" class="custom-control-input" value="COMMODITY_EXPERT" th:field="*{role}">
-						<label class="custom-control-label" for="customRadio3" th:text="#{role.commodityexpert}">Commodity expert</label>
+						<input type="radio" id="customRadio3" name="role" class="custom-control-input"
+							value="COMMODITY_EXPERT" th:field="*{role}">
+						<label class="custom-control-label" for="customRadio3"
+							th:text="#{role.commodityexpert}">Commodity expert</label>
 					</div>
 				</div>
-				
 
-			
+
+
 				<button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{sign.up}">Sign up</button>
 			</form>
 		</div>

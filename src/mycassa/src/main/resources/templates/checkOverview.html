@@ -25,24 +25,24 @@
 
 
 	<div class="sectionMainContent">
-	
 
-	
+
+
 		<div class="d-flex flex-column">
-		
-				<div class="d-flex justify-content-start mt-5 mb-5">
-					<div sec:authorize="hasAuthority('CASHIER')">
-						<a th:href="@{/products}" class="btn btn-danger">Back</a>					
-					</div>
-						
+
+			<div class="d-flex justify-content-start mt-5 mb-5">
+				<div sec:authorize="hasAuthority('CASHIER')">
+					<a th:href="@{/products}" class="btn btn-danger">Back</a>
 				</div>
-								<div class="shadow p-3 bg-light rounded">
+
+			</div>
+			<div class="shadow p-3 bg-light rounded">
 				<div style="text-align:left;" class="d-flex justify-content-center">
 					<table class="table table-hover">
 						<thead class="thead-light">
 							<tr>
 								<th>Ean</th>
-								<th>Title</th>
+								<th class="titleColumn">Title</th>
 								<th>Price * quantity</th>
 								<th>Total</th>
 							</tr>
@@ -50,31 +50,33 @@
 						<tbody>
 							<tr scope="row" th:each="saleDTO : ${salesDTO.salesDTO}">
 								<td th:text="${saleDTO.product.ean}" />
-								<td th:text="${saleDTO.product.title}" />
+								<td class="titleColumn" th:text="${saleDTO.product.title}" />
 								<td th:text="${saleDTO.product.cost} + ' * ' + ${saleDTO.quantity}" />
 								<td th:text="${saleDTO.product.cost * saleDTO.quantity}" />
 							</tr>
 						</tbody>
 					</table>
 				</div>
-				
+
 				<div class="d-flex justify-content-end">
 					<div>
-						<h3 class="d-flex justify-content-end mt-2 mr-3" th:text="#{total.price} + ': ' + ${salesDTO.totalPrice} + ' ' + #{currency.uah}"><h3>
+						<h3 class="d-flex justify-content-end mt-2 mr-3"
+							th:text="#{total.price} + ': ' + ${salesDTO.totalPrice} + ' ' + #{currency.uah}">
+							<h3>
 					</div>
-					
+
 				</div>
 				<div class="d-flex justify-content-end">
 					<div sec:authorize="hasAuthority('CASHIER')">
 						<a href="#" class="btn btn-warning mr-2">Call senior cassier</a>
 					</div>
 					<div>
-						<a href="" class="btn btn-success mr-3">Print check</a>
+						<a th:href="@{/sales/check/print}" class="btn btn-success mr-3">Print check</a>
 					</div>
 				</div>
-</div>
-				
-			
+			</div>
+
+
 		</div>
 	</div>
 

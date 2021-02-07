@@ -1,8 +1,8 @@
 package com.savit.mycassa.service;
 
+import java.io.ByteArrayInputStream;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +17,7 @@ import com.savit.mycassa.entity.session.StatusSession;
 import com.savit.mycassa.repository.ProductRepository;
 import com.savit.mycassa.repository.SaleRepository;
 import com.savit.mycassa.repository.SessionRepository;
+import com.savit.mycassa.util.pdf.CheckBuilder;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -78,6 +79,15 @@ public class SaleService {
 		}
 
 		return new SalesDTO(sales, totalPrice );
+	}
+
+	public ByteArrayInputStream getCheck() {
+		
+		Session session = sessionRepository
+				.findByUserIdAndByStatus(userService.getAuthUserDetails().getId(), StatusSession.OPENED).get();
+		session.setEndedAt(LocalDateTime.now());
+
+		return CheckBuilder.buildSessionPDFCheck(session);
 	}
 	
 //

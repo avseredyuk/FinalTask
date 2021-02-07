@@ -94,31 +94,4 @@ public class ProductController {
 		return "redirect:/products";
 	}
 
-	@GetMapping("/sale/{ean}")
-	public String getSaleProductPage(@PathVariable String ean, SaleDTO saleDTO, Model model) {
-
-		model.addAttribute("saleDTO", saleDTO);
-		model.addAttribute("productData", productService.getProductByEan(ean));
-
-		return "addproduct";
-	}
-
-	@PostMapping("/sale/{ean}")
-	public String saleProduct(@PathVariable String ean, @Valid @ModelAttribute SaleDTO saleDTO,
-			BindingResult bindingResult, Model model) {
-
-		if (bindingResult.hasErrors()) {
-			return "addproduct";
-		}
-
-		log.info("saleDTO: [{}], ean:{}", saleDTO, ean);
-		
-		try {
-			Sale sale = saleService.newProductSale(ean, saleDTO);
-		} catch (Exception ex) {
-			throw new CashierHasNotPermissionException("{cashier.hasnt.add.product.to.check}");
-		}
-		return "redirect:/products";
-	}
-
 }

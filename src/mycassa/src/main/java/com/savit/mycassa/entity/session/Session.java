@@ -1,6 +1,7 @@
 package com.savit.mycassa.entity.session;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -54,7 +55,7 @@ public class Session {
 	private StatusSession statusSession;
 	
 	@OneToMany(mappedBy = "session", cascade = CascadeType.ALL)
-	private Set<Sale> sales;
+	private List<Sale> sales;
 	
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

@@ -7,8 +7,8 @@
 	<link rel="stylesheet" th:href="@{/css/main.css}">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
 		integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
-	
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+
 	<title th:text="#{products}">Products</title>
 </head>
 
@@ -19,61 +19,61 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
 		crossorigin="anonymous"></script>
-	
+
 	<header>
 		<div th:insert="~{fragments/header :: copy}"></div>
 	</header>
 	<div class="bodyContainer">
-		
-	<!-- <a th:href="@{/sessions}" class="btn btn-outline-danger bi bi-arrow-left-square ml-3 mt-3" role="button" aria-pressed="true"></a>-->
 
-	<div class="sectionMainContent text-center">
+		<!-- <a th:href="@{/sessions}" class="btn btn-outline-danger bi bi-arrow-left-square ml-3 mt-3" role="button" aria-pressed="true"></a>-->
+
+		<div class="sectionMainContent text-center">
 
 
 
-				<form th:action="@{/products}">
+			<form th:action="@{/products}">
 				<div class="d-flex shadow p-3 mb-5 mt-5 bg-light rounded">
-					<div th:if="${productsData.productsData.hasContent()}" >
-						
-							<select class="custom-select" th:name="filterField">
-								<option value="ean"
-									th:selected="${#strings.equals(productsData.filterField, 'ean')}  ? 'selected'"
-									th:text="#{product.ean}">ean</option>
-								<option value="title"
-									th:selected="${#strings.equals(productsData.filterField, 'title')}  ? 'selected'"
-									th:text="#{product.title}">product title</option>
-								<option value="cost"
-									th:selected="${#strings.equals(productsData.filterField, 'cost')}  ? 'selected'"
-									th:text="#{product.cost}">cost</option>
-								<option value="quantityInStore"
-									th:selected="${#strings.equals(productsData.filterField, 'quantityInStore')}  ? 'selected'"
-									th:text="#{product.quantityInStore}">quantity</option>
-								<option value="measure"
-									th:selected="${#strings.equals(productsData.filterField, 'measure')}  ? 'selected'"
-									th:text="#{product.measure}">measure</option>
-							</select>
+					<div th:if="${productsData.productsData.hasContent()}">
+
+						<select class="custom-select" th:name="filterField">
+							<option value="ean"
+								th:selected="${#strings.equals(productsData.filterField, 'ean')}  ? 'selected'"
+								th:text="#{product.ean}">ean</option>
+							<option value="title"
+								th:selected="${#strings.equals(productsData.filterField, 'title')}  ? 'selected'"
+								th:text="#{product.title}">product title</option>
+							<option value="cost"
+								th:selected="${#strings.equals(productsData.filterField, 'cost')}  ? 'selected'"
+								th:text="#{product.cost}">cost</option>
+							<option value="quantityInStore"
+								th:selected="${#strings.equals(productsData.filterField, 'quantityInStore')}  ? 'selected'"
+								th:text="#{product.quantityInStore}">quantity</option>
+							<option value="measure"
+								th:selected="${#strings.equals(productsData.filterField, 'measure')}  ? 'selected'"
+								th:text="#{product.measure}">measure</option>
+						</select>
 					</div>
 					<div th:if="${productsData.productsData.hasContent()}" class=" mr-5">
-							<select class="ml-1  custom-select" th:name="direction">
-								<option value="desc"
-									th:selected="${#strings.equals(productsData.direction, 'desc')}  ? 'selected'"
-									th:text="#{descending}">descending</option>
-								<option value="asc"
-									th:selected="${#strings.equals(productsData.direction, 'asc')}  ? 'selected'"
-									th:text="#{ascending}">ascending</option>
-							</select>
-					</div>							
-						<div class="flex-grow-1">
-							<div class=" input-group">
-								<input type="text" class="form-control" th:placeholder="#{input.partof.ean.or.title}"
-									aria-describedby="basic-addon1" name='searchQuery'
-									th:value="*{productsData.searchQuery}">
-								<div class="input-group-append">
-									<button class="btn btn-primary" type="submit" th:text="#{find}">Find </button>
-								</div>
-							</div> 
+						<select class="ml-1  custom-select" th:name="direction">
+							<option value="desc"
+								th:selected="${#strings.equals(productsData.direction, 'desc')}  ? 'selected'"
+								th:text="#{descending}">descending</option>
+							<option value="asc"
+								th:selected="${#strings.equals(productsData.direction, 'asc')}  ? 'selected'"
+								th:text="#{ascending}">ascending</option>
+						</select>
+					</div>
+					<div class="flex-grow-1">
+						<div class=" input-group">
+							<input type="text" class="form-control" th:placeholder="#{input.partof.ean.or.title}"
+								aria-describedby="basic-addon1" name='searchQuery'
+								th:value="*{productsData.searchQuery}">
+							<div class="input-group-append">
+								<button class="btn btn-primary" type="submit" th:text="#{find}">Find </button>
+							</div>
 						</div>
-						
+					</div>
+
 					<div class="ml-2" sec:authorize="hasAnyAuthority('COMMODITY_EXPERT')">
 
 						<a th:href="@{/products/new}">
@@ -82,12 +82,13 @@
 
 					</div>
 				</div>
-					
 
 
-				</form>
 
-			<div th:if="${productsData.productsData.hasContent()}" class="d-flex justify-content-center shadow p-3 bg-light rounded">
+			</form>
+
+			<div th:if="${productsData.productsData.hasContent()}"
+				class="d-flex justify-content-center shadow p-3 bg-light rounded">
 
 				<div class="">
 					<table class="table table-hover">
@@ -99,8 +100,7 @@
 								<th th:text="#{product.cost}">Cost</th>
 								<th th:text="#{product.quantityInStore}">Quantity</th>
 								<th th:text="#{product.measure}">Measure</th>
-								<th sec:authorize="hasAnyAuthority('COMMODITY_EXPERT')"
-									 th:text="#{edit}">Edit</th>
+								<th sec:authorize="hasAnyAuthority('COMMODITY_EXPERT')" th:text="#{edit}">Edit</th>
 								<th sec:authorize="hasAnyAuthority('CASHIER')"></th>
 							</tr>
 						</thead>
@@ -112,18 +112,18 @@
 								<td th:text="${productData.cost}" />
 								<td th:text="${productData.quantityInStore}" />
 								<td th:text="${productData.measure}" />
-							<!--	<td>
+								<!--	<td>
 									<a th:href="@{/products/sale/{ean}(ean=${productData.ean})}"
 									 class="btn btn-info bi bi-plus-square "
 									  role="button" aria-pressed="true"></a>
 								</td>-->
-								
-								<td>	
-									<span >
-									<a  th:href="@{/products/sale/{ean}(ean=${productData.ean})}"
-									 class="bi bi-plus-square"></a>
-									</span>					
-									
+
+								<td>
+									<span>
+										<a th:href="@{/sales/new/{ean}(ean=${productData.ean})}"
+											class="bi bi-plus-square"></a>
+									</span>
+
 								</td>
 
 
@@ -132,13 +132,14 @@
 
 							<tr scope="row" th:each="productData: ${productsData.productsData}"
 								sec:authorize="hasAnyAuthority('COMMODITY_EXPERT')">
-								<td  th:text="${productData.ean}" />
+								<td th:text="${productData.ean}" />
 								<td class="titleColumn" th:text="${productData.title}" />
 								<td th:text="${productData.cost}" />
 								<td th:text="${productData.quantityInStore}" />
 								<td th:text="${productData.measure}" />
 								<td>
-									<a  th:href="@{/products/edit/{ean}(ean=${productData.ean})}" class="btn bi bi-pencil-square"></a>
+									<a th:href="@{/products/edit/{ean}(ean=${productData.ean})}"
+										class="btn bi bi-pencil-square"></a>
 								</td>
 							</tr>
 						</tbody>
@@ -189,26 +190,25 @@
 
 
 
-		
 
-		<div class="m-xl-5 d-flex justify-content-center" th:if="${!productsData.productsData.hasContent()}">
-			No products
+
+			<div class="m-xl-5 d-flex justify-content-center" th:if="${!productsData.productsData.hasContent()}">
+				No products
+			</div>
+
+			<div class="m-xl-5 d-flex justify-content-center" sec:authorize="hasAnyAuthority('CASHIER')">
+				<a th:href="@{sales/check/overview}">
+					<div class="btn btn-primary my-2 my-sm-0" th:text="#{make.check}"></div>
+				</a>
+			</div>
+
+
+
+
+
+
 		</div>
 
-	<div class="m-xl-5 d-flex justify-content-center" sec:authorize="hasAnyAuthority('CASHIER')">
-		<a th:href="@{/check/overview}">
-			<div class="btn btn-primary my-2 my-sm-0" th:text="#{make.check}"></div>
-		</a>
-	</div>
-
-
-
-
-
-
-	</div>
-	
-	
 
 
 
@@ -216,10 +216,11 @@
 
 
 
-	<footer>
-		<div th:insert="~{fragments/footer :: copy}"></div>
-	</footer>
-		
+
+		<footer>
+			<div th:insert="~{fragments/footer :: copy}"></div>
+		</footer>
+
 	</div>
 
 

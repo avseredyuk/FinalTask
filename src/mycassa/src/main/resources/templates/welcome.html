@@ -30,18 +30,15 @@
 			<p th:text="#{greeting.subtitle}">We provide new technologies that were available only to network giants.
 			</p>
 			<p>
-				 
-				<a class="btn btn-primary btn-lg" th:href="@{/login}"
-					sec:authorize="isAnonymous()"
+
+				<a class="btn btn-primary btn-lg" th:href="@{/login}" sec:authorize="isAnonymous()"
 					th:text="#{welcome.start}">Get started &raquo;
 				</a>
 				<a class="btn btn-primary btn-lg" th:href="@{/products}"
-					sec:authorize="hasAnyAuthority('COMMODITY_EXPERT')"
-					th:text="#{welcome.start}">Get started &raquo;
+					sec:authorize="hasAnyAuthority('COMMODITY_EXPERT')" th:text="#{welcome.start}">Get started &raquo;
 				</a>
-				
-				<a class="btn btn-primary btn-lg" th:href="@{/sessions/new}"
-					sec:authorize="hasAnyAuthority('CASHIER')"
+
+				<a class="btn btn-primary btn-lg" th:href="@{/sessions/new}" sec:authorize="hasAnyAuthority('CASHIER')"
 					th:text="#{welcome.start}">Get started &raquo;
 				</a>
 
