@@ -31,7 +31,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name="sessions", uniqueConstraints= @UniqueConstraint(columnNames = {"user_id", "statusSession"}))
+@Table(name="sessions")
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString

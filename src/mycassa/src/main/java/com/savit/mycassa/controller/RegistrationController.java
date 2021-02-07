@@ -58,7 +58,8 @@ public class RegistrationController extends ResponseEntityExceptionHandler {
 		try {
 			userService.signUpUser(userData);			
 		}catch(Exception ex) {
-			bindingResult.rejectValue("email", "error.user", "An account already exists for this email.");
+			bindingResult.rejectValue("email", "such.email.exists");			
+			return "registration";
 		}
 
 		return "redirect:/login";

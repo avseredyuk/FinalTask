@@ -1,6 +1,7 @@
 package com.savit.mycassa.service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import com.savit.mycassa.entity.user.User;
 import com.savit.mycassa.entity.user.details.UserDetailsImpl;
 import com.savit.mycassa.repository.SessionRepository;
 import com.savit.mycassa.repository.UserRepository;
+import com.savit.mycassa.util.exception.NoOpenedSessionException;
 import com.savit.mycassa.util.exception.SessionNotFoundException;
 
 import lombok.AllArgsConstructor;
@@ -38,30 +40,48 @@ public class SessionService {
 		
 		Session session =  sessionRepository.findById(sessionId)
 					.orElseThrow(() -> new SessionNotFoundException("Session with id %d doesn't exists"));
-		
 		return new SessionData(session.getId(), session.getStartedAt(), session.getStatusSession().name());
 	}
 
 	
 	
 	@org.springframework.transaction.annotation.Transactional(	propagation=Propagation.REQUIRED, rollbackFor = {Exception.class})
-	public SessionData createNewSession() {
+	public SessionData createNewSession() throws Exception {
 		
-		UserDetailsImpl userDetails = userService.getAuthUserDetails();
+		
+		User userAuth = userService.getPrincipalUser();
+		
+		if(sessionRepository.findCountByUserIdAndNotEnded(userAuth.getId()) > 0) {
+			throw new Exception();
+		}
+		
 		Session session = sessionRepository.save(new Session(LocalDateTime.now(), StatusSession.OPENED));
-		User user = userRepository.findByEmail(userDetails.getUsername()).get();
-		session.setUser(user);
+		
+		session.setUser(userRepository.findByEmail(userAuth.getEmail()).get());
 		
 		return SessionData.builder().id(session.getId())
 				.status(session.getStatusSession().name())
 				.startedAt(session.getStartedAt()).build();
 	}
 	
-	public SessionsData getAllAuthUserOpenedSessions() {
+//	public SessionsData getAllAuthUserOpenedSessions() {
+//		
+//		return new SessionsData(sessionRepository.findListNotClosedByUserId(userService.getPrincipalUser().getId()));	
+//		
+//	}
+	
+	public SessionData getAuthUserOpenedSession() throws NoOpenedSessionException {
 		
-		UserDetailsImpl userDetails = userService.getAuthUserDetails();
+		Optional<Session> session = sessionRepository.findByUserIdAndNotEnded(userService.getPrincipalUser().getId());
 		
-		return new SessionsData(sessionRepository.findListNotClosedByUserId(userDetails.getId()));	
+		if(session.isEmpty()) {
+			throw new NoOpenedSessionException("not.opened.sessions.exception");
+		}
+		
+		
+		return SessionData.builder().id(session.get().getId())
+				.status(session.get().getStatusSession().name())
+				.startedAt(session.get().getStartedAt()).build();
 		
 	}
 	

@@ -14,14 +14,17 @@ import com.savit.mycassa.entity.session.StatusSession;
 public interface SessionRepository extends JpaRepository<Session, Long>  {
 	
 
-	@Query("SELECT s FROM Session AS s INNER JOIN FETCH s.user WHERE s.user.id = ?1 AND s.endedAt IS NULL")
-	List<Session> findListNotClosedByUserId(Long user_id);
+//	@Query("SELECT s FROM Session AS s INNER JOIN FETCH s.user WHERE s.user.id = ?1 AND s.endedAt IS NULL")
+//	List<Session> findListNotClosedByUserId(Long user_id);
 	
 	
 	@Query("SELECT s FROM Session AS s INNER JOIN FETCH s.user WHERE s.user.id = ?1 AND s.endedAt IS NULL")
-	Optional<Session> findOneNotClosedByUserId(Long user_id);
+	Optional<Session> findByUserIdAndNotEnded(Long user_id);
 
 	@Query("SELECT s FROM Session AS s INNER JOIN FETCH s.user WHERE s.user.id = ?1 AND s.statusSession = ?2")
 	Optional<Session> findByUserIdAndByStatus(Long id, StatusSession statusSession);
+	
+	@Query("SELECT COUNT(s) FROM Session AS s INNER JOIN s.user WHERE s.user.id = ?1 AND s.endedAt IS NULL")
+	Integer findCountByUserIdAndNotEnded(Long id);
 
 }

@@ -38,14 +38,15 @@ public class UserController {
 	
 	@GetMapping("/profile")
 	public String getUserProfile(Model model) {
+		
+		model.addAttribute("userData", userService.getPrincipalUserDTO());
 		return "profile";
 	}
 
 	@GetMapping("/profile/edit")
 	public String getUserEditForm(Model model) {
-		UserData userData = userService.getPrincipal();
-		//FIXME replace all getPrincipal except getId()
-		model.addAttribute("userData", userData);
+		UserData userData = userService.getPrincipalUserDTO(); //TODO: refactor Data to DTO
+		model.addAttribute("userData", userData); //TODO Refactor userData to user
 
 		return "editUser";			
 		
@@ -60,13 +61,11 @@ public class UserController {
 				return "editUser";				
 			}
 		}
-		
-		log.info("ussssserDATA: {}", userData);
 		try {
 			userService.updateUser(userData);
 			
 		} catch (Exception e) {
-			bindingResult.rejectValue("email", "such.email.exists", "such.email.exists");
+			bindingResult.rejectValue("email", "such.email.exists");
 			return "editUser";	
 		}
 		

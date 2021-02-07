@@ -25,27 +25,17 @@ import com.itextpdf.text.pdf.qrcode.WriterException;
 import com.savit.mycassa.entity.product.Sale;
 import com.savit.mycassa.entity.session.Session;
 import com.savit.mycassa.entity.user.User;
+import com.savit.mycassa.util.exception.CantPrintCheckException;
+import com.savit.mycassa.util.exception.EmptySalesListException;
 
 import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
 public class CheckBuilder{
-	
-	private static Document document = new Document();
-	private static ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-
-	private static BaseFont bf;
 	private static String FONT = "12540.ttf";
 
-	private CheckBuilder() {
-		try {
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
 
 	private static void addEmptyLine(Paragraph paragraph, int number) {
 		for (int i = 0; i < number; i++) {
@@ -59,13 +49,20 @@ public class CheckBuilder{
 			bf = BaseFont.createFont(FONT, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 			return new Chunk(content, new Font(bf, size, style));
 		} catch (Exception ex) {
-			return null;
+			return new Chunk(content);
 		}
 	}
 
-	public static ByteArrayInputStream buildSessionPDFCheck(Session session) {
+	public static ByteArrayInputStream buildSessionPDFCheck(Session session) throws CantPrintCheckException, EmptySalesListException {
 
+		
+		Document document = new Document();
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		List<Sale> sales = session.getSales();
+		
+		if(sales.size() == 0) {
+			throw new EmptySalesListException("Check is empty");
+		}
 
 		User user = session.getUser();
 		try {
@@ -146,7 +143,7 @@ public class CheckBuilder{
 			document.close();
 
 		} catch (Exception ex) {
-			log.error("Error occurred: {0}", ex);
+			throw new CantPrintCheckException("Error in print check");
 		}
 		
 		return new ByteArrayInputStream(out.toByteArray());

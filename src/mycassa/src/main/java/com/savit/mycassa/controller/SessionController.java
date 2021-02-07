@@ -11,6 +11,7 @@ import com.savit.mycassa.dto.SessionData;
 import com.savit.mycassa.dto.SessionsData;
 import com.savit.mycassa.service.SessionService;
 import com.savit.mycassa.service.UserService;
+import com.savit.mycassa.util.exception.NoOpenedSessionException;
 import com.savit.mycassa.util.exception.SessionNotFoundException;
 
 import lombok.AllArgsConstructor;
@@ -19,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @Slf4j
 @AllArgsConstructor
-public class CashierController {
+public class SessionController {
 
 	@Autowired
 	private final SessionService sessionService;
@@ -39,11 +40,9 @@ public class CashierController {
 	 
 
 	@GetMapping("/sessions")
-	public String createSessionForUser(Model model){
-		log.info("SESSIONS rollback");
-		SessionsData sessionsData = sessionService.getAllAuthUserOpenedSessions();
-		model.addAttribute("sessionsData", sessionsData);
-		return "sessions";
+	public String createSessionForUser(Model model) throws NoOpenedSessionException{
+		model.addAttribute("sessionData", sessionService.getAuthUserOpenedSession());
+		return "notEndedSession";
 	} 
 
 }

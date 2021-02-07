@@ -9,6 +9,9 @@ table {
 	width:550px;
 }
 
+.errorContent{
+	width: 200px !important;
+}
 
 
 .greeting{

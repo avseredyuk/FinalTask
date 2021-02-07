@@ -40,12 +40,7 @@
 
 				<div class="ml-3">
 					<div class="inline-block">
-						<span class="h1 mr-3" sec:authentication="principal.firstName">
-							firstName
-						</span>
-						<span class="h1" sec:authentication="principal.lastName">
-							lastName
-						</span>
+						<h1 th:text="${userData.firstName + ' ' + userData.lastName}"></h1>
 					</div>
 
 

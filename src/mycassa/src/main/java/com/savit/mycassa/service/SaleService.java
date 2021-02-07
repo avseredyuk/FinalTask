@@ -3,6 +3,7 @@ package com.savit.mycassa.service;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,10 @@ import com.savit.mycassa.entity.session.StatusSession;
 import com.savit.mycassa.repository.ProductRepository;
 import com.savit.mycassa.repository.SaleRepository;
 import com.savit.mycassa.repository.SessionRepository;
+import com.savit.mycassa.util.exception.CantPrintCheckException;
+import com.savit.mycassa.util.exception.EmptySalesListException;
+import com.savit.mycassa.util.exception.NoOpenedSessionException;
+import com.savit.mycassa.util.exception.SessionNotStartedYetException;
 import com.savit.mycassa.util.pdf.CheckBuilder;
 
 import lombok.AllArgsConstructor;
@@ -47,30 +52,24 @@ public class SaleService {
 		
 		Product product = productRepository.findByEan(ean).get();
 		
-		Session session = sessionRepository.findByUserIdAndByStatus(userService.getAuthUserDetails().getId(), StatusSession.OPENED).get();
+		Session session = sessionRepository.findByUserIdAndByStatus(userService.getPrincipalUser().getId(), StatusSession.OPENED).get();
 		
 		product.setQuantityInStore(product.getQuantityInStore() - saleDTO.getQuantityToBuy());
 		
-//		Optional <Product> existedProduct = session.getSales()
-//												.stream()
-//												.filter(sale -> sale.getProduct().getId().equals(product.getId()))
-//												.findAny()
-//												.map(sale -> sale.getProduct());
-//		//TODO: bg  E8F2FE
-//		if(existedProduct.isPresent()) {
-//			return saleRepository.save(new Sale(saleDTO.getQuantityToBuy(), existedProduct.get(), session));
-//		}
-
 		return saleRepository.save(new Sale(saleDTO.getQuantityToBuy(), product, session));
 		
 		
 	}
 
-	public SalesDTO getAllSessionSales() {
+	public SalesDTO getOpenedSessionSales() throws SessionNotStartedYetException {
 		
-		Session session = sessionRepository.findOneNotClosedByUserId(userService.getAuthUserDetails().getId()).get();
+		Optional <Session> session = sessionRepository.findByUserIdAndNotEnded(userService.getPrincipalUser().getId());
 		
-		List<Sale> sales = saleRepository.findAllBySessionIdAndByUserId(session.getId());
+		if(session.isEmpty()) {
+			throw new SessionNotStartedYetException("You have not started a session yet");
+		}
+		
+		List<Sale> sales = saleRepository.findAllBySessionIdAndByUserId(session.get().getId());
 		
 		Long totalPrice = 0L;
 		
@@ -81,13 +80,20 @@ public class SaleService {
 		return new SalesDTO(sales, totalPrice );
 	}
 
-	public ByteArrayInputStream getCheck() {
+	@Transactional
+	public ByteArrayInputStream getCheck() throws SessionNotStartedYetException, EmptySalesListException, CantPrintCheckException {
 		
-		Session session = sessionRepository
-				.findByUserIdAndByStatus(userService.getAuthUserDetails().getId(), StatusSession.OPENED).get();
-		session.setEndedAt(LocalDateTime.now());
+		Optional<Session> session = sessionRepository.findByUserIdAndByStatus(userService.getPrincipalUser().getId(), StatusSession.OPENED);
+		
+		if(session.isEmpty()) {
+			throw new SessionNotStartedYetException("You have not started a session yet");
+		}
+		
+		session.get().setEndedAt(LocalDateTime.now());
+		session.get().setStatusSession(StatusSession.CLOSED);
+		
+		return   CheckBuilder.buildSessionPDFCheck(session.get());
 
-		return CheckBuilder.buildSessionPDFCheck(session);
 	}
 	
 //

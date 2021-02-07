@@ -1,10 +1,9 @@
 package com.savit.mycassa.util.exception;
 
-public class SessionNotFoundException extends Exception {
-
+public class SessionNotFoundException extends RuntimeException {
 	
-	public SessionNotFoundException(String errorMessage) {
-	    super(errorMessage);
+	public SessionNotFoundException(String message) {
+		super(message);
 	}
 
 }

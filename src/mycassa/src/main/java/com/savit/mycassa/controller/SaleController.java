@@ -1,5 +1,7 @@
 package com.savit.mycassa.controller;
 
+
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +18,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.savit.mycassa.dto.SaleDTO;
 import com.savit.mycassa.dto.SalesDTO;
 import com.savit.mycassa.entity.product.Sale;
 import com.savit.mycassa.service.ProductService;
 import com.savit.mycassa.service.SaleService;
+import com.savit.mycassa.util.exception.CantPrintCheckException;
 import com.savit.mycassa.util.exception.CashierHasNotPermissionException;
+import com.savit.mycassa.util.exception.EmptySalesListException;
+import com.savit.mycassa.util.exception.SessionNotStartedYetException;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,13 +47,13 @@ public class SaleController {
 	
 	
 	
+	// TODO rename data to DTO
 	
 	
-	
-	@GetMapping("sales/check/overview")
-	public String getSalesList(Model model){
+	@GetMapping("/sales/check/overview")
+	public String getSalesList(Model model)  throws SessionNotStartedYetException{
 		
-		SalesDTO salesDTO =  saleService.getAllSessionSales();
+		SalesDTO salesDTO =  saleService.getOpenedSessionSales();
 		
 		model.addAttribute("salesDTO", salesDTO);
 		
@@ -57,7 +64,6 @@ public class SaleController {
 	
 	@GetMapping("/sales/new/{ean}")
 	public String getSaleProductPage(@PathVariable String ean, SaleDTO saleDTO, Model model) {
-
 		model.addAttribute("saleDTO", saleDTO);
 		model.addAttribute("productData", productService.getProductByEan(ean));
 
@@ -85,19 +91,20 @@ public class SaleController {
 	
 	@RequestMapping(value = "/sales/check/print", method = RequestMethod.GET, 
 			produces = MediaType.APPLICATION_PDF_VALUE)
-	public ResponseEntity<InputStreamResource>  getSalesReport (Model model){
-		
-		SalesDTO salesDTO =  saleService.getAllSessionSales();
-		
-
+	public ResponseEntity<InputStreamResource>  getSalesReport (Model model) throws SessionNotStartedYetException,
+																					EmptySalesListException,
+																					CantPrintCheckException{
         var headers = new HttpHeaders();
         headers.add("Content-Disposition", "inline; filename=check.pdf");
+        headers.add("Refresh", "10; url = /profile");
 
-        return ResponseEntity
-                .ok()
-                .headers(headers)
-                .contentType(MediaType.APPLICATION_PDF)
-                .body(new InputStreamResource(saleService.getCheck()));
+			return ResponseEntity
+			        .ok()
+			        .headers(headers)
+			        .contentType(MediaType.APPLICATION_PDF)
+			        .body(new InputStreamResource(saleService.getCheck()));
+
+	
 	}
 
 	

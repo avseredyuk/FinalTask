@@ -33,34 +33,26 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class UserService implements UserDetailsService {
 
-	
-
 	@Autowired
 	private final UserRepository userRepository;
 
 	@Autowired
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-	
-	public UserDetailsImpl getAuthUserDetails() {
+	public User getPrincipalUser() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-		return userDetails;
-		
+		return userRepository.findById(userDetails.getId()).get();
 	}
-	
-	
-	public UserData getPrincipal() {
-		
-		UserDetailsImpl userDetails = getAuthUserDetails();
-		
-		log.info("getPrincipal USER: {}", userDetails.toString());
-		UserData ud = UserData.builder()
-				.firstName(userDetails.getFirstName())
-				.lastName(userDetails.getLastName())
-				.email(userDetails.getUsername())
-				.role(userDetails.getRole().name()).build();
-		
+
+	public UserData getPrincipalUserDTO() {
+
+		User authUser = getPrincipalUser();
+
+//		log.info("getPrincipal USER: {}", authUser.toString());
+		UserData ud = UserData.builder().firstName(authUser.getFirstName()).lastName(authUser.getLastName())
+				.email(authUser.getEmail()).role(authUser.getRole().name()).build();
+
 		return ud;
 	}
 
@@ -93,29 +85,20 @@ public class UserService implements UserDetailsService {
 
 	}
 
-    public UsersData getAllUsersCashiers() {
-        return new UsersData(userRepository.findByRole(Role.CASHIER));
-        
-    }
+	public UsersData getAllUsersCashiers() {
+		return new UsersData(userRepository.findByRole(Role.CASHIER));
+	}
 
 //	@Transactional(	propagation=Propagation.REQUIRED, rollbackFor = {Exception.class})
 	public void updateUser(@Valid UserData userData) throws Exception {
-		
-		
 
-			User user = User.builder().id(getAuthUserDetails().getId())
-					.email(userData.getEmail())
-					.firstName(userData.getFirstName())
-					.lastName(userData.getLastName())
-					.password(bCryptPasswordEncoder.encode(userData.getPassword()))
-					.role(getAuthUserDetails().getRole()).build();	
-			System.out.println("USRE: " + user);
-			
-			userRepository.save(user);
+		User userToUpdate = getPrincipalUser();
 
-		
-		
-		
+		User user = User.builder().id(userToUpdate.getId()).email(userData.getEmail())
+				.firstName(userData.getFirstName()).lastName(userData.getLastName())
+				.password(bCryptPasswordEncoder.encode(userData.getPassword())).role(userToUpdate.getRole()).build();
+
+		userRepository.save(user);
 	}
 
 }

@@ -23,42 +23,44 @@
 		<div th:insert="~{fragments/header :: copy}"></div>
 	</header>
 
+	
+	
 	<div class="sectionMainContent">
+		<div class="d-flex justify-content-center">
 
+			<div class="card w-50 mt-5">
+				<div class="card-body">
+				<div class="d-flex justify-content-left">
+					<h3 class="card-title">
+						
+							<span th:if="${sessionData.status == 'OPENED'}" class="badge badge-success"  th:text="#{session.status.opened}">
+							</span>
+							<span th:if="${sessionData.status == 'WAITING'}" class="badge badge-success"  th:text="#{session.status.waiting}">
+							</span>
+						
+					</h3>
+				</div>
+				<div class="d-flex justify-content-left">
+					<h5 class="card-subtitle mb-2 text-muted">
+						<span th:text="#{session.startedAt} + ' ' + ${#temporals.format(sessionData.startedAt, 'dd-MM-yyyy HH:mm')}"></span>
+					</h5>
+				</div>
+					<!-- submit -->
+					<div class="d-flex justify-content-end mt-3 mb-3">
+						<a th:href="@{/profile}" class="btn btn-secondary mr-2">Cancel</a>
+						<a th:if="${sessionData.status == 'OPENED'}" th:href="@{/products}" class="btn btn-primary" th:text="#{products.list}"></a>
+						<a th:if="${sessionData.status == 'WAITING'}" th:href="@{/sales/check/overview}" class="btn btn-primary" th:text="#{wait}"></a>
+					</div>
+				</div>
 
-		<div style="text-align:left;" class="mt-xl-5">
-			<table class="table table-hover">
-				<thead class="thead-light">
-					<tr>
-						<th th:text="#{session.number}">Number</th>
-						<th th:text="#{session.startedAt}">startedAt</th>
-						<th th:text="#{session.status}">status</th>
-						<th th:text="#{session.go}">Go</th>
-					</tr>
-				</thead>
-
-				<tbody>
-					<tr scope="row" th:each="sessionData : ${sessionsData.sessionsData}">
-						<td th:text="${sessionData.id}" />
-						<td th:text="${#temporals.format(sessionData.startedAt, 'dd-MM-yyyy HH:mm')}" />
-						<td th:text="${sessionData.statusSession}" />
-						<td th:if="${sessionData.statusSession.name == 'OPENED'}">
-							<a th:href="@{/products}" class="btn btn-primary bi bi-arrow-right-square-fill"></a>
-						</td>
-
-
-
-					</tr>
-				</tbody>
-			</table>
+			</div>
 		</div>
-
-
-
-
-
-
 	</div>
+
+
+	
+	
+	
 	<footer ass="fixed-bottom ">
 		<div th:insert="~{fragments/footer :: copy}"></div>
 	</footer>
