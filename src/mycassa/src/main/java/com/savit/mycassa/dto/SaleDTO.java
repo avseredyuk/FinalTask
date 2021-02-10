@@ -20,5 +20,8 @@ public class SaleDTO {
 	
 	@Positive
 	private Long quantityToBuy;
+	
+	@Positive
+	private Long fixedPrice;
 
 }

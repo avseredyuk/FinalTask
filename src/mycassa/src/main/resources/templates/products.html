@@ -33,33 +33,33 @@
 
 			<form th:action="@{/products}">
 				<div class="d-flex shadow p-3 mb-5 mt-5 bg-light rounded">
-					<div th:if="${productsData.productsData.hasContent()}">
+					<div th:if="${products.products.hasContent()}">
 
 						<select class="custom-select" th:name="filterField">
 							<option value="ean"
-								th:selected="${#strings.equals(productsData.filterField, 'ean')}  ? 'selected'"
+								th:selected="${#strings.equals(products.filterField, 'ean')}  ? 'selected'"
 								th:text="#{product.ean}">ean</option>
-							<option value="title"
-								th:selected="${#strings.equals(productsData.filterField, 'title')}  ? 'selected'"
+							<option th:value="title"
+								th:selected="${#strings.equals(products.filterField, 'title')}  ? 'selected'"
 								th:text="#{product.title}">product title</option>
-							<option value="cost"
-								th:selected="${#strings.equals(productsData.filterField, 'cost')}  ? 'selected'"
-								th:text="#{product.cost}">cost</option>
-							<option value="quantityInStore"
-								th:selected="${#strings.equals(productsData.filterField, 'quantityInStore')}  ? 'selected'"
+							<option th:value="price"
+								th:selected="${#strings.equals(products.filterField, 'price')}  ? 'selected'"
+								th:text="#{product.price}">cost</option>
+							<option th:value="quantityInStore"
+								th:selected="${#strings.equals(products.filterField, 'quantityInStore')}  ? 'selected'"
 								th:text="#{product.quantityInStore}">quantity</option>
-							<option value="measure"
-								th:selected="${#strings.equals(productsData.filterField, 'measure')}  ? 'selected'"
+							<option th:value="measure"
+								th:selected="${#strings.equals(products.filterField, 'measure')}  ? 'selected'"
 								th:text="#{product.measure}">measure</option>
 						</select>
 					</div>
-					<div th:if="${productsData.productsData.hasContent()}" class=" mr-5">
+					<div th:if="${products.products.hasContent()}" class=" mr-5">
 						<select class="ml-1  custom-select" th:name="direction">
 							<option value="desc"
-								th:selected="${#strings.equals(productsData.direction, 'desc')}  ? 'selected'"
+								th:selected="${#strings.equals(products.direction, 'desc')}  ? 'selected'"
 								th:text="#{descending}">descending</option>
 							<option value="asc"
-								th:selected="${#strings.equals(productsData.direction, 'asc')}  ? 'selected'"
+								th:selected="${#strings.equals(products.direction, 'asc')}  ? 'selected'"
 								th:text="#{ascending}">ascending</option>
 						</select>
 					</div>
@@ -67,7 +67,7 @@
 						<div class=" input-group">
 							<input type="text" class="form-control" th:placeholder="#{input.partof.ean.or.title}"
 								aria-describedby="basic-addon1" name='searchQuery'
-								th:value="*{productsData.searchQuery}">
+								th:value="*{products.searchQuery}">
 							<div class="input-group-append">
 								<button class="btn btn-primary" type="submit" th:text="#{find}">Find </button>
 							</div>
@@ -87,7 +87,7 @@
 
 			</form>
 
-			<div th:if="${productsData.productsData.hasContent()}"
+			<div th:if="${products.products.hasContent()}"
 				class="d-flex justify-content-center shadow p-3 bg-light rounded">
 
 				<div class="">
@@ -97,7 +97,7 @@
 
 								<th th:text="#{product.ean}">Ean</th>
 								<th class="titleColumn" th:text="#{product.title}">Title</th>
-								<th th:text="#{product.cost}">Cost</th>
+								<th th:text="#{product.cost}">Price</th>
 								<th th:text="#{product.quantityInStore}">Quantity</th>
 								<th th:text="#{product.measure}">Measure</th>
 								<th sec:authorize="hasAnyAuthority('COMMODITY_EXPERT')" th:text="#{edit}">Edit</th>
@@ -105,13 +105,13 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr scope="row" th:each="productData: ${productsData.productsData}"
+							<tr scope="row" th:each="product: ${products.products}"
 								sec:authorize="hasAnyAuthority('CASHIER')">
-								<td th:text="${productData.ean}" />
-								<td class="titleColumn" th:text="${productData.title}" />
-								<td th:text="${productData.cost}" />
-								<td th:text="${productData.quantityInStore}" />
-								<td th:text="${productData.measure}" />
+								<td th:text="${product.ean}" />
+								<td class="titleColumn" th:text="${product.title}" />
+								<td th:text="${product.price}" />
+								<td th:text="${product.quantityInStore}" />
+								<td th:text="${product.measure}" />
 								<!--	<td>
 									<a th:href="@{/products/sale/{ean}(ean=${productData.ean})}"
 									 class="btn btn-info bi bi-plus-square "
@@ -120,7 +120,7 @@
 
 								<td>
 									<span>
-										<a th:href="@{/sales/new/{ean}(ean=${productData.ean})}"
+										<a th:href="@{/sales/{ean}/new(ean=${product.ean})}"
 											class="bi bi-plus-square"></a>
 									</span>
 
@@ -130,15 +130,15 @@
 							</tr>
 
 
-							<tr scope="row" th:each="productData: ${productsData.productsData}"
+							<tr scope="row" th:each="product: ${products.products}"
 								sec:authorize="hasAnyAuthority('COMMODITY_EXPERT')">
-								<td th:text="${productData.ean}" />
-								<td class="titleColumn" th:text="${productData.title}" />
-								<td th:text="${productData.cost}" />
-								<td th:text="${productData.quantityInStore}" />
-								<td th:text="${productData.measure}" />
+								<td th:text="${product.ean}" />
+								<td class="titleColumn" th:text="${product.title}" />
+								<td th:text="${product.price}" />
+								<td th:text="${product.quantityInStore}" />
+								<td th:text="${product.measure}" />
 								<td>
-									<a th:href="@{/products/edit/{ean}(ean=${productData.ean})}"
+									<a th:href="@{/products/{ean}/edit(ean=${product.ean})}"
 										class="btn bi bi-pencil-square"></a>
 								</td>
 							</tr>
@@ -148,37 +148,37 @@
 
 			</div>
 
-			<div th:if="${productsData.productsData.hasContent()}" class="m-xl-5 d-flex justify-content-center">
-				<div th:if="${productsData.productsData.hasContent()}">
+			<div th:if="${products.products.hasContent()}" class="m-xl-5 d-flex justify-content-center">
+				<div th:if="${products.products.hasContent()}">
 
 					<nav>
 						<ul class="pagination flex-wrap" th:with="pageUrlPrefix = '/products?filterField=' + 
-					${productsData.filterField} + '&amp;direction=' 
-					+ ${productsData.direction} + '&amp;searchQuery=' 
-					+ ${productsData.searchQuery}">
-							<li th:class="${!productsData.productsData.isFirst() ? 'page-item' : 'page-item disabled'}">
+					${products.filterField} + '&amp;direction=' 
+					+ ${products.direction} + '&amp;searchQuery=' 
+					+ ${products.searchQuery}">
+							<li th:class="${!products.products.isFirst() ? 'page-item' : 'page-item disabled'}">
 								<a th:href="@{${pageUrlPrefix}(page='1')}" class="page-link"><b>&laquo;</b></a>
 							</li>
 
-							<li th:class="${!productsData.productsData.isFirst() ? 'page-item' : 'page-item disabled'}">
-								<a th:href="@{${pageUrlPrefix}(page=${productsData.productsData.getNumber()})}"
+							<li th:class="${!products.products.isFirst() ? 'page-item' : 'page-item disabled'}">
+								<a th:href="@{${pageUrlPrefix}(page=${products.products.getNumber()})}"
 									class="page-link"><b>‹</b></a>
 							</li>
 
 
-							<li th:each="i: ${#numbers.sequence(1, productsData.productsData.getTotalPages())}"
-								th:class="${productsData.productsData.getNumber()+1 != i ? 'page-item' : 'page-item active'}">
+							<li th:each="i: ${#numbers.sequence(1, products.products.getTotalPages())}"
+								th:class="${products.products.getNumber()+1 != i ? 'page-item' : 'page-item active'}">
 								<a th:href="@{${pageUrlPrefix}(page=${i})}" class="page-link">[[${i}]]</a>
 							</li>
 
 
-							<li th:class="${!productsData.productsData.isLast() ? 'page-item' : 'page-item disabled'}">
-								<a th:href="@{${pageUrlPrefix}(page=${productsData.productsData.getNumber()+2})}"
+							<li th:class="${!products.products.isLast() ? 'page-item' : 'page-item disabled'}">
+								<a th:href="@{${pageUrlPrefix}(page=${products.products.getNumber()+2})}"
 									class="page-link"><b>›</b></a>
 							</li>
 
-							<li th:class="${!productsData.productsData.isLast() ? 'page-item' : 'page-item disabled'}">
-								<a th:href="@{${pageUrlPrefix}(page=${productsData.productsData.getTotalPages()})}"
+							<li th:class="${!products.products.isLast() ? 'page-item' : 'page-item disabled'}">
+								<a th:href="@{${pageUrlPrefix}(page=${products.products.getTotalPages()})}"
 									class="page-link"><b>&raquo;</b></a>
 							</li>
 						</ul>
@@ -192,12 +192,12 @@
 
 
 
-			<div class="m-xl-5 d-flex justify-content-center" th:if="${!productsData.productsData.hasContent()}">
+			<div class="m-xl-5 d-flex justify-content-center" th:if="${!products.products.hasContent()}">
 				No products
 			</div>
 
 			<div class="m-xl-5 d-flex justify-content-center" sec:authorize="hasAnyAuthority('CASHIER')">
-				<a th:href="@{sales/check/overview}">
+				<a th:href="@{/session/check}">
 					<div class="btn btn-primary my-2 my-sm-0" th:text="#{make.check}"></div>
 				</a>
 			</div>

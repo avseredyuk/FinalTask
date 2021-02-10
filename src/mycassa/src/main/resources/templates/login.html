@@ -24,7 +24,7 @@
 
 	<div>
 		<div class="text-center">
-			<form class="form-signin" name="f" th:action="@{/perform-login}" method="post">
+			<form class="form-signin" th:action="@{/perform-login}" method="post">
 				<h1 class="h3 mb-3 font-weight-normal" th:text="#{sign.in.please}">Please sign in</h1>
 				<div th:if="${param.error}" class="alert alert-danger" th:text="#{sign.in.invalidinput}">
 					Неправильные имя и пароль.

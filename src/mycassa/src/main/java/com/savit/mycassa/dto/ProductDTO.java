@@ -20,8 +20,8 @@ import lombok.ToString;
 @EqualsAndHashCode
 @Builder
 @ToString
-public class ProductData {
-	
+public class ProductDTO {
+	//TODO: add labels for="id" for input
 	Long id;
 	
 	
@@ -33,7 +33,7 @@ public class ProductData {
 	
 	@NotNull(message = "{cost.valid.notnull}")
 	@Positive
-	private Long cost;
+	private Long price;
 	
 	@NotNull(message = "{quantityInStore.valid.notnull}")
 	@Positive(message = "{quantityInStore.valid.positive}")

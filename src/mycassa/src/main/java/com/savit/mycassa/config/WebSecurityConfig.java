@@ -35,14 +35,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.authorizeRequests()
 		.antMatchers("/css/**","/js/**","/images/**").permitAll()
 		.antMatchers("/registration", "/welcome", "/login").permitAll()
-		
+		//FIXME review 
 		.antMatchers("/profile/**").hasAnyAuthority("CASHIER", "COMMODITY_EXPERT", "SENIOR_CASHIER")
-		.antMatchers("sales/check/overview").hasAnyAuthority("CASHIER", "SENIOR_CASHIER")
+		.antMatchers("/session/**").hasAnyAuthority("CASHIER", "SENIOR_CASHIER")
+//		.antMatchers("/sales/check/overview/**").hasAnyAuthority("SENIOR_CASHIER")
 		
 		.antMatchers("/products").hasAnyAuthority("COMMODITY_EXPERT", "CASHIER")
 		.antMatchers("/products/**").hasAnyAuthority("COMMODITY_EXPERT")
-		.antMatchers("/statistics/**", "/cashiers/**").hasAuthority("SENIOR_CASHIER")
-		.antMatchers("/sales/**", "/session").hasAnyAuthority("CASHIER")
+		.antMatchers("/statistics/**", "/cashiers/**", "/session/requests").hasAuthority("SENIOR_CASHIER")
+		
+		.antMatchers("/sales/**").hasAnyAuthority("CASHIER")
 		
 		
 		.anyRequest().authenticated()

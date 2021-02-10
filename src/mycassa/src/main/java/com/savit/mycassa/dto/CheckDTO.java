@@ -1,8 +1,9 @@
 package com.savit.mycassa.dto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-import com.savit.mycassa.entity.session.Session;
+import com.savit.mycassa.entity.product.Sale;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,8 +18,15 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 @ToString
-public class SessionsData {
+public class CheckDTO {
 
-	private List<Session> sessions;
+	public String sessionId;
 	
+	public  LocalDateTime startedAt;
+	
+	public  String status;
+	
+	private List<Sale> sales;
+	
+	private Long totalPrice;
 }

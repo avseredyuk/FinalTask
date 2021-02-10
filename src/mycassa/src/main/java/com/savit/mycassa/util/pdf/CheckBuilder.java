@@ -61,7 +61,7 @@ public class CheckBuilder{
 		List<Sale> sales = session.getSales();
 		
 		if(sales.size() == 0) {
-			throw new EmptySalesListException("Check is empty");
+			throw new EmptySalesListException("Check is empty", session.getId());
 		}
 
 		User user = session.getUser();
@@ -98,11 +98,10 @@ public class CheckBuilder{
 //			header.add(new Chunk(new DottedLineSeparator()));
 				document.add(header);
 
-				totalPrice += (sale.getQuantity() * sale.getProduct().getCost());
+				totalPrice += (sale.getQuantity() * sale.getFixedPrice());
 				header = new Paragraph(setText(
-						String.valueOf(sale.getQuantity()) + " x " + String.valueOf(sale.getProduct().getCost()) + " = "
-								+ String.valueOf(sale.getQuantity() * sale.getProduct().getCost() + " A"),
-						18, Font.NORMAL));
+						String.valueOf(sale.getQuantity()) + " x " + String.valueOf(sale.getFixedPrice()) + " = "
+								+ String.valueOf(sale.getQuantity() * sale.getFixedPrice() + " A"), 18, Font.NORMAL));
 				header.setAlignment(Paragraph.ALIGN_RIGHT);
 				addEmptyLine(header, 2);
 				document.add(header);

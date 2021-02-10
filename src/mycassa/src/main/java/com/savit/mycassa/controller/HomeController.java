@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.savit.mycassa.dto.UserData;
+import com.savit.mycassa.dto.UserDTO;
 import com.savit.mycassa.service.UserService;
 
 import lombok.AllArgsConstructor;

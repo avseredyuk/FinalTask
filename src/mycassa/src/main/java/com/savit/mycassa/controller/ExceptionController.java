@@ -1,30 +1,30 @@
 package com.savit.mycassa.controller;
 
+import java.util.Locale;
+
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.ui.Model;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.savit.mycassa.util.exception.CantPrintCheckException;
+import com.savit.mycassa.util.exception.CashierHasNotPermissionException;
 import com.savit.mycassa.util.exception.EmptySalesListException;
 import com.savit.mycassa.util.exception.SessionNotStartedYetException;
 
 @ControllerAdvice
 public class ExceptionController {
 
-//	@ExceptionHandler(value = Exception.class)
-//	public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
-//
-//		ModelAndView modelAndView = new ModelAndView();
-//
-//		modelAndView.addObject("message", e.getMessage());
-//		modelAndView.setViewName("profile");
-//
-//		return modelAndView;
-//	}
+//	@Autowired
+//	private MessageSource messageSource;
+//	
+//	@Autowired
+//	private LocalValidatorFactoryBean localValidatorFactoryBean;
+
 
 	@ExceptionHandler(value = SessionNotStartedYetException.class)
 	public ModelAndView sessionNotStartedHandler(HttpServletRequest req, Exception e){
@@ -37,13 +37,27 @@ public class ExceptionController {
 		return modelAndView;
 
 	}
+
 	
-	
-	@ExceptionHandler({EmptySalesListException.class,  CantPrintCheckException.class})
-	public String buildCheckHandler(HttpServletRequest req, Exception e, RedirectAttributes redirectAttributes){
+	@ExceptionHandler({EmptySalesListException.class})
+	public String buildCheckHandler(HttpServletRequest req, EmptySalesListException e, RedirectAttributes redirectAttributes){
 		redirectAttributes.addFlashAttribute("error", e.getMessage());
-//		model.addAttribute("error", e.getMessage());
-		return "redirect:/sales/check/overview";
+
+		return "redirect:/session/" + e.getSessionId() + "/check/overview";
+
+	}
+	
+	
+	
+
+	
+	@ExceptionHandler({CashierHasNotPermissionException.class})
+	public String repeatSalingTheSameProductHandler(HttpServletRequest req, CashierHasNotPermissionException e, RedirectAttributes redirectAttributes){
+//		messageSource.getMessage(e.getLocalizedMessage(), Locale.)
+//		redirectAttributes.addFlashAttribute("error", e.getLocalizedMessage());
+		
+		redirectAttributes.addFlashAttribute("theSameProductsError", true);
+		return "redirect:/sales/" +  e.getEan() + "/new";
 
 	}
 	

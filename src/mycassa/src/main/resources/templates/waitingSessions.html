@@ -38,19 +38,19 @@
 						<thead class="thead-light">
 							<tr>
 								<th th:text="#{session.number}">Session #</th>
-								<th class="titleColumn" th:text="#{user.firstname + user.lastName}">Fullname</th>
+								<th class="titleColumn" th:text="#{user.firstnameuser.lastName}">Fullname</th>
 								<th th:text="#{session.startedAt}">Started At</th>
 								<th th:text="#{edit}">Edit</th>
 							</tr>
 						</thead>
 						<tbody>
 
-							<tr scope="row" th:each="session: ${sessions.sessions}">
-								<td th:text="${session.id}" />
-								<td class="titleColumn" th:text="${session.user.firstName + ' ' + session.user.lastName}" />
-								<td th:text="${#temporals.format(session.startedAt, 'dd-MM-yyyy HH:mm')}" />
+							<tr scope="row" th:each="sessionData: ${sessions.sessions}">
+								<td th:text="${sessionData.id}" />
+								<td class="titleColumn" th:text="${sessionData.user.firstName + ' ' + sessionData.user.lastName}" />
+								<td th:text="${#temporals.format(sessionData.startedAt, 'dd-MM-yyyy HH:mm')}" />
 								<td>
-									<a th:href="@{/products}"
+									<a th:href="@{/session/{sessionId}/check/overview(sessionId=${sessionData.id})}"
 										class="btn bi bi-pencil-square"></a>
 								</td>
 							</tr>

@@ -1,19 +1,15 @@
 package com.savit.mycassa.dto;
 
-import java.time.LocalDateTime;
-
 import org.springframework.data.domain.Page;
 
 import com.savit.mycassa.entity.product.Product;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
 
 @Getter
 @Setter
@@ -21,13 +17,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 @ToString
-public class SessionData {
-
-	public Long id;
+public class ProductsDTO {
+	private Page<Product> products;
 	
-	public  LocalDateTime startedAt;
+	private String filterField;
 	
-	public  String status;
+	private String direction;
 	
-	
+	private String searchQuery;
 }

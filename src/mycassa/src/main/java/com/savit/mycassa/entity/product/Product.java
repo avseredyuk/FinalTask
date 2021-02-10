@@ -50,7 +50,7 @@ public class Product {
 	private String title;
 	
 	@Column(nullable = false)
-	private Long cost;
+	private Long price;
 	
 
 	@Column(nullable = false)
@@ -62,17 +62,17 @@ public class Product {
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
 	private Set<Sale> sales;
 
-	public Product(String title, Long cost, Long quantityInStore, Measure measure) {
+	public Product(String title, Long price, Long quantityInStore, Measure measure) {
 		this.title = title;
-		this.cost = cost;
+		this.price = price;
 		this.quantityInStore = quantityInStore;
 		this.measure = measure;
 	}
 
-	public Product(String ean, String title, Long cost, Long quantityInStore, Measure measure, Set<Sale> sales) {
+	public Product(String ean, String title, Long price, Long quantityInStore, Measure measure, Set<Sale> sales) {
 		this.ean = ean;
 		this.title = title;
-		this.cost = cost;
+		this.price = price;
 		this.quantityInStore = quantityInStore;
 		this.measure = measure;
 		this.sales = sales;

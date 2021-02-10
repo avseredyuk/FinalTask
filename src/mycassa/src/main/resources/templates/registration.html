@@ -25,13 +25,13 @@
 
 	<div class="text-center">
 		<div class="sectionMainContent">
-			<form class="form-signup" method="post" th:action="@{/registration}" th:object="${userData}">
+			<form class="form-signup" method="post" th:action="@{/registration}" th:object="${user}">
 				<h1 class="h3 mb-3 font-weight-normal" th:text="#{sign.up}">Please sign up</h1>
 
 				<div class="form-row">
 					<div class="col-md-6 mb-4 justify-content-center">
 						<input type="text" class="form-control"
-							th:classappend="${#fields.hasErrors('firstName')} ? is-invalid : (${userData.firstName != null} ? is-valid)"
+							th:classappend="${#fields.hasErrors('firstName')} ? is-invalid : (${user.firstName != null} ? is-valid)"
 							th:placeholder="#{user.input.firstName}" name="firstName" th:value="*{firstName}"
 							th:errorClass="is-invalid" autofocus>
 						<div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"
@@ -42,7 +42,7 @@
 					</div>
 					<div class="col-md-6 mb-4 justify-content-center">
 						<input type="text" class="form-control"
-							th:classappend="${#fields.hasErrors('lastName')} ? is-invalid  : (${userData.lastName != null} ? is-valid)"
+							th:classappend="${#fields.hasErrors('lastName')} ? is-invalid  : (${user.lastName != null} ? is-valid)"
 							th:placeholder="#{user.input.lastName}" name="lastName" th:value="*{lastName}"
 							th:errorClass="is-invalid">
 						<div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="invalid-feedback">
@@ -53,7 +53,7 @@
 
 				<div class=" mb-4 justify-content-center">
 					<input type="email" class="form-control"
-						th:classappend="${#fields.hasErrors('email')} ? is-invalid : (${userData.email != null} ? is-valid)"
+						th:classappend="${#fields.hasErrors('email')} ? is-invalid : (${user.email != null} ? is-valid)"
 						th:placeholder="#{user.input.email}" name="email" th:value="*{email}"
 						th:errorClass="is-invalid">
 					<div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="invalid-feedback">Invalid
@@ -63,7 +63,7 @@
 
 				<div class=" mb-4 justify-content-center">
 					<input type="password" class="form-control"
-						th:classappend="${#fields.hasErrors('password')} ? is-invalid : (${userData.password != null} ? is-valid)"
+						th:classappend="${#fields.hasErrors('password')} ? is-invalid : (${user.password != null} ? is-valid)"
 						th:placeholder="#{user.input.password}" name="password" th:value="*{password}"
 						th:errorClass="is-invalid">
 					<div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="invalid-feedback">

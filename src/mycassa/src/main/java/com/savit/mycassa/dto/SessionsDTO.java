@@ -1,8 +1,8 @@
 package com.savit.mycassa.dto;
 
-import org.springframework.data.domain.Page;
+import java.util.List;
 
-import com.savit.mycassa.entity.product.Product;
+import com.savit.mycassa.entity.session.Session;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,12 +17,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 @ToString
-public class ProductsData {
-	private Page<Product> productsData;
+public class SessionsDTO {
+
+	private List<Session> sessions;
 	
-	private String filterField;
-	
-	private String direction;
-	
-	private String searchQuery;
 }

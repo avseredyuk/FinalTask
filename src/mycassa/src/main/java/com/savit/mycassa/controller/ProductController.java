@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.savit.mycassa.dto.ProductData;
+import com.savit.mycassa.dto.ProductDTO;
 import com.savit.mycassa.dto.SaleDTO;
 import com.savit.mycassa.entity.product.Sale;
 import com.savit.mycassa.service.ProductService;
@@ -37,7 +37,7 @@ public class ProductController {
 	@Autowired
 	private final SaleService saleService;
 
-	@GetMapping()
+	@GetMapping
 	public String getProductsPage(@RequestParam(required = false, defaultValue = "ean") String filterField,
 			@RequestParam(required = false, defaultValue = "desc") String direction,
 			@RequestParam(required = false, defaultValue = "1") String page,
@@ -46,50 +46,50 @@ public class ProductController {
 
 		log.info("[PAGINATION] Input params: filterField:[{}], direction:[{}], page:[{}], size:[{}], searchQuery:[{}]",
 				filterField, direction, page, size, searchQuery);
-		model.addAttribute("productsData",
+		model.addAttribute("products",
 				productService.getAllProducts(filterField, direction, page, size, searchQuery));
 
 		return "products";
 
 	}
 
-	@GetMapping("/edit/{ean}")
+	@GetMapping("{ean}/edit")
 	public String getUpdateProductPage(@PathVariable String ean, Model model) {
 
-		ProductData productData = productService.getProductByEan(ean);
+		ProductDTO productDTO = productService.getProductByEan(ean);
 
-		model.addAttribute("productData", productData);
+		model.addAttribute("product", productDTO);
 
 		return "editProduct";
 	}
 
-	@PostMapping("/edit/{ean}")
-	public String updateProduct(@PathVariable String ean, @Valid @ModelAttribute ProductData productData,
+	@PostMapping("{ean}/edit")
+	public String updateProduct(@PathVariable String ean, @Valid @ModelAttribute("product") ProductDTO productDTO,
 			BindingResult bindingResult) {
 		if (bindingResult.hasFieldErrors("quantityInStore") || bindingResult.hasFieldErrors("cost") || bindingResult.hasFieldErrors("title")) {
 			return "editProduct";
 		}
 
-		productService.updateProduct(productData, ean);
+		productService.updateProduct(productDTO, ean);
 
 		return "redirect:/products";
 	}
 
 	@GetMapping("/new")
-	public String getNewProductPage(@ModelAttribute ProductData productData, Model model) {
-		model.addAttribute("productData", productData);
+	public String getNewProductPage(Model model) {
+		model.addAttribute("product", new ProductDTO());
 		return "newProduct";
 	}
 
 	@PostMapping("/new")
-	public String saveProduct(@Valid @ModelAttribute ProductData productData, BindingResult bindingResult) {
+	public String saveProduct(@Valid @ModelAttribute("product") ProductDTO productDTO, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
-			log.error(" >> productData: {}", productData.toString());
+			log.error(" >> productData: {}", productDTO.toString());
 			return "newProduct";
 		}
-		log.info(" >> productData: {}", productData.toString());
+		log.info(" >> productData: {}", productDTO.toString());
 
-		productService.saveProduct(productData);
+		productService.saveProduct(productDTO);
 
 		return "redirect:/products";
 	}

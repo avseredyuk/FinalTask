@@ -1,6 +1,5 @@
 package com.savit.mycassa.service;
 
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +11,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.savit.mycassa.dto.ProductData;
-import com.savit.mycassa.dto.ProductsData;
+import com.savit.mycassa.dto.ProductDTO;
+import com.savit.mycassa.dto.ProductsDTO;
 import com.savit.mycassa.entity.product.Measure;
 import com.savit.mycassa.entity.product.Product;
 import com.savit.mycassa.repository.ProductRepository;
-import com.savit.mycassa.util.Validator;
 import com.savit.mycassa.util.exception.ProductNotFoundException;
 
 import lombok.AllArgsConstructor;
@@ -31,13 +29,16 @@ public class ProductService {
 	@Autowired
 	private final ProductRepository productRepository;
 
-	public void saveProduct(ProductData productData) {
+	//TODO Why& @T ransactional
+	@Transactional
+	public void saveProduct(ProductDTO productDTO) {
 
-		productRepository.save(new Product(productData.getTitle(), productData.getCost(),
-				productData.getQuantityInStore(), Measure.valueOf(productData.getMeasure())));
+		productRepository.save(new Product(productDTO.getTitle(), productDTO.getPrice(),
+				productDTO.getQuantityInStore(), Measure.valueOf(productDTO.getMeasure())));
 	}
-
-	public ProductsData getAllProducts(String filterField, String direction, String pageS, String sizeS,
+//TODO:searchQuery=
+	
+	public ProductsDTO getAllProducts(String filterField, String direction, String pageS, String sizeS,
 			String searchQuery) {
 		Pageable pageable = buildPageable(filterField, direction, pageS, sizeS);
 
@@ -49,61 +50,54 @@ public class ProductService {
 //		pageable.getSort().get().forEach(a -> log.info("[PAGINATION] Sorted by field:{}, Ordered by:{}",
 //				a.getProperty(), a.getDirection().toString()));
 
-		return new ProductsData(products, filterField, direction, searchQuery);
+		return new ProductsDTO(products, filterField, direction, searchQuery);
 
 	}
 
-	public ProductData getProductByEan(String ean) {
+	public ProductDTO getProductByEan(String ean) {
 
-		Optional<Product> product = productRepository.findByEan(ean);
+		Product product = productRepository.findByEan(ean).orElseThrow(() -> new ProductNotFoundException("Such product not exists"));
 
-		if (product.isEmpty()) {
-			throw new ProductNotFoundException(String.format("No product with ean %s", ean));
-		}
-
-		return ProductData.builder().title(product.get().getTitle()).ean(product.get().getEan())
-				.cost(product.get().getCost()).quantityInStore(product.get().getQuantityInStore())
-				.measure(product.get().getMeasure().name()).id(product.get().getId()).build();
+		return ProductDTO.builder().title(product.getTitle()).ean(product.getEan())
+				.price(product.getPrice()).quantityInStore(product.getQuantityInStore())
+				.measure(product.getMeasure().name()).id(product.getId()).build();
 
 	}
 	
 
-	public ProductData getProductById(Long id) {
-		Optional<Product> product = productRepository.findById(id);
+	public ProductDTO getProductById(Long id) {
 
-		if (product.isEmpty()) {
-			throw new NoSuchElementException(String.format("No product with id %d", id));
-		}
+		Product product = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("Such product not exists"));
 
-		return ProductData.builder().title(product.get().getTitle()).ean(product.get().getEan())
-				.cost(product.get().getCost()).quantityInStore(product.get().getQuantityInStore())
-				.measure(product.get().getMeasure().name()).id(product.get().getId()).build();
+		return ProductDTO.builder().title(product.getTitle()).ean(product.getEan())
+				.price(product.getPrice()).quantityInStore(product.getQuantityInStore())
+				.measure(product.getMeasure().name()).id(product.getId()).build();
 	}
 	
+	//TODO 	propagation=Propagation.REQUIRED - what is it?
 	@Transactional(	propagation=Propagation.REQUIRED, rollbackFor = {Exception.class})
-	public void updateProduct(ProductData productData, String ean) {
-		Product product = productRepository.findByEan(ean).get();
-		log.info("product: {}", product);
-		product.setTitle(productData.getTitle());
-		product.setCost(productData.getCost());
-		product.setQuantityInStore(productData.getQuantityInStore());
+	public void updateProduct(ProductDTO productDTO, String ean) {
+		Product product = productRepository.findByEan(ean).orElseThrow(() -> new ProductNotFoundException("Such product not exists"));
+
+		
+		product.setTitle(productDTO.getTitle());
+		product.setPrice(productDTO.getPrice());
+		product.setQuantityInStore(productDTO.getQuantityInStore());
+		//XXX: need to save?
 //		productRepository.save(product.setCost(productData.getCost()).quantityInStore(productData.getQuantityInStore()).build());
 	}
 	
 
 	private static Pageable buildPageable(String filterField, String direction, String pageS, String sizeS) {
-		Validator.validatePageVariables(pageS, sizeS);
-		Validator.validateFilterField(filterField);
 
 		int page = Integer.parseInt(pageS);
 		int size = Integer.parseInt(sizeS);
 
-		Sort sort = "asc".equals(direction) ? Sort.by(filterField).ascending()
-				: ("desc".equals(direction) ? Sort.by(filterField).descending() : null);
+		Optional <Sort> sort = "asc".equals(direction) ? Optional.of(Sort.by(filterField).ascending())
+				: ("desc".equals(direction) ? Optional.of(Sort.by(filterField).descending()) : Optional.of(null));
 
-		Validator.validateDirection(sort);
-
-		return PageRequest.of(page - 1, size, sort);
+		
+		return PageRequest.of(page - 1, size, sort.get());
 	}
 
 

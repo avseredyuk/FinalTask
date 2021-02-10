@@ -24,10 +24,6 @@ public class UserDetailsImpl implements UserDetails {
 		SimpleGrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().name());
 		return Collections.singletonList(authority);
 	}
-	
-	public Long getId() {
-		return user.getId();
-	}
 
 	@Override
 	public String getPassword() {
@@ -59,19 +55,19 @@ public class UserDetailsImpl implements UserDetails {
 		return true;
 	}
 
-	public String getFirstName() {
-		return this.user.getFirstName();
-	}
-	
-	public String getLastName() {
-		return this.user.getLastName();
-	}
-	
-	public Role getRole() {
-		return this.user.getRole();
-	}
-	
-	
+//	public String getFirstName() {
+//		return this.user.getFirstName();
+//	}
+//	
+//	public String getLastName() {
+//		return this.user.getLastName();
+//	}
+//	
+//	public Role getRole() {
+//		return this.user.getRole();
+//	}
+//	
+//	
 	
 	public String toString() {
 		return String.format("User:{email:%s,password:%s,firstName:%s,lastName:%s,role:%s}", user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName(), user.getRole().name());

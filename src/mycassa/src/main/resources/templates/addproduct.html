@@ -25,25 +25,36 @@
 
 
 	<div class="sectionMainContent">
+
+		<!--<div th:insert="~{error/errorAlert :: copy}"></div>-->
+
+		<div th:if="${error != null}" class="text-center d-flex justify-content-center mt-5">
+			<div class="alert alert-danger w-50" role="alert">
+				<div>
+					<strong th:text="#{cashier.hasnt.add.product.to.check}"></strong>
+				</div>
+			</div>
+		</div>
+
 		<div class="d-flex justify-content-center">
 
 			<div class="card w-50 mt-5">
-				<form class="card-body" method="post" th:action="@{/sales/new/{ean}(ean=${productData.ean})}"
-					th:object="${saleDTO}">
+				<form class="card-body" th:method="post" th:action="@{/sales/{ean}/new(ean=${product.ean})}"
+					th:object="${sale}">
 
-
+					<input th:type="hidden" th:name="fixedPrice" th:value="${product.price}" />
 					<h3 class="card-title">
-						<span th:text="${productData.title}">
+						<span th:text="${product.title}">
 						</span>
 					</h3>
 					<h6 class="card-subtitle mb-2 text-muted">
-						<span th:if="${productData.measure == 'PIECE'}">
+						<span th:if="${product.measure == 'PIECE'}">
 							<span
-								th:text="#{products.left} + ': ' + ${productData.quantityInStore} + ' ' + #{product.measure.piece}"></span>
+								th:text="#{products.left} + ': ' + ${product.quantityInStore} + ' ' + #{product.measure.piece}"></span>
 						</span>
-						<span th:if="${productData.measure == 'KILOGRAM'}">
+						<span th:if="${product.measure == 'KILOGRAM'}">
 							<span
-								th:text="#{products.left} + ': ' + ${productData.quantityInStore} + #{product.measure.kg}"></span>
+								th:text="#{products.left} + ': ' + ${product.quantityInStore} + #{product.measure.kg}"></span>
 						</span>
 					</h6>
 
@@ -51,7 +62,7 @@
 					<!-- input -->
 
 					<div class="card-text mt-3">
-						<input type="number" th:min="1" th:max="${productData.quantityInStore}" class="form-control"
+						<input type="number" th:min="1" th:max="${product.quantityInStore}" class="form-control"
 							th:classappend="${#fields.hasErrors('quantityToBuy')} ? is-invalid  : (${quantityToBuy != null} ? is-valid)"
 							th:placeholder="#{product.quantity.to.buy}" name="quantityToBuy" th:value="*{quantityToBuy}"
 							th:errorClass="is-invalid" autofocus />
@@ -75,7 +86,7 @@
 
 						<div class="d-flex justify-content-center">
 							<i th:text="#{price.per.one} + ': '"></i>
-							<b th:text="${productData.cost}"></b>
+							<b th:text="${product.price}"></b>
 							<i th:text="#{currency.uah}"></i>
 						</div>
 

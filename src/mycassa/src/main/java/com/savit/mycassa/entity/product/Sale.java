@@ -35,6 +35,10 @@ public class Sale {
 	@Column(nullable = false)
 	private Long quantity;
 	
+	@Column(nullable = false)
+	private Long fixedPrice;
+	
+	
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
@@ -43,8 +47,9 @@ public class Sale {
     @JoinColumn(name = "session_id")
     private Session session;
 
-	public Sale(Long quantity, Product product, Session session) {
+	public Sale(Long quantity, Long fixedPrice, Product product, Session session) {
 		this.quantity = quantity;
+		this.fixedPrice = fixedPrice;
 		this.product = product;
 		this.session = session;
 	}

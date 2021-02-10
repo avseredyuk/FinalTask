@@ -57,7 +57,7 @@ public class Session {
 	@OneToMany(mappedBy = "session", cascade = CascadeType.ALL)
 	private List<Sale> sales;
 	
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 

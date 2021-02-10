@@ -27,14 +27,14 @@
 
 	<div class="text-center">
 		<div class="sectionMainContent">
-			<form class="form-signup" method="post" th:action="@{/products/edit/{ean}(ean=${productData.ean})}"
-				th:object="${productData}">
+			<form class="form-signup" method="post" th:action="@{/products/{ean}/edit(ean=${product.ean})}"
+				th:object="${product}">
 				<h1 class="h3 mb-3 font-weight-normal" th:text="#{product.edit}">Edit product</h1>
 
 				<div class="mb-4">
 					<span class="ml-1 labelForInput" th:text="#{product.title}">title</span>
 					<input type="text" class="form-control"
-						th:classappend="${#fields.hasErrors('title')} ? is-invalid  : (${productData.title != null} ? is-valid)"
+						th:classappend="${#fields.hasErrors('title')} ? is-invalid  : (${product.title != null} ? is-valid)"
 						th:placeholder="#{product.title}" name="title" th:value="*{title}" th:errorClass="is-invalid">
 					<div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="invalid-feedback">
 						Invalid title</div>
@@ -43,9 +43,9 @@
 				<div class="mb-4">
 					<span class="ml-1 labelForInput" th:text="#{product.cost}">Cost</span>
 					<input type="number" class="form-control"
-						th:classappend="${#fields.hasErrors('cost')} ? is-invalid  : (${productData.cost != null} ? is-valid)"
-						th:placeholder="#{product.cost}" name="cost" th:value="*{cost}" th:errorClass="is-invalid">
-					<div th:if="${#fields.hasErrors('cost')}" th:errors="*{cost}" class="invalid-feedback">
+						th:classappend="${#fields.hasErrors('price')} ? is-invalid  : (${product.price != null} ? is-valid)"
+						th:placeholder="#{product.cost}" name="price" th:value="*{price}" th:errorClass="is-invalid">
+					<div th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="invalid-feedback">
 						Invalid Сost</div>
 				</div>
 
@@ -53,7 +53,7 @@
 				<div class=" mb-4 justify-content-center">
 					<span class="ml-1 labelForInput " th:text="#{product.quantityInStore}">quantityInStore</span>
 					<input type="number" class="form-control"
-						th:classappend="${#fields.hasErrors('quantityInStore')} ? is-invalid : (${productData.quantityInStore != null} ? is-valid)"
+						th:classappend="${#fields.hasErrors('quantityInStore')} ? is-invalid : (${product.quantityInStore != null} ? is-valid)"
 						th:placeholder="#{product.quantityInStore}" name="quantityInStore" th:value="*{quantityInStore}"
 						th:errorClass="is-invalid">
 					<div th:if="${#fields.hasErrors('quantityInStore')}" th:errors="*{quantityInStore}"

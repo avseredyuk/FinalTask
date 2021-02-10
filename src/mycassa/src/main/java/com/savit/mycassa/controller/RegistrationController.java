@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.savit.mycassa.dto.UserData;
+import com.savit.mycassa.dto.UserDTO;
 import com.savit.mycassa.service.UserService;
 
 import lombok.AllArgsConstructor;
@@ -40,23 +39,21 @@ public class RegistrationController extends ResponseEntityExceptionHandler {
 		webDataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
 	}
 	@GetMapping
-	public String showForm(@ModelAttribute UserData userData,  Model model) {
-		model.addAttribute("userData", userData);
-		log.info(" >> model: {}", model.toString());
+	public String showForm(Model model) {
+		model.addAttribute("user", new UserDTO());
 		return "registration";
 	}
 
 	@PostMapping
-	public String registrateNewUser(@Valid UserData userData, 
-			BindingResult bindingResult) {
+	public String registrateNewUser(@Valid @ModelAttribute("user") UserDTO userDTO, BindingResult bindingResult) {
 		
 		if (bindingResult.hasErrors()) {
-			log.info(" >> userDTO: {}", userData.toString());
+			log.info(" >> userDTO: {}", userDTO.toString());
 			return "registration";
 		}
-		log.info(" >> userDTO: {}", userData.toString());
+		
 		try {
-			userService.signUpUser(userData);			
+			userService.signUpUser(userDTO);			
 		}catch(Exception ex) {
 			bindingResult.rejectValue("email", "such.email.exists");			
 			return "registration";

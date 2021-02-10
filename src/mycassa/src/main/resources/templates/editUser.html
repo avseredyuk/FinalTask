@@ -22,47 +22,49 @@
 		<div th:insert="~{fragments/header :: copy}"></div>
 	</header>
 
-
 	<div class="text-center">
 		<div class="sectionMainContent">
-			<form class="form-signup" method="post" th:action="@{/profile/edit}" th:object="${userData}">
+			<form class="form-signup" method="post" th:action="@{/profile/edit}" th:object="${user}">
 				<h1 class="h3 mb-3 font-weight-normal" th:text="#{edit.propfile}">Edit profile</h1>
 
 				<div class="form-row">
 					<div class="col-md-6 mb-4 justify-content-center">
 						<input type="text" class="form-control"
-							th:classappend="${#fields.hasErrors('firstName')} ? is-invalid : (${userData.firstName != null} ? is-valid)"
-							th:placeholder="#{user.input.firstName}" name="firstName" th:value="*{firstName}"
+							th:classappend="${#fields.hasErrors('firstName')} ? is-invalid : (${user.firstName != null} ? is-valid)"
+							th:placeholder="#{user.input.firstName}" th:name="firstName" th:value="*{firstName}"
 							th:errorClass="is-invalid" autofocus>
 						<div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"
 							class="invalid-feedback">
 							Invalid
-							First name</div>
+							First name
+						</div>
 					</div>
 					<div class="col-md-6 mb-4 justify-content-center">
 						<input type="text" class="form-control"
-							th:classappend="${#fields.hasErrors('lastName')} ? is-invalid  : (${userData.lastName != null} ? is-valid)"
-							th:placeholder="#{user.input.lastName}" name="lastName" th:value="*{lastName}"
+							th:classappend="${#fields.hasErrors('lastName')} ? is-invalid  : (${user.lastName != null} ? is-valid)"
+							th:placeholder="#{user.input.lastName}" th:name="lastName" th:value="*{lastName}"
 							th:errorClass="is-invalid">
 						<div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="invalid-feedback">
-							Invalid Last name</div>
+							Invalid Last name
+						</div>
 					</div>
 
 				</div>
 
 				<div class=" mb-4 justify-content-center">
 					<input type="email" class="form-control"
-						th:classappend="${#fields.hasErrors('email')} ? is-invalid : (${userData.email != null} ? is-valid)"
-						th:placeholder="#{user.input.email}" name="email" th:value="*{email}"
+						th:classappend="${#fields.hasErrors('email')} ? is-invalid : (${user.email != null} ? is-valid)"
+						th:placeholder="#{user.input.email}" th:name="email" th:value="*{email}"
 						th:errorClass="is-invalid">
 					<div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="invalid-feedback">Invalid
-						Email</div>
+						Email
+					</div>
 				</div>
 
 				<div class=" mb-4 justify-content-center">
 					<input type="password" class="form-control"
-						th:classappend="${#fields.hasErrors('password')} ? is-invalid : (${userData.password != null} ? is-valid)"
-						th:placeholder="#{user.input.password}" name="password" th:value="*{password}"
+						th:classappend="${#fields.hasErrors('password')} ? is-invalid : (${user.password != null} ? is-valid)"
+						th:placeholder="#{user.input.password}" th:name="password" th:value="*{password}"
 						th:errorClass="is-invalid">
 					<div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="invalid-feedback">
 						Invalid Password</div>
@@ -70,29 +72,27 @@
 
 				<div class="mb-4 d-flex justify-content-center">
 					<div class="custom-control custom-radio" sec:authorize="hasAnyAuthority('CASHIER')">
-						<input type="radio" checked id="customRadio1" name="role" class="custom-control-input"
-							value="CASHIER" disabled>
+						<input type="radio" checked id="customRadio1" th:name="role" class="custom-control-input"
+						th:value="CASHIER" disabled>
 						<label class="custom-control-label" for="customRadio1" th:text="#{role.cashier}">Cashier</label>
 					</div>
 					<div class="custom-control custom-radio" sec:authorize="hasAnyAuthority('SENIOR_CASHIER')">
-						<input type="radio" checked id="customRadio2" name="role" class="custom-control-input"
-							value="SENIOR_CASHIER" disabled>
-						<label class="custom-control-label" for="customRadio2" th:text="#{role.seniorcashier}">Seinor
-							cashier</label>
+						<input type="radio" checked id="customRadio2" th:name="role" class="custom-control-input"
+						th:value="SENIOR_CASHIER" disabled>
+						<label class="custom-control-label" for="customRadio2" th:text="#{role.seniorcashier}">Seinor cashier</label>
 					</div>
 					<div class="custom-control custom-radio" sec:authorize="hasAnyAuthority('COMMODITY_EXPERT')">
-						<input type="radio" checked id="customRadio3" name="role" class="custom-control-input"
-							value="COMMODITY_EXPERT" disabled>
-						<label class="custom-control-label" for="customRadio3"
-							th:text="#{role.commodityexpert}">Commodity expert</label>
+						<input type="radio" checked id="customRadio3" th:name="role" class="custom-control-input"
+							th:value="COMMODITY_EXPERT" disabled>
+						<label class="custom-control-label" for="customRadio3" th:text="#{role.commodityexpert}">Commodity expert</label>
 					</div>
 				</div>
 
 
 				<button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{edit}">Edit</button>
-				<ul th:if="${#fields.hasErrors('*')}">
+				<!--<ul th:if="${#fields.hasErrors('*')}">
 					<li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
-				</ul>
+				</ul>-->
 			</form>
 		</div>
 	</div>

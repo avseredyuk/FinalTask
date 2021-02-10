@@ -21,8 +21,8 @@ import lombok.ToString;
 @EqualsAndHashCode
 @Builder
 @ToString
-public class UserData {
-
+public class UserDTO {
+//FIXME incorrect localization on  rus
 	private static final String REGEX = "(([^<>()\\\\.,;:\\s@\"]+(\\.[^<>()\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))";
 	
 	@NotBlank(message = "{firstName.valid.notblank}")

@@ -22,6 +22,9 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
 			+ "INNER JOIN FETCH sale.session "
 				+ "WHERE sale.session.id = ?1")
 
-	List<Sale> findAllBySessionIdAndByUserId(Long session_id);
+	List<Sale> findAllBySessionId(Long session_id);
+
+//	@Query("UPDATE")
+//	void deleteAllBySessionId(Long session_id);
 
 }

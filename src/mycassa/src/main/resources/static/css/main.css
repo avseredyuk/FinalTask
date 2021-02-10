@@ -3,10 +3,12 @@ body {background-color: #E8F2FE !important;}
 
 table {
   table-layout: fixed;
+ 	
 }
 
 .titleColumn{
-	width:550px;
+	max-width:550px;
+	width:50%;
 }
 
 .errorContent{

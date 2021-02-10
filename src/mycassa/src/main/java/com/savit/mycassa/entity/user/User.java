@@ -75,15 +75,15 @@ public class User {
 		this.role = role;
 	}
 	
-	public static User buildUser(UserDetailsImpl ud) {
-		return User.builder()
-							.id(ud.getId())
-							.email(ud.getUsername())
-							.password(ud.getPassword())
-							.firstName(ud.getFirstName())
-							.lastName(ud.getLastName())
-							.role(ud.getRole()).build();
-	}
+//	public static User buildUser(UserDetailsImpl ud) {
+//		return User.builder()
+//							.id(ud.getId())
+//							.email(ud.getUsername())
+//							.password(ud.getPassword())
+//							.firstName(ud.getFirstName())
+//							.lastName(ud.getLastName())
+//							.role(ud.getRole()).build();
+//	}
 	
 }
 

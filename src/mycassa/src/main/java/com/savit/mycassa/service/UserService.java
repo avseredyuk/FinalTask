@@ -1,29 +1,19 @@
 package com.savit.mycassa.service;
 
-import java.util.Optional;
-
-import javax.validation.Valid;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.savit.mycassa.dto.UserData;
-import com.savit.mycassa.dto.UsersData;
+import com.savit.mycassa.dto.UserDTO;
 import com.savit.mycassa.entity.user.Role;
 import com.savit.mycassa.entity.user.User;
 import com.savit.mycassa.entity.user.details.UserDetailsImpl;
 import com.savit.mycassa.repository.UserRepository;
-import com.savit.mycassa.util.exception.EmailExistsException;
+import com.savit.mycassa.util.exception.UserNotFoundException;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,23 +28,7 @@ public class UserService implements UserDetailsService {
 
 	@Autowired
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
-	public User getPrincipalUser() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-		return userRepository.findById(userDetails.getId()).get();
-	}
-
-	public UserData getPrincipalUserDTO() {
-
-		User authUser = getPrincipalUser();
-
-//		log.info("getPrincipal USER: {}", authUser.toString());
-		UserData ud = UserData.builder().firstName(authUser.getFirstName()).lastName(authUser.getLastName())
-				.email(authUser.getEmail()).role(authUser.getRole().name()).build();
-
-		return ud;
-	}
+	
 
 	@Override
 	public UserDetails loadUserByUsername(String email) {
@@ -63,42 +37,41 @@ public class UserService implements UserDetailsService {
 				.orElseThrow(() -> new UsernameNotFoundException(String.format("email %s not found", email))));
 
 	}
+	
 
-	public void signUpUser(UserData userData) {
+	public UserDTO getUserByEmailAuth(UserDetails userDetails) throws UserNotFoundException {
+		
+		User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
 
-		Optional<User> us = userRepository.findByEmail(userData.getEmail());
+		return UserDTO.builder().firstName(user.getFirstName()).lastName(user.getLastName())
+				.email(user.getEmail()).role(user.getRole().name()).build();
+	}
 
-		boolean isPresent = us.isPresent();
+	@Transactional
+	public void signUpUser(UserDTO userDTO) {
 
-		if (isPresent) {
-			log.error(" >> such user is exists: {}", us.get().toString());
-			throw new IllegalStateException("===== user with such email is exists =====	");
-		}
+		String encPassword = bCryptPasswordEncoder.encode(userDTO.getPassword());
 
-		String encPassword = bCryptPasswordEncoder.encode(userData.getPassword());
-
-		User user = new User(userData.getEmail(), encPassword, userData.getFirstName(), userData.getLastName(),
-				Role.valueOf(userData.getRole()));
+		User user = new User(userDTO.getEmail(), encPassword, userDTO.getFirstName(), userDTO.getLastName(),
+				Role.valueOf(userDTO.getRole()));
 
 		userRepository.save(user);
 		log.info(" >> new user: {}", user.toString());
 
 	}
 
-	public UsersData getAllUsersCashiers() {
-		return new UsersData(userRepository.findByRole(Role.CASHIER));
-	}
+	@Transactional
+	public void updateUser(UserDTO userDTO, UserDetails userDetails) throws Exception {
 
-//	@Transactional(	propagation=Propagation.REQUIRED, rollbackFor = {Exception.class})
-	public void updateUser(@Valid UserData userData) throws Exception {
+		User userToUpdate = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
 
-		User userToUpdate = getPrincipalUser();
-
-		User user = User.builder().id(userToUpdate.getId()).email(userData.getEmail())
-				.firstName(userData.getFirstName()).lastName(userData.getLastName())
-				.password(bCryptPasswordEncoder.encode(userData.getPassword())).role(userToUpdate.getRole()).build();
-
-		userRepository.save(user);
+		userRepository.save(User.builder()
+							.id(userToUpdate.getId())
+							.email(userDTO.getEmail())
+							.firstName(userDTO.getFirstName())
+							.lastName(userDTO.getLastName())
+							.password(bCryptPasswordEncoder.encode(userDTO.getPassword()))
+							.role(userToUpdate.getRole()).build());
 	}
 
 }

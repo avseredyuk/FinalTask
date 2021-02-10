@@ -17,7 +17,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 @ToString
-public class UsersData {
+public class UsersDTO {
 	
-	private List<User> usersData;
+	private List<User> users;
 }
