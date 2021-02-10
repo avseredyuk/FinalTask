@@ -1,6 +1,7 @@
 package com.savit.mycassa.service;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.savit.mycassa.dto.CheckDTO;
 import com.savit.mycassa.dto.SessionDTO;
 import com.savit.mycassa.dto.SessionsDTO;
+import com.savit.mycassa.dto.TimeBordersDTO;
 import com.savit.mycassa.entity.product.Sale;
 import com.savit.mycassa.entity.session.Session;
 import com.savit.mycassa.entity.session.StatusSession;
@@ -104,12 +106,6 @@ public class SessionService {
 	}
 
 
-
-	public SessionsDTO getSessionsByStatus(StatusSession waiting) {
-		return new SessionsDTO(sessionRepository.findByStatusSession(waiting));
-	}
-
-
 	@Transactional
 	public void closeSession(Long session_id) {
 		
@@ -182,6 +178,24 @@ public class SessionService {
 		
 		session.setStatusSession(StatusSession.OPENED);
 		
+	}
+
+	
+	public SessionsDTO getSessionsByStatus(StatusSession status) {
+		return new SessionsDTO(sessionRepository.findByStatusSession(status));
+	}
+
+
+	public SessionsDTO getSessionsForStatistics(TimeBordersDTO borders) {
+		List<Session> sessions = sessionRepository.findByStatusSessionAndByTimeBorders(StatusSession.CLOSED, borders.getTimeFrom(), borders.getTimeTo());
+		return new SessionsDTO(sessions);
+	}
+
+
+
+	public ByteArrayInputStream getSessionReportDoc(SessionsDTO sessionsDTO) {
+		
+		return CheckBuilder.buildSessionsWithTimeBordersPdfReport(sessionsDTO.getSessions());
 	}
 
 }

@@ -1,14 +1,11 @@
 package com.savit.mycassa.controller;
 
 import java.io.BufferedInputStream;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +16,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.savit.mycassa.dto.SessionsDTO;
 import com.savit.mycassa.dto.TimeBordersDTO;
 import com.savit.mycassa.service.SessionService;
 
@@ -47,15 +45,15 @@ public class ReportController {
 	}
 	
 	
-	@PostMapping("/reports/sessions")
-	public String getSessionsReport(@ModelAttribute("borders") TimeBordersDTO bordersDTO, 
-			Model model, BindingResult bindingResult) {
+	@PostMapping("/reports/sessions")//
+	public String getSessionsReport(@Valid @ModelAttribute("borders") TimeBordersDTO bordersDTO, 
+			RedirectAttributes redirectAttributes, BindingResult bindingResult) {
 		
-		log.info("borders : {}", bordersDTO);
 		
 		if(bindingResult.hasErrors()) {
 			return "reports/reportSessionsForm";
 		}
+		log.info("borders : {}", bordersDTO);
 		
 		if(bordersDTO.getTimeFrom().isAfter(bordersDTO.getTimeTo())) {
 			bindingResult.rejectValue("timeFrom", "must.be.before.to");	
@@ -63,8 +61,8 @@ public class ReportController {
 			return "reports/reportSessionsForm";
 		}
 		//FIXME
-		model.addAttribute("from", 
-		model.addAttribute("to", bordersDTO.getTbordersDTO.getTimeTo());imeTo());
+		redirectAttributes.addFlashAttribute("sessions", sessionService.getSessionsForStatistics(bordersDTO));
+//		model.addAttribute("sessions", sessionService.getSessionsForStatistics(bordersDTO));
 		
 //		log.info("from: {}, to: {}", bordersDTO.getTimeFrom().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME), 
 //				bordersDTO.getTimeTo().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
@@ -78,16 +76,16 @@ public class ReportController {
 
 	@GetMapping(value = "/reports/sessions/print", produces = MediaType.APPLICATION_PDF_VALUE)
 	public ResponseEntity<InputStreamResource> printSessionsReport(
-			
+			@ModelAttribute("sessions") SessionsDTO sessionsDTO, 
 			Model model){
 		
-		log.info("from: {}, to: {}", from.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME), to.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+		
 		var headers = new HttpHeaders();
-		headers.add("Content-Disposition", "inline; filename=check.pdf");
+		headers.add("Content-Disposition", "inline; filename=reportSessions.pdf");
 //headers.add("Refresh", "10; url = /profile");
 
 		return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)
-				.body(new InputStreamResource(new BufferedInputStream(null)));
+				.body(new InputStreamResource(new BufferedInputStream(sessionService.getSessionReportDoc(sessionsDTO))));
 	}
 
 }

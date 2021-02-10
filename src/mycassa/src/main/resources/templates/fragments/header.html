@@ -37,14 +37,14 @@
 						<a class="nav-link" th:href="@{/session/requests}" th:text="#{waiting.sessions}">sessions</a>
 					</li>
 					
-					<li class="nav-item dropdown">
+					<li class="nav-item dropdown" sec:authorize="hasAnyAuthority('SENIOR_CASHIER')">
 						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
 							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="#{reports}">
 							Reports
 						</a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
 							<a class="dropdown-item" th:href="@{/reports/sessions}" th:text="#{report.sessions}">Report by sessions</a>
-							<a class="dropdown-item" th:href="@{/reports/product/print}" th:text="#{report.product}">Report by product</a>
+							<a class="dropdown-item" th:href="@{/products}" th:text="#{report.product}">Report by product</a>
 						</div>
 					</li>
 

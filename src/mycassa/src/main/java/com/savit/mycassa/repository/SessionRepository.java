@@ -1,5 +1,6 @@
 package com.savit.mycassa.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,5 +30,9 @@ public interface SessionRepository extends JpaRepository<Session, Long>  {
 	
 	@Query("SELECT s FROM Session AS s WHERE s.statusSession = ?1")
 	List<Session> findByStatusSession(StatusSession statusSession);
+	
+	@Query("SELECT s FROM Session AS s WHERE s.statusSession = ?1 AND s.startedAt >= ?2 AND s.endedAt <=?3")
+	List<Session> findByStatusSessionAndByTimeBorders(StatusSession statusSession, LocalDateTime startedAt, LocalDateTime endedAt);
+
 
 }

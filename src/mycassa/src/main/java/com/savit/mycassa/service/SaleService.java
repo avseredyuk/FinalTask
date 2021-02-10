@@ -1,5 +1,7 @@
 package com.savit.mycassa.service;
 
+import java.io.ByteArrayInputStream;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import com.savit.mycassa.repository.SaleRepository;
 import com.savit.mycassa.repository.SessionRepository;
 import com.savit.mycassa.util.exception.ProductNotFoundException;
 import com.savit.mycassa.util.exception.SessionNotStartedYetException;
+import com.savit.mycassa.util.pdf.CheckBuilder;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +49,10 @@ public class SaleService {
 		
 		saleRepository.save(new Sale(saleDTO.getQuantityToBuy(), saleDTO.getFixedPrice(), product, session));
 		
+	}
+
+	public ByteArrayInputStream getProductSalesReportDoc(String ean) {
+		return CheckBuilder.buildProductSalesPdfReport(saleRepository.findByEanAndByStatusSession(ean, StatusSession.CLOSED));
 	}
 
 //	public SalesDTO getOpenedSessionSales(Optional <Long> session_id) throws SessionNotStartedYetException {

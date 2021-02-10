@@ -101,46 +101,34 @@
 								<th th:text="#{product.quantityInStore}">Quantity</th>
 								<th th:text="#{product.measure}">Measure</th>
 								<th sec:authorize="hasAnyAuthority('COMMODITY_EXPERT')" th:text="#{edit}">Edit</th>
-								<th sec:authorize="hasAnyAuthority('CASHIER')"></th>
+								<th sec:authorize="hasAnyAuthority('CASHIER')" th:text="add.to.check"></th>
+								<th sec:authorize="hasAnyAuthority('SENIOR_CASHIER')" th:text="report.print"></th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr scope="row" th:each="product: ${products.products}"
-								sec:authorize="hasAnyAuthority('CASHIER')">
+							<tr scope="row" th:each="product: ${products.products}">
 								<td th:text="${product.ean}" />
 								<td class="titleColumn" th:text="${product.title}" />
 								<td th:text="${product.price}" />
 								<td th:text="${product.quantityInStore}" />
 								<td th:text="${product.measure}" />
-								<!--	<td>
-									<a th:href="@{/products/sale/{ean}(ean=${productData.ean})}"
-									 class="btn btn-info bi bi-plus-square "
-									  role="button" aria-pressed="true"></a>
-								</td>-->
-
-								<td>
+								<td sec:authorize="hasAnyAuthority('CASHIER')">
 									<span>
 										<a th:href="@{/sales/{ean}/new(ean=${product.ean})}"
 											class="bi bi-plus-square"></a>
 									</span>
 
 								</td>
-
-
-							</tr>
-
-
-							<tr scope="row" th:each="product: ${products.products}"
-								sec:authorize="hasAnyAuthority('COMMODITY_EXPERT')">
-								<td th:text="${product.ean}" />
-								<td class="titleColumn" th:text="${product.title}" />
-								<td th:text="${product.price}" />
-								<td th:text="${product.quantityInStore}" />
-								<td th:text="${product.measure}" />
-								<td>
+								<td sec:authorize="hasAnyAuthority('COMMODITY_EXPERT')">
 									<a th:href="@{/products/{ean}/edit(ean=${product.ean})}"
 										class="btn bi bi-pencil-square"></a>
+								</td>								
+								<td sec:authorize="hasAnyAuthority('SENIOR_CASHIER')">
+									<a th:href="@{/sales/{ean}/report(ean=${product.ean})}"
+										class="bi bi-printer"></a>
 								</td>
+
+
 							</tr>
 						</tbody>
 					</table>

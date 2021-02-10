@@ -7,22 +7,25 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.savit.mycassa.entity.product.Sale;
+import com.savit.mycassa.entity.session.StatusSession;
 
 @Repository
 public interface SaleRepository extends JpaRepository<Sale, Long> {
 
 	
-//	 "FROM Mark AS markk "
-//				+ "INNER JOIN FETCH markk.student  "
-//				+ "INNER JOIN FETCH markk.student.class_  "
-//				+ "INNER JOIN FETCH markk.subject  "
-//				+ "WHERE markk.mark >= :min_mark AND markk.mark < :max_mark "
 //	
 	@Query("SELECT sale FROM Sale AS sale "
 			+ "INNER JOIN FETCH sale.session "
 				+ "WHERE sale.session.id = ?1")
 
 	List<Sale> findAllBySessionId(Long session_id);
+
+	
+	@Query("SELECT sale FROM Sale sale "
+			+ "INNER JOIN FETCH sale.session session "
+			+ "INNER JOIN FETCH sale.product product "
+			+ "WHERE product.ean = ?1 AND session.statusSession = ?2")
+	List<Sale>  findByEanAndByStatusSession(String ean, StatusSession closed);
 
 //	@Query("UPDATE")
 //	void deleteAllBySessionId(Long session_id);
