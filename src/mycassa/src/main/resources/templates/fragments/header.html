@@ -34,6 +34,9 @@
 					</li>
 					</form>-->
 					<li class="nav-item active" sec:authorize="hasAnyAuthority('SENIOR_CASHIER')">
+						<a class="nav-link" th:href="@{/shifts/open}">New shift</a>
+					</li>
+					<li class="nav-item active" sec:authorize="hasAnyAuthority('SENIOR_CASHIER')">
 						<a class="nav-link" th:href="@{/session/requests}" th:text="#{waiting.sessions}">sessions</a>
 					</li>
 					

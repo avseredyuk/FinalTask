@@ -25,18 +25,25 @@
 	</header>
 	<div class="bodyContainer">
 
-		<!-- <a th:href="@{/sessions}" class="btn btn-outline-danger bi bi-arrow-left-square ml-3 mt-3" role="button" aria-pressed="true"></a>-->
 
 		<div class="sectionMainContent text-center">
 
 
+			<div th:if="${productNotFoundError != null}" class="text-center d-flex justify-content-center mt-5">
+				<div class="alert alert-danger w-50" role="alert">
+					<div>
+						<strong th:text="#{productNotFoundError}"></strong>
+					</div>
+				</div>
+			</div>
+			
 
 			<form th:action="@{/products}">
 				<div class="d-flex shadow p-3 mb-5 mt-5 bg-light rounded">
 					<div th:if="${products.products.hasContent()}">
 
 						<select class="custom-select" th:name="filterField">
-							<option value="ean"
+							<option th:value="ean"
 								th:selected="${#strings.equals(products.filterField, 'ean')}  ? 'selected'"
 								th:text="#{product.ean}">ean</option>
 							<option th:value="title"
@@ -101,19 +108,20 @@
 								<th th:text="#{product.quantityInStore}">Quantity</th>
 								<th th:text="#{product.measure}">Measure</th>
 								<th sec:authorize="hasAnyAuthority('COMMODITY_EXPERT')" th:text="#{edit}">Edit</th>
-								<th sec:authorize="hasAnyAuthority('CASHIER')" th:text="add.to.check"></th>
-								<th sec:authorize="hasAnyAuthority('SENIOR_CASHIER')" th:text="report.print"></th>
+								<th sec:authorize="hasAnyAuthority('CASHIER')" th:text="#{add.to.check}"></th>
+								<th sec:authorize="hasAnyAuthority('SENIOR_CASHIER')" th:text="#{report.print}"></th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr scope="row" th:each="product: ${products.products}">
+							<tr scope="row" th:each="product: ${products.products}" 
+							th:class="${product.quantityInStore <=  0} ? table-danger">
 								<td th:text="${product.ean}" />
 								<td class="titleColumn" th:text="${product.title}" />
 								<td th:text="${product.price}" />
 								<td th:text="${product.quantityInStore}" />
 								<td th:text="${product.measure}" />
 								<td sec:authorize="hasAnyAuthority('CASHIER')">
-									<span>
+									<span th:if="${product.quantityInStore >  0} ">
 										<a th:href="@{/sales/{ean}/new(ean=${product.ean})}"
 											class="bi bi-plus-square"></a>
 									</span>
@@ -122,9 +130,10 @@
 								<td sec:authorize="hasAnyAuthority('COMMODITY_EXPERT')">
 									<a th:href="@{/products/{ean}/edit(ean=${product.ean})}"
 										class="btn bi bi-pencil-square"></a>
+
 								</td>								
 								<td sec:authorize="hasAnyAuthority('SENIOR_CASHIER')">
-									<a th:href="@{/sales/{ean}/report(ean=${product.ean})}"
+									<a th:href="@{/reports/productSales/{ean}/print(ean=${product.ean})}"
 										class="bi bi-printer"></a>
 								</td>
 

@@ -30,10 +30,8 @@
 
 	<div th:if="${error != null}" class="text-center d-flex justify-content-center mt-5">
 			<div class="alert alert-danger w-50" role="alert">
-				<div>
 					<strong th:text="${error}"></strong>
 
-				</div>
 			</div>
 	</div>
 
@@ -56,7 +54,7 @@
 								<th th:text="#{product.ean}">Ean</th>
 								<th class="titleColumn" th:text="#{product.title}">Title</th>
 								<th th:text="#{product.price.mult.quantity}">Price * quantity</th>
-								<th th:text="product.cost.total">Total</th>
+								<th th:text="#{product.cost.total}">Total</th>
 								<th sec:authorize="hasAnyAuthority('SENIOR_CASHIER')" 
 								th:text="#{delete}"/>
 							</tr>

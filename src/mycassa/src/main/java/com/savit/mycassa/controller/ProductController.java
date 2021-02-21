@@ -20,6 +20,7 @@ import com.savit.mycassa.entity.product.Sale;
 import com.savit.mycassa.service.ProductService;
 import com.savit.mycassa.service.SaleService;
 import com.savit.mycassa.util.exception.CashierHasNotPermissionException;
+import com.savit.mycassa.util.exception.ProductNotSavedException;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,8 +35,6 @@ public class ProductController {
 	@Autowired
 	private final ProductService productService;
 
-	@Autowired
-	private final SaleService saleService;
 
 	@GetMapping
 	public String getProductsPage(@RequestParam(required = false, defaultValue = "ean") String filterField,
@@ -66,8 +65,11 @@ public class ProductController {
 	@PostMapping("{ean}/edit")
 	public String updateProduct(@PathVariable String ean, @Valid @ModelAttribute("product") ProductDTO productDTO,
 			BindingResult bindingResult) {
-		if (bindingResult.hasFieldErrors("quantityInStore") || bindingResult.hasFieldErrors("cost") || bindingResult.hasFieldErrors("title")) {
-			return "editProduct";
+		if (bindingResult.hasFieldErrors("quantityInStore") || 
+				bindingResult.hasFieldErrors("cost") || 
+				bindingResult.hasFieldErrors("title")) {
+			
+				return "editProduct";
 		}
 
 		productService.updateProduct(productDTO, ean);
@@ -84,12 +86,14 @@ public class ProductController {
 	@PostMapping("/new")
 	public String saveProduct(@Valid @ModelAttribute("product") ProductDTO productDTO, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
-			log.error(" >> productData: {}", productDTO.toString());
 			return "newProduct";
 		}
-		log.info(" >> productData: {}", productDTO.toString());
-
-		productService.saveProduct(productDTO);
+		
+		try {
+			productService.saveProduct(productDTO);			
+		}catch(Exception ex) {
+			throw new ProductNotSavedException();
+		}
 
 		return "redirect:/products";
 	}

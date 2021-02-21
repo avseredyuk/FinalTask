@@ -1,13 +1,10 @@
 package com.savit.mycassa.service;
 
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -20,15 +17,18 @@ import com.savit.mycassa.dto.TimeBordersDTO;
 import com.savit.mycassa.entity.product.Sale;
 import com.savit.mycassa.entity.session.Session;
 import com.savit.mycassa.entity.session.StatusSession;
+import com.savit.mycassa.entity.shift.Shift;
+import com.savit.mycassa.entity.shift.StatusShift;
 import com.savit.mycassa.repository.SaleRepository;
 import com.savit.mycassa.repository.SessionRepository;
+import com.savit.mycassa.repository.ShiftRepository;
 import com.savit.mycassa.repository.UserRepository;
 import com.savit.mycassa.util.exception.CantPrintCheckException;
-import com.savit.mycassa.util.exception.EmptySalesListException;
 import com.savit.mycassa.util.exception.NotClosedSessionExistsException;
+import com.savit.mycassa.util.exception.OpenedShiftNotExistsException;
 import com.savit.mycassa.util.exception.SaleNotExistsException;
-import com.savit.mycassa.util.exception.SessionNotFoundException;
 import com.savit.mycassa.util.exception.SessionNotStartedYetException;
+import com.savit.mycassa.util.exception.UserNotFoundException;
 import com.savit.mycassa.util.pdf.CheckBuilder;
 
 import lombok.AllArgsConstructor;
@@ -38,164 +38,146 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @AllArgsConstructor
 public class SessionService {
-	
+
 	@Autowired
 	private final SessionRepository sessionRepository;
-	
+
 	@Autowired
 	private final UserRepository userRepository;
-	
+
 	@Autowired
 	private final SaleRepository saleRepository;
-
 	
+	@Autowired
+	private final ShiftRepository shiftRepository;
 
-	public SessionDTO getSessionById(Long sessionId) throws SessionNotFoundException {
-		
-		Session session =  sessionRepository.findById(sessionId)
-					.orElseThrow(() -> new SessionNotFoundException("Session doesn't exists"));
-		
+	public SessionDTO getSessionById(Long sessionId) throws SessionNotStartedYetException {
+
+		Session session = sessionRepository.findById(sessionId).orElseThrow(SessionNotStartedYetException::new);
+
 		return new SessionDTO(session.getId(), session.getStartedAt(), session.getStatusSession().name());
 	}
 
-	
-	
-	@org.springframework.transaction.annotation.Transactional(	propagation=Propagation.REQUIRED, rollbackFor = {Exception.class})
+	@Transactional
 	public SessionDTO createNewSessionAuth(UserDetails userDetails) throws NotClosedSessionExistsException {
-		
-		//TODO: add <titles> html to prop
-		if(sessionRepository.findCountByUserEmailAndNotEnded(userDetails.getUsername()) > 0) {
+
+		if (sessionRepository.findByUserEmailAndNotEnded(userDetails.getUsername()).isPresent()) {
 			throw new NotClosedSessionExistsException();
 		}
-		
-		Session session = sessionRepository.save(new Session(LocalDateTime.now(), StatusSession.OPENED));
-		
-		session.setUser(userRepository.findByEmail(userDetails.getUsername()).get());
-		
-		return SessionDTO.builder().id(session.getId())
-				.status(session.getStatusSession().name())
-				.startedAt(session.getStartedAt()).build();
-	}
-	
-//	public SessionsData getAllAuthUserOpenedSessions() {
-//		
-//		return new SessionsData(sessionRepository.findListNotClosedByUserId(userService.getPrincipalUser().getId()));	
-//		
-//	}
-	
-	public SessionDTO getNotEndedSessionAuth(UserDetails userDetails) throws SessionNotStartedYetException {
 
-		Session session = sessionRepository.findByUserEmailAndNotEnded(userDetails.getUsername())
-				.orElseThrow(() -> new SessionNotStartedYetException("not.opened.sessions.exception"));
+		Session session = sessionRepository.save(Session
+				.builder()
+				.startedAt(LocalDateTime.now())
+				.statusSession(StatusSession.OPENED)
+				.shift(shiftRepository.findByStatusShift(StatusShift.OPENED).orElseThrow(OpenedShiftNotExistsException::new))
+				.user(userRepository.findByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new))
+				.build());
 
-		return SessionDTO.builder().id(session.getId())
-				.status(session.getStatusSession().name())
+		SessionDTO dto =  SessionDTO.builder().id(session.getId()).status(session.getStatusSession().name())
 				.startedAt(session.getStartedAt()).build();
 		
+		return dto;
+		
+//		return SessionDTO.builder().id(session.getId()).status(session.getStatusSession().name())
+//				.startedAt(session.getStartedAt()).build();
 	}
 
-//FIXME is @Transactional need?
-	@Transactional
-	public void updateStatusSessionAuth(UserDetails userDetails, StatusSession status) throws SessionNotStartedYetException  {
-		
+	public SessionDTO getNotEndedSessionAuth(UserDetails userDetails) {
+
 		Session session = sessionRepository.findByUserEmailAndNotEnded(userDetails.getUsername())
-											.orElseThrow(() -> new SessionNotStartedYetException("Session not opened"));
-		
+				.orElseThrow(SessionNotStartedYetException::new);
+
+		return SessionDTO.builder().id(session.getId()).status(session.getStatusSession().name())
+				.startedAt(session.getStartedAt()).build();
+
+	}
+
+	public void updateStatusSessionAuth(UserDetails userDetails, StatusSession status) {
+
+		Session session = sessionRepository.findByUserEmailAndNotEnded(userDetails.getUsername())
+				.orElseThrow(SessionNotStartedYetException::new);
+
 		session.setStatusSession(status);
-		
+
 	}
 
-
 	@Transactional
-	public void closeSession(Long session_id) {
-		
-		Session session = sessionRepository.findById(session_id)
-				.orElseThrow(() -> new SessionNotStartedYetException("This session not started"));
+	public void cancelSession(Long session_id) {
+
+		Session session = sessionRepository.findById(session_id).orElseThrow(SessionNotStartedYetException::new);
 
 		List<Sale> sales = session.getSales();
 		saleRepository.deleteAll(sales);
-		
+
 		session.setEndedAt(LocalDateTime.now());
 		session.setStatusSession(StatusSession.CLOSED);
-		
-		for(Sale sale : sales) {
+
+		for (Sale sale : sales) {
 			sale.getProduct().setQuantityInStore(sale.getProduct().getQuantityInStore() + sale.getQuantity());
 		}
-		
+
 	}
 
-
 	@Transactional
-	public ByteArrayInputStream getCheck(Long session_id) throws SessionNotStartedYetException, EmptySalesListException, CantPrintCheckException {
-		
-		Session session = sessionRepository.findById(session_id)
-				.orElseThrow(() -> new SessionNotStartedYetException("You have not started a session yet"));
-		
+	public ByteArrayInputStream getCheck(Long session_id) throws CantPrintCheckException{
+
+		Session session = sessionRepository.findById(session_id).orElseThrow(SessionNotStartedYetException::new);
+
 		session.setEndedAt(LocalDateTime.now());
 		session.setStatusSession(StatusSession.CLOSED);
-		
-		return   CheckBuilder.buildSessionPDFCheck(session);
+
+//		return CheckBuilder.buildSessionPDFCheck(session, session.getSales());//FIXME
+		return null;
 
 	}
-
-
 
 	public CheckDTO getCheckDTO(Long sessionId) {
-		
-		Session session =  sessionRepository.findById(sessionId)
-				.orElseThrow(() -> new SessionNotFoundException("Session not found"));
-		
-		if(StatusSession.CLOSED.equals(session.getStatusSession())) {
-			throw new SessionNotStartedYetException("You have not started a session yet");
+
+		Session session = sessionRepository.findById(sessionId).orElseThrow(SessionNotStartedYetException::new);
+
+		if (StatusSession.CLOSED.equals(session.getStatusSession())) {
+			throw new SessionNotStartedYetException();
 		}
-		
+
 		Long totalPrice = 0L;
 		List<Sale> sales = session.getSales();
-		//TODO: remake to stream:
-
-		for(Sale sale : sales) {
-			totalPrice+=sale.getQuantity() * sale.getFixedPrice();			
+		
+		// TODO: remake to stream:
+		for (Sale sale : sales) {
+			totalPrice += sale.getQuantity() * sale.getFixedPrice();
 		}
 
-		return new CheckDTO(String.valueOf(session.getId()),
-							session.getStartedAt(),
-							session.getStatusSession().name(),
-							sales,
-							totalPrice);
+		return new CheckDTO(String.valueOf(session.getId()), session.getStartedAt(), session.getStatusSession().name(),
+				sales, totalPrice);
 
 	}
 
-	
 	@Transactional
 	public void deleteSaleFromCheck(Long sessionId, Long saleId) {
-		
-		saleRepository.delete(saleRepository.findById(saleId)
-				.orElseThrow(() -> new SaleNotExistsException("The sale not exists")));
-		
-		Session session = sessionRepository.findById(sessionId)
-				.orElseThrow(() -> new SessionNotStartedYetException("Session not started yet"));
 
-		
+		saleRepository.delete(saleRepository.findById(saleId).orElseThrow(SaleNotExistsException::new));
+
+		Session session = sessionRepository.findById(sessionId).orElseThrow(SessionNotStartedYetException::new);
+
 		session.setStatusSession(StatusSession.OPENED);
-		
 	}
 
-	
 	public SessionsDTO getSessionsByStatus(StatusSession status) {
 		return new SessionsDTO(sessionRepository.findByStatusSession(status));
 	}
 
-
 	public SessionsDTO getSessionsForStatistics(TimeBordersDTO borders) {
-		List<Session> sessions = sessionRepository.findByStatusSessionAndByTimeBorders(StatusSession.CLOSED, borders.getTimeFrom(), borders.getTimeTo());
+		List<Session> sessions = sessionRepository.findByStatusSessionAndByTimeBorders(StatusSession.CLOSED,
+				borders.getTimeFrom(), borders.getTimeTo());
 		return new SessionsDTO(sessions);
 	}
 
-
-
-	public ByteArrayInputStream getSessionReportDoc(SessionsDTO sessionsDTO) {
-		
-		return CheckBuilder.buildSessionsWithTimeBordersPdfReport(sessionsDTO.getSessions());
+	public ByteArrayInputStream getSessionReportDocAuth(UserDetails userDetails, SessionsDTO sessionsDTO)
+			throws UserNotFoundException, Exception {
+//		return CheckBuilder.buildSessionsWithTimeBordersPdfReport(
+//				userRepository.findByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new),
+//				sessionsDTO.getSessions());
+		return null;//FIXME
 	}
 
 }

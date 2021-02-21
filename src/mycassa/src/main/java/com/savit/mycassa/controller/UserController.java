@@ -78,7 +78,7 @@ public class UserController {
 			return "editUser";
 		}
 		
-		return "redirect:/profile";
+		return "redirect:/logout";
 	}
 
 	

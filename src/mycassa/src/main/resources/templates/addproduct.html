@@ -28,11 +28,12 @@
 
 		<!--<div th:insert="~{error/errorAlert :: copy}"></div>-->
 
-		<div th:if="${error != null}" class="text-center d-flex justify-content-center mt-5">
+		<div   th:if="${productAleadyInCheckError != null}" class="text-center d-flex justify-content-center mt-5">
 			<div class="alert alert-danger w-50" role="alert">
 				<div>
 					<strong th:text="#{cashier.hasnt.add.product.to.check}"></strong>
 				</div>
+
 			</div>
 		</div>
 

@@ -1,4 +1,4 @@
-package com.savit.mycassa.entity.session;
+package com.savit.mycassa.entity.shift;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,8 +19,7 @@ import javax.persistence.Table;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.savit.mycassa.entity.product.Sale;
-import com.savit.mycassa.entity.shift.Shift;
+import com.savit.mycassa.entity.session.Session;
 import com.savit.mycassa.entity.user.User;
 
 import lombok.AllArgsConstructor;
@@ -31,14 +30,14 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name="sessions")
+@Table(name="shifts")
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @Builder
 @Getter
 @Setter
-public class Session {
+public class Shift {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,23 +52,15 @@ public class Session {
 	private LocalDateTime endedAt;
 	
 	@Enumerated(EnumType.STRING)
-	private StatusSession statusSession;
+	private StatusShift statusShift;
 	
-	@OneToMany(mappedBy = "session", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private List<Sale> sales;
+	@OneToMany(mappedBy = "shift", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private List<Session> sessions;
 	
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-    
-    @ManyToOne
-    @JoinColumn(name = "shift_id")
-    private Shift shift;
 
-	public Session(LocalDateTime startedAt, StatusSession statusSession, Shift shift) {
+	public Shift(LocalDateTime startedAt, StatusShift statusShift) {
 		this.startedAt = startedAt;
-		this.statusSession = statusSession;
-		this.shift = shift;
+		this.statusShift = statusShift;
 	}
 	
 	

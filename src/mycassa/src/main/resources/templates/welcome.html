@@ -25,6 +25,13 @@
 	</header>
 
 	<div class="jumbotron">
+		<div th:if="${globalError != null}" class="text-center d-flex justify-content-center mt-5">
+			<div class="alert alert-danger w-50" role="alert">
+				<div>
+					<strong th:text="#{globalError}"></strong>
+				</div>
+			</div>
+		</div>
 		<div class="container">
 			<h1 class="display-3" th:text="#{greeting}">Hello, world! </h1>
 			<p th:text="#{greeting.subtitle}">We provide new technologies that were available only to network giants.
@@ -38,11 +45,11 @@
 					sec:authorize="hasAnyAuthority('COMMODITY_EXPERT')" th:text="#{welcome.start}">Get started &raquo;
 				</a>
 
-				<a class="btn btn-primary btn-lg" th:href="@{/sessions/new}" sec:authorize="hasAnyAuthority('CASHIER')"
+				<a class="btn btn-primary btn-lg" th:href="@{/session}" sec:authorize="hasAnyAuthority('CASHIER')"
 					th:text="#{welcome.start}">Get started &raquo;
 				</a>
 
-				<a class="btn btn-primary btn-lg" href="/statistics" sec:authorize="hasAnyAuthority('SENIOR_CASHIER')"
+				<a class="btn btn-primary btn-lg" href="/session/requests" sec:authorize="hasAnyAuthority('SENIOR_CASHIER')"
 					th:text="#{welcome.start}">Get started &raquo;
 				</a>
 

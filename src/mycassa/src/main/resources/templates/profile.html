@@ -27,6 +27,26 @@
 
 	<div>
 		<div class="sectionMainContent">
+
+
+			<div th:if="${NoSuchOpenedSessionsError != null}" class="text-center d-flex justify-content-center mt-5">
+				<div class="alert alert-danger w-50" role="alert">
+					<div>
+						<strong th:text="#{NoSuchOpenedSessionsError}"></strong>
+					</div>
+				</div>
+			</div>
+
+			<div th:if="${openedShiftNotExists != null}" class="text-center d-flex justify-content-center mt-5">
+				<div class="alert alert-danger w-50" role="alert">
+					<div>
+						<strong th:text="#{OpenedShiftNotExists}"></strong>
+					</div>
+				</div>
+			</div>
+
+
+
 			<div class="media">
 				<div class="imageAva" sec:authorize="hasAnyAuthority('CASHIER')" style="border-color: #5cb85c;">
 					<img th:src="@{/images/icons/user.png}" alt="User ava" width="150" height="150">

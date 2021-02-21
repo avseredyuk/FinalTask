@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -59,7 +60,7 @@ public class Product {
 	@Enumerated(EnumType.STRING)
 	private Measure measure;
 	
-	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<Sale> sales;
 
 	public Product(String title, Long price, Long quantityInStore, Measure measure) {

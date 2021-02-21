@@ -29,26 +29,21 @@ public class ProductService {
 	@Autowired
 	private final ProductRepository productRepository;
 
-	//TODO Why& @T ransactional
+
 	@Transactional
 	public void saveProduct(ProductDTO productDTO) {
-
-		productRepository.save(new Product(productDTO.getTitle(), productDTO.getPrice(),
+		Product product = productRepository.save(new Product(productDTO.getTitle(), productDTO.getPrice(),
 				productDTO.getQuantityInStore(), Measure.valueOf(productDTO.getMeasure())));
+		product.setEan(String.format("%013d", product.getId()));
 	}
-//TODO:searchQuery=
-	
+
 	public ProductsDTO getAllProducts(String filterField, String direction, String pageS, String sizeS,
 			String searchQuery) {
+		
 		Pageable pageable = buildPageable(filterField, direction, pageS, sizeS);
 
 		Page<Product> products = searchQuery.isBlank() ? productRepository.findAll(pageable)
 				: productRepository.findByEanContainsIsOrTitleContainsIs(searchQuery, pageable);
-
-//		log.info("[PAGINATION] Page: [{}], PerPage: [{}], Sorted by field:[{}], Ordered by:[{}]",
-//				pageable.getPageNumber(), pageable.getPageSize());
-//		pageable.getSort().get().forEach(a -> log.info("[PAGINATION] Sorted by field:{}, Ordered by:{}",
-//				a.getProperty(), a.getDirection().toString()));
 
 		return new ProductsDTO(products, filterField, direction, searchQuery);
 
@@ -56,7 +51,7 @@ public class ProductService {
 
 	public ProductDTO getProductByEan(String ean) {
 
-		Product product = productRepository.findByEan(ean).orElseThrow(() -> new ProductNotFoundException("Such product not exists"));
+		Product product = productRepository.findByEan(ean).orElseThrow(ProductNotFoundException::new);
 
 		return ProductDTO.builder().title(product.getTitle()).ean(product.getEan())
 				.price(product.getPrice()).quantityInStore(product.getQuantityInStore())
@@ -67,24 +62,20 @@ public class ProductService {
 
 	public ProductDTO getProductById(Long id) {
 
-		Product product = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("Such product not exists"));
+		Product product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
 
 		return ProductDTO.builder().title(product.getTitle()).ean(product.getEan())
 				.price(product.getPrice()).quantityInStore(product.getQuantityInStore())
 				.measure(product.getMeasure().name()).id(product.getId()).build();
 	}
 	
-	//TODO 	propagation=Propagation.REQUIRED - what is it?
-	@Transactional(	propagation=Propagation.REQUIRED, rollbackFor = {Exception.class})
+	@Transactional(rollbackFor = {Exception.class})
 	public void updateProduct(ProductDTO productDTO, String ean) {
-		Product product = productRepository.findByEan(ean).orElseThrow(() -> new ProductNotFoundException("Such product not exists"));
-
+		Product product = productRepository.findByEan(ean).orElseThrow(ProductNotFoundException::new);
 		
 		product.setTitle(productDTO.getTitle());
 		product.setPrice(productDTO.getPrice());
 		product.setQuantityInStore(productDTO.getQuantityInStore());
-		//XXX: need to save?
-//		productRepository.save(product.setCost(productData.getCost()).quantityInStore(productData.getQuantityInStore()).build());
 	}
 	
 
