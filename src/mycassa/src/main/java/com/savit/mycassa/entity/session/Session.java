@@ -8,7 +8,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,7 +18,7 @@ import javax.persistence.Table;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.savit.mycassa.entity.product.Sale;
+import com.savit.mycassa.entity.sale.Sale;
 import com.savit.mycassa.entity.shift.Shift;
 import com.savit.mycassa.entity.user.User;
 

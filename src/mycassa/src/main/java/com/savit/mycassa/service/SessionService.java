@@ -7,16 +7,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.savit.mycassa.dto.CheckDTO;
 import com.savit.mycassa.dto.SessionDTO;
 import com.savit.mycassa.dto.SessionsDTO;
-import com.savit.mycassa.entity.product.Sale;
+import com.savit.mycassa.entity.sale.Sale;
 import com.savit.mycassa.entity.session.Session;
 import com.savit.mycassa.entity.session.StatusSession;
-import com.savit.mycassa.entity.shift.Shift;
 import com.savit.mycassa.entity.shift.StatusShift;
 import com.savit.mycassa.repository.SaleRepository;
 import com.savit.mycassa.repository.SessionRepository;
@@ -25,7 +23,6 @@ import com.savit.mycassa.repository.UserRepository;
 import com.savit.mycassa.util.exception.CantPrintCheckException;
 import com.savit.mycassa.util.exception.NotClosedSessionExistsException;
 import com.savit.mycassa.util.exception.OpenedShiftNotExistsException;
-import com.savit.mycassa.util.exception.SaleNotExistsException;
 import com.savit.mycassa.util.exception.SessionNotStartedYetException;
 import com.savit.mycassa.util.exception.UserNotFoundException;
 import com.savit.mycassa.util.pdf.CheckBuilder;
@@ -138,18 +135,8 @@ public class SessionService {
 				.map(sale -> sale.getQuantity() * sale.getFixedPrice())
 				.reduce(0L, (partial, current) -> partial + current);
 				
-		return new CheckDTO(String.valueOf(session.getId()), session.getStartedAt(), session.getStatusSession().name(),
+		return new CheckDTO(session.getId(), session.getStartedAt(), session.getStatusSession().name(),
 				sales, totalPrice);
-	}
-
-	@Transactional
-	public void deleteSaleFromCheck(Long sessionId, Long saleId) {
-
-		saleRepository.delete(saleRepository.findById(saleId).orElseThrow(() -> new SaleNotExistsException(sessionId)));
- 
-		Session session = sessionRepository.findByIdAndByStatusSession(sessionId, StatusSession.WAITING).orElseThrow(SessionNotStartedYetException::new);
-
-		session.setStatusSession(StatusSession.OPENED);
 	}
 
 	public SessionsDTO getSessionsByStatus(StatusSession status) {

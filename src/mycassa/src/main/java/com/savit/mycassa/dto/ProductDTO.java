@@ -1,8 +1,12 @@
 package com.savit.mycassa.dto;
 
 
-import javax.validation.constraints.*;
-import com.savit.mycassa.entity.product.Measure;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

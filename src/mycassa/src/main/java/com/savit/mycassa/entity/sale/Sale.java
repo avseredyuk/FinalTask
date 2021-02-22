@@ -1,8 +1,7 @@
-package com.savit.mycassa.entity.product;
+package com.savit.mycassa.entity.sale;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -11,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import com.savit.mycassa.entity.product.Product;
 import com.savit.mycassa.entity.session.Session;
 
 import lombok.AllArgsConstructor;

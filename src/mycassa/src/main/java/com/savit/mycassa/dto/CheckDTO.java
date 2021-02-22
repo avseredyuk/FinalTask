@@ -3,7 +3,7 @@ package com.savit.mycassa.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.savit.mycassa.entity.product.Sale;
+import com.savit.mycassa.entity.sale.Sale;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +20,7 @@ import lombok.ToString;
 @ToString
 public class CheckDTO {
 
-	public String sessionId;
+	public Long sessionId;
 	
 	public  LocalDateTime startedAt;
 	

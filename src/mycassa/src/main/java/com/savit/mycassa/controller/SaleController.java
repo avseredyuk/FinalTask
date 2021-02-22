@@ -28,9 +28,9 @@ import com.savit.mycassa.util.exception.SessionNotStartedYetException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Controller
 @Slf4j
 @AllArgsConstructor
+@Controller
 @RequestMapping("/sales")
 public class SaleController {
 	
@@ -51,7 +51,6 @@ public class SaleController {
 		return "sale/newSale";
 	}
 
-	@PreAuthorize("hasAuthority('CASHIER')")
 	@PostMapping("{ean}/new")
 	public String saleProduct(@PathVariable String ean, @Valid @ModelAttribute("sale") SaleDTO saleDTO,
 			BindingResult bindingResult, RedirectAttributes redirectAttributes) {
@@ -72,6 +71,17 @@ public class SaleController {
 			throw new CashierHasNotPermissionException(ex.getMessage(), ean);
 		}
 		return "redirect:/products";
+	}
+	
+	@GetMapping("{saleId}/delete")
+	public String deleteSaleInCheck(@PathVariable("saleId") Long saleId,
+			Model model) {
+
+		log.info("START DELETING SALE");
+
+		saleService.deleteSaleFromCheck(saleId);
+
+		return "redirect:/session/requests";
 	}
 
 	

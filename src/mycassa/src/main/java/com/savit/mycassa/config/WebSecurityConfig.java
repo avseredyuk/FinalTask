@@ -33,23 +33,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable()
 		.authorizeRequests()
-		.antMatchers("/css/**","/js/**","/images/**").permitAll()
-		.antMatchers("/registration", "/welcome", "/login").permitAll()
-		//FIXME review 
-		.antMatchers("/profile/**", "/products").hasAnyAuthority("CASHIER", "COMMODITY_EXPERT", "SENIOR_CASHIER")
-		.antMatchers("/session/**").hasAnyAuthority("CASHIER", "SENIOR_CASHIER")
-//		.antMatchers("/sales/check/overview/**").hasAnyAuthority("SENIOR_CASHIER")
+		.antMatchers("/css/**","/js/**","/images/**", "/welcome").permitAll()
+		.antMatchers("/registration").anonymous()
+		.antMatchers("/profile/**").fullyAuthenticated()
 		
-//		.antMatchers("/products").hasAnyAuthority("COMMODITY_EXPERT", "CASHIER")
-		.antMatchers("/products/**").hasAnyAuthority("COMMODITY_EXPERT")
-		.antMatchers("/statistics/**", "/cashiers/**", "/session/requests").hasAuthority("SENIOR_CASHIER")
-		.antMatchers("/sales/**").hasAnyAuthority("CASHIER", "SENIOR_CASHIER")
-		.antMatchers("/shifts").hasAnyAuthority("SENIOR_CASHIER")
+		.antMatchers("/products").hasAnyAuthority("CASHIER", "COMMODITY_EXPERT")
+		.antMatchers("/session/{\\d+}/check/overview").hasAnyAuthority("CASHIER", "SENIOR_CASHIER")
 		
+		.antMatchers("/session/requests", "/session/{\\d+}/close", 
+				"/sales/{\\d+}/delete", "/shifts/**").hasAuthority("SENIOR_CASHIER")
 		
+		.antMatchers("/session/**", "/sales/**").hasAuthority("CASHIER")
+		
+		.antMatchers("/products/**").hasAuthority("COMMODITY_EXPERT")
+
 		.anyRequest().authenticated()
-//			.and()
-//		.exceptionHandling().accessDeniedPage("/unauthorized")
 			.and()
 		.formLogin().permitAll()
 		.loginPage("/login")

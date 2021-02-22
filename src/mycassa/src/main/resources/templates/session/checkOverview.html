@@ -28,14 +28,6 @@
 
 	<div class="sectionMainContent">
 
-	<div th:if="${saleNotExistsError != null}" class="text-center d-flex justify-content-center mt-5">
-			<div class="alert alert-danger w-50" role="alert">
-					<strong th:text="#{exception.sale.not.exists}"></strong>
-			</div>
-	</div>
-
-
-
 		<div class="d-flex flex-column">
 
 			<div class="d-flex justify-content-start mt-5">
@@ -65,7 +57,7 @@
 								<td th:text="${sale.fixedPrice * sale.quantity}" />
 								<td sec:authorize="hasAnyAuthority('SENIOR_CASHIER')">
 									<span>
-										<a th:href="@{/session/{sessionId}/check/sales/{saleId}/delete(sessionId=${check.sessionId},saleId=${sale.id})}"
+										<a th:href="@{/sales/{saleId}/delete(saleId=${sale.id})}"
 											class="bi bi-trash"></a>
 									</span>
 								</td>

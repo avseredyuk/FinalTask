@@ -2,8 +2,6 @@ package com.savit.mycassa.dto;
 
 import java.time.LocalDateTime;
 
-import com.savit.mycassa.entity.user.User;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,4 +25,5 @@ public class ShiftDTO {
 	public  LocalDateTime endedAt;
 	
 	public  String status;	
+
 }

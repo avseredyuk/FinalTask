@@ -12,22 +12,10 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
-import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
-import org.thymeleaf.spring5.ISpringTemplateEngine;
-import org.thymeleaf.spring5.SpringTemplateEngine;
-import org.thymeleaf.templateresolver.ITemplateResolver;
 
 @Configuration
 public class MvcConfig implements WebMvcConfigurer {
 
-//    @Bean
-//    public ISpringTemplateEngine templateEngine(ITemplateResolver templateResolver) {
-//        SpringTemplateEngine engine = new SpringTemplateEngine();
-//        engine.addDialect(new Java8TimeDialect());
-//        engine.setTemplateResolver(templateResolver);
-//        return engine;
-//    }
-	
 	
 	@Bean
 	public LocaleResolver localeResolver() {

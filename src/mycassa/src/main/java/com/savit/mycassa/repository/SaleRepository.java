@@ -6,14 +6,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.savit.mycassa.entity.product.Sale;
+import com.savit.mycassa.entity.sale.Sale;
 import com.savit.mycassa.entity.session.StatusSession;
 
 @Repository
 public interface SaleRepository extends JpaRepository<Sale, Long> {
 
 	
-//	
+
 	@Query("SELECT sale FROM Sale AS sale "
 			+ "INNER JOIN FETCH sale.session "
 				+ "WHERE sale.session.id = ?1")
@@ -27,7 +27,5 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
 			+ "WHERE product.ean = ?1 AND session.statusSession = ?2")
 	List<Sale>  findByEanAndByStatusSession(String ean, StatusSession closed);
 
-//	@Query("UPDATE")
-//	void deleteAllBySessionId(Long session_id);
 
 }

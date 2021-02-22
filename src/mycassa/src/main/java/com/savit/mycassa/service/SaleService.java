@@ -1,7 +1,5 @@
 package com.savit.mycassa.service;
 
-import java.io.ByteArrayInputStream;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -9,19 +7,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.savit.mycassa.dto.SaleDTO;
 import com.savit.mycassa.entity.product.Product;
-import com.savit.mycassa.entity.product.Sale;
+import com.savit.mycassa.entity.sale.Sale;
 import com.savit.mycassa.entity.session.Session;
 import com.savit.mycassa.entity.session.StatusSession;
-import com.savit.mycassa.entity.user.User;
 import com.savit.mycassa.repository.ProductRepository;
 import com.savit.mycassa.repository.SaleRepository;
 import com.savit.mycassa.repository.SessionRepository;
-import com.savit.mycassa.repository.UserRepository;
-import com.savit.mycassa.util.exception.CantPrintCheckException;
 import com.savit.mycassa.util.exception.ProductNotFoundException;
+import com.savit.mycassa.util.exception.SaleNotExistsException;
 import com.savit.mycassa.util.exception.SessionNotStartedYetException;
-import com.savit.mycassa.util.exception.UserNotFoundException;
-import com.savit.mycassa.util.pdf.CheckBuilder;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,6 +47,19 @@ public class SaleService {
 		
 		saleRepository.save(new Sale(saleDTO.getQuantityToBuy(), saleDTO.getFixedPrice(), product, session));
 		
+	}
+	
+	
+	@Transactional
+	public void deleteSaleFromCheck(Long saleId) {
+
+		Sale sale = saleRepository.findById(saleId).orElseThrow(SaleNotExistsException::new);
+		
+		Session session = sale.getSession();
+		if(StatusSession.WAITING.equals(session.getStatusSession())) {
+			session.setStatusSession(StatusSession.OPENED);
+			saleRepository.delete(sale);
+		}
 	}
 
 	

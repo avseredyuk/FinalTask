@@ -16,13 +16,6 @@ import com.savit.mycassa.util.exception.ShiftCloseException;
 
 @ControllerAdvice
 public class ExceptionController {
-	
-	
-//	@ExceptionHandler({Exception.class})
-//	public String repeatSalingTheSameProductHandler(HttpServletRequest req, Exception e, RedirectAttributes redirectAttributes){
-//		redirectAttributes.addFlashAttribute("globalError", true);
-//		return "redirect:/welcome";
-//	}
 
 
 	@ExceptionHandler({SessionNotStartedYetException.class, 
@@ -63,7 +56,7 @@ public class ExceptionController {
 	@ExceptionHandler({SaleNotExistsException.class})
 	public String handleAndRedirectNewSale(HttpServletRequest req, SaleNotExistsException e, RedirectAttributes redirectAttributes){
 		redirectAttributes.addFlashAttribute("saleNotExistsError", true);
-		return "redirect:/session/" + e.getSessionId() + "/check/overview";
+		return "redirect:/session/requests";
 	}
 	
 }

@@ -1,6 +1,5 @@
 package com.savit.mycassa.util.pdf;
 
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -20,7 +19,6 @@ import com.itextpdf.text.Font;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.draw.DottedLineSeparator;
-import com.savit.mycassa.entity.session.Session;
 import com.savit.mycassa.util.exception.CantPrintCheckException;
 
 public class PdfElements {
@@ -75,7 +73,7 @@ public class PdfElements {
 			qrCodeImage.setAlignment(Paragraph.ALIGN_CENTER);
 			return qrCodeImage;
 		} catch (UnsupportedEncodingException | com.google.zxing.WriterException e) {
-			throw new CantPrintCheckException("Error in print check");
+			throw new CantPrintCheckException();
 		}
 
 	}

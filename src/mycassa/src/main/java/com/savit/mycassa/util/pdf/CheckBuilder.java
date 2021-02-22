@@ -13,7 +13,7 @@ import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.DottedLineSeparator;
-import com.savit.mycassa.entity.product.Sale;
+import com.savit.mycassa.entity.sale.Sale;
 import com.savit.mycassa.entity.session.Session;
 import com.savit.mycassa.entity.shift.Shift;
 import com.savit.mycassa.entity.user.User;
@@ -63,7 +63,7 @@ public class CheckBuilder {
 			document.close();
 
 		} catch (Exception ex) {
-			throw new CantPrintCheckException("Error in print check");
+			throw new CantPrintCheckException();
 		}
 
 		return new ByteArrayInputStream(out.toByteArray());
@@ -90,7 +90,7 @@ public class CheckBuilder {
 
 			document.close();
 		} catch (Exception ex) {
-			throw new CantPrintCheckException("Error");
+			throw new CantPrintCheckException();
 		}
 
 		return new ByteArrayInputStream(out.toByteArray());
@@ -119,7 +119,7 @@ public class CheckBuilder {
 			document.add(PdfElements.getTextLine("ENCASHMENT CARRIED OUT!", 20, Font.BOLD, Paragraph.ALIGN_CENTER));
 			document.close();
 		} catch (Exception ex) {
-			throw new CantPrintCheckException("Error");
+			throw new CantPrintCheckException();
 		}
 
 		return new ByteArrayInputStream(out.toByteArray());

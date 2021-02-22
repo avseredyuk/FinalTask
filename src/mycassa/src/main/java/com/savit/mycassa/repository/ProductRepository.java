@@ -21,12 +21,5 @@ public interface ProductRepository  extends JpaRepository<Product, Long> {
 
 	Optional<Product> findByEan(String ean);
 
-//	
-//	select * from products 
-//	inner join 
-//	(select products.id as pid,  products.quantity_in_store-sum(quantity) as tempquantity from sales  
-//			inner join products ON products.id = sales.product_id group by(products.id)) as d
-//	on products.id = pid ;
-
 	
 }

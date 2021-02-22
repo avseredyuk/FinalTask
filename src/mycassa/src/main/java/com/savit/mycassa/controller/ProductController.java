@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,21 +14,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.savit.mycassa.dto.ProductDTO;
-import com.savit.mycassa.dto.SaleDTO;
-import com.savit.mycassa.entity.product.Sale;
 import com.savit.mycassa.service.ProductService;
-import com.savit.mycassa.service.SaleService;
-import com.savit.mycassa.util.exception.CashierHasNotPermissionException;
 import com.savit.mycassa.util.exception.ProductNotSavedException;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Controller
-//@PreAuthorize("hasAnyAuthority('COMMODITY_EXPERT', 'CASHIER')")
-@RequestMapping("/products")
 @AllArgsConstructor
 @Slf4j
+@Controller
+@RequestMapping("/products")
 public class ProductController {
 
 	@Autowired

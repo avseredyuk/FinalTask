@@ -5,15 +5,12 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,9 +21,8 @@ import com.savit.mycassa.util.exception.UserNotFoundException;
 
 import lombok.AllArgsConstructor;
 
-@Controller
 @AllArgsConstructor
-//@PreAuthorize("hasAnyAuthority('COMMODITY_EXPERT','SENIOR_CASHIER', 'CASHIER')")
+@Controller
 @RequestMapping("/profile")
 public class UserController {
 
@@ -35,11 +31,6 @@ public class UserController {
 
 	private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
-	@InitBinder
-	public void initBinder(WebDataBinder webDataBinder) {
-		StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(true);
-		webDataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
-	}
 	
 	@GetMapping
 	public String getUserProfile(Model model) throws UserNotFoundException {

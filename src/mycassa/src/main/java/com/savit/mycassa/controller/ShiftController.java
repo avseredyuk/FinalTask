@@ -7,7 +7,6 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,10 +20,9 @@ import com.savit.mycassa.util.exception.OpenedShiftNotExistsException;
 
 import lombok.AllArgsConstructor;
 
-@Controller
 @AllArgsConstructor
+@Controller
 @RequestMapping("/shifts")
-@PreAuthorize("hasAuthority('SENIOR_CASHIER')")
 public class ShiftController {
 
 	@Autowired

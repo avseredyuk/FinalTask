@@ -26,7 +26,7 @@
 
 	<div class="jumbotron">
 		<div class="container">
-			<h1 class="display-3" th:text="#{welcome.greeting}">Hello, world! </h1>
+			<h3 class="display-4" th:text="#{welcome.greeting}"></h3>
 			<p th:text="#{welcome.greeting.subtitle}">We provide new technologies that were available only to network giants.
 			</p>
 			<p>
@@ -38,7 +38,7 @@
 					th:text="#{welcome.get.started}">Get started &raquo;
 				</a>
 
-				<a class="btn btn-primary btn-lg" th:href="@{/session}" sec:authorize="hasAnyAuthority('CASHIER')"
+				<a class="btn btn-primary btn-lg" th:href="@{/session/new}" sec:authorize="hasAnyAuthority('CASHIER')"
 					th:text="#{welcome.get.started}">Get started &raquo;
 				</a>
 

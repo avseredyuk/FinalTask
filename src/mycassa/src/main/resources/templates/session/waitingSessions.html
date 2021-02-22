@@ -26,8 +26,15 @@
 	<div class="bodyContainer">
 
 		<div class="sectionMainContent text-center">
-<!--th:if="${productsData.productsData.hasContent()}"-->
+
+			<div th:if="${saleNotExistsError != null}" class="text-center d-flex justify-content-center mt-5">
+				<div class="alert alert-danger w-50" role="alert">
+					<strong th:text="#{exception.sale.not.exists}"></strong>
+				</div>
+			</div>
+
 			<div class=" mt-5">
+
 
 				<div th:if="${#lists.size(sessions.sessions) != 0}" class="d-flex justify-content-center shadow p-3 bg-light rounded">
 					<table class="table table-hover">

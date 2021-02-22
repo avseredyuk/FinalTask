@@ -1,5 +1,3 @@
 package com.savit.mycassa.util.exception;
 
-public class ShiftCloseException extends RuntimeException {
-
-}
+public class ShiftCloseException extends RuntimeException {}

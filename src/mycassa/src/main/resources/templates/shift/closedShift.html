@@ -9,7 +9,7 @@
 		integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 
-	<title>Closed shift</title>
+	<title th:text="#{title.shift.closed}">Closed shift</title>
 </head>
 
 <body>
@@ -31,14 +31,13 @@
 
 			<div class="card w-50 mt-5">
 				<div class="card-header d-flex justify-content-between">
-					<h3 th:text="'Shift #' + ${shift.id}"></h3>
-					<a th:href="@{/shifts/current/print-zcheck/{shift_id}(shift_id=${shift.id})}" class="btn btn-link">Print Z check</a>
+					<h3 th:text="#{shift.number} + ${shift.id}"></h3>
+					<a th:href="@{/shifts/current/print-zcheck/{shift_id}(shift_id=${shift.id})}" class="btn btn-link" th:text="#{shift.check.z.print}">Print Z check</a>
 				</div>
 				<div class="card-body">
 					<div class="d-flex justify-content-left">
 						<h3 class="card-title">
-							<span class="badge badge-warning" th:text="#{session.status.closed}">
-							</span>
+							<span class="badge badge-warning" th:text="#{shift.status.closed}"></span>
 						</h3>
 					</div>
 
@@ -50,7 +49,7 @@
 						
 					
 					<div class="d-flex justify-content-end mt-3 mb-3">
-						<a th:href="@{/profile}" class="btn btn-primary">Go to profile page</a>
+						<a th:href="@{/profile}" class="btn btn-primary"th:text="#{shift.goto.profile}">Go to profile page</a>
 						
 					</div>
 				</div>

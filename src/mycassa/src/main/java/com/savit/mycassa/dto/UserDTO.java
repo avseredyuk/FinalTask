@@ -2,7 +2,6 @@ package com.savit.mycassa.dto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
@@ -22,7 +21,7 @@ import lombok.ToString;
 @Builder
 @ToString
 public class UserDTO {
-//FIXME incorrect localization on  rus
+
 	private static final String REGEX = "(([^<>()\\\\.,;:\\s@\"]+(\\.[^<>()\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))";
 	
 	@NotBlank(message = "{valid.user.firstName.notblank}")

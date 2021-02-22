@@ -1,6 +1,5 @@
 package com.savit.mycassa.dto;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 
 import lombok.AllArgsConstructor;
