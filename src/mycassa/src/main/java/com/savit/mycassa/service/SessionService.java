@@ -122,12 +122,16 @@ public class SessionService {
 	public ByteArrayInputStream getCheck(Long session_id) throws CantPrintCheckException{
 
 		Session session = sessionRepository.findById(session_id).orElseThrow(SessionNotStartedYetException::new);
-
 		session.setEndedAt(LocalDateTime.now());
 		session.setStatusSession(StatusSession.CLOSED);
+		
+		Long totalSessionAmount = session.getSales().stream()
+				.map(a -> a.getFixedPrice()*a.getQuantity())
+				.reduce(0L, (partial, current) -> partial + current);
 
-//		return CheckBuilder.buildSessionPDFCheck(session, session.getSales());//FIXME
-		return null;
+
+		return CheckBuilder.buildSessionPDFCheck(session, session.getSales(), totalSessionAmount);//FIXME
+
 
 	}
 

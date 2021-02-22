@@ -40,7 +40,7 @@
 			<div class="card w-50 mt-5">
 				<div class="card-header d-flex justify-content-between">
 					<h3 th:text="'Shift #' + ${shift.id}"></h3>
-					<a th:href="@{/shifts/current/print-xcheck}" class="btn btn-link">Print X check</a>
+					<a th:href="@{/shifts/current/print-xcheck/{shift_id}(shift_id=${shift.id})}" class="btn btn-link">Print X check</a>
 				</div>
 				<div class="card-body">
 					<div class="d-flex justify-content-left">
