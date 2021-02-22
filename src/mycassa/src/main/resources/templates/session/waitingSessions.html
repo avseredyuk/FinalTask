@@ -9,7 +9,7 @@
 		integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 
-	<title th:text="#{products}">Products</title>
+	<title th:text="#{title.session.waiting}">Waiting sessions</title>
 </head>
 
 <body>
@@ -25,22 +25,18 @@
 	</header>
 	<div class="bodyContainer">
 
-		<!-- <a th:href="@{/sessions}" class="btn btn-outline-danger bi bi-arrow-left-square ml-3 mt-3" role="button" aria-pressed="true"></a>-->
-
 		<div class="sectionMainContent text-center">
-
-
 <!--th:if="${productsData.productsData.hasContent()}"-->
-			<div class="d-flex justify-content-center shadow p-3 bg-light rounded mt-5">
+			<div class=" mt-5">
 
-				<div class="">
+				<div th:if="${#lists.size(sessions.sessions) != 0}" class="d-flex justify-content-center shadow p-3 bg-light rounded">
 					<table class="table table-hover">
 						<thead class="thead-light">
 							<tr>
-								<th th:text="#{session.number}">Session #</th>
-								<th class="titleColumn" th:text="#{user.firstnameuser.lastName}">Fullname</th>
+								<th th:text="#{session.waiting.number}">Session #</th>
+								<th class="titleColumn" th:text="#{session.waiting.fullname}">Fullname</th>
 								<th th:text="#{session.startedAt}">Started At</th>
-								<th th:text="#{edit}">Edit</th>
+								<th th:text="#{session.waiting.edit}">Edit</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -58,7 +54,7 @@
 						</tbody>
 					</table>
 				</div>
-
+				<h3 th:if="${#lists.size(sessions.sessions) == 0}" th:text="#{session.waiting.empty}"></h3>
 			</div>
 
 

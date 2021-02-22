@@ -55,8 +55,10 @@ public class Session {
 	@Enumerated(EnumType.STRING)
 	private StatusSession statusSession;
 	
-	@OneToMany(mappedBy = "session", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private List<Sale> sales;
+//	@OneToMany(mappedBy = "session", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+
+	@OneToMany(mappedBy = "session", cascade = CascadeType.ALL)
+private List<Sale> sales;
 	
     @ManyToOne
     @JoinColumn(name = "user_id")

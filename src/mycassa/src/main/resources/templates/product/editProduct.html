@@ -8,7 +8,7 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
 		integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
-	<title th:text="#{editProduct}">Edit Product</title>
+	<title th:text="#{title.product.edit}">Edit Product</title>
 </head>
 
 <body class="text-center">
@@ -29,26 +29,21 @@
 		<div class="sectionMainContent">
 			<form class="form-signup" method="post" th:action="@{/products/{ean}/edit(ean=${product.ean})}"
 				th:object="${product}">
-				<h1 class="h3 mb-3 font-weight-normal" th:text="#{product.edit}">Edit product</h1>
-
+				<h1 class="h3 mb-3 font-weight-normal" th:text="#{product.edit.edit}">Edit product</h1>
 				<div class="mb-4">
 					<span class="ml-1 labelForInput" th:text="#{product.title}">title</span>
 					<input type="text" class="form-control"
 						th:classappend="${#fields.hasErrors('title')} ? is-invalid  : (${product.title != null} ? is-valid)"
 						th:placeholder="#{product.title}" name="title" th:value="*{title}" th:errorClass="is-invalid">
-					<div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="invalid-feedback">
-						Invalid title</div>
+					<div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="invalid-feedback"></div>
 				</div>
-
 				<div class="mb-4">
-					<span class="ml-1 labelForInput" th:text="#{product.cost}">Cost</span>
+					<span class="ml-1 labelForInput" th:text="#{product.price}">Price</span>
 					<input type="number" class="form-control"
 						th:classappend="${#fields.hasErrors('price')} ? is-invalid  : (${product.price != null} ? is-valid)"
-						th:placeholder="#{product.cost}" name="price" th:value="*{price}" th:errorClass="is-invalid">
-					<div th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="invalid-feedback">
-						Invalid Сost</div>
+						th:placeholder="#{product.price}" name="price" th:value="*{price}" th:errorClass="is-invalid">
+					<div th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="invalid-feedback"></div>
 				</div>
-
 
 				<div class=" mb-4 justify-content-center">
 					<span class="ml-1 labelForInput " th:text="#{product.quantityInStore}">quantityInStore</span>
@@ -56,16 +51,12 @@
 						th:classappend="${#fields.hasErrors('quantityInStore')} ? is-invalid : (${product.quantityInStore != null} ? is-valid)"
 						th:placeholder="#{product.quantityInStore}" name="quantityInStore" th:value="*{quantityInStore}"
 						th:errorClass="is-invalid">
-					<div th:if="${#fields.hasErrors('quantityInStore')}" th:errors="*{quantityInStore}"
-						class="invalid-feedback">Invalid
-						Invalid quantityInStore</div>
+					<div th:if="${#fields.hasErrors('quantityInStore')}" th:errors="*{quantityInStore}" class="invalid-feedback"></div>
 				</div>
 
 
 
-				<button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{product.edit}">Add
-					product</button>
-
+				<button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{product.edit}"></button>
 			</form>
 		</div>
 	</div>

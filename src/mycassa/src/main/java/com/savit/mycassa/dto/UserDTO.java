@@ -25,24 +25,23 @@ public class UserDTO {
 //FIXME incorrect localization on  rus
 	private static final String REGEX = "(([^<>()\\\\.,;:\\s@\"]+(\\.[^<>()\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))";
 	
-	@NotBlank(message = "{firstName.valid.notblank}")
-	@Size(max = 30, message = "{firstName.valid.max}")
+	@NotBlank(message = "{valid.user.firstName.notblank}")
+	@Size(max = 30, message = "{valid.user.firstName.max}")
 	private  String firstName;
 	
-	@NotBlank(message = "{lastName.valid.notblank}")
-	@Size(max = 30, message = "{lastName.valid.max}")
+	@NotBlank(message = "{valid.user.lastName.notblank}")
+	@Size(max = 30, message = "{valid.user.lastName.max}")
 	private  String lastName;
 	
-	@NotBlank(message = "{email.valid.notblank}")
-	@Size(max = 30, message = "{email.valid.max}")
-	@Email(regexp = REGEX, message = "{email.valid.email}")
+	@NotBlank(message = "{valid.user.email.notblank}")
+	@Size(max = 30, message = "{valid.user.email.max}")
+	@Email(regexp = REGEX, message = "{valid.user.email.regex}")
 	private  String email;
 	
-	@NotBlank(message = "{password.valid.notblank}")
-	@Size(max = 30, message = "{password.valid.max}")
+	@NotBlank(message = "{valid.user.password.notblank}")
+	@Size(max = 30, message = "{valid.user.password.max}")
 	private  String password;
 	
-	@NotBlank(message = "{role.valid.notblank}")
 	private String role;
 	
 }

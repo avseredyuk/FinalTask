@@ -47,7 +47,7 @@ public class UserController {
 		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
 		model.addAttribute("user", userService.getUserByEmailAuth(userDetails));
-		return "profile";
+		return "user/profile";
 	}
 
 	@GetMapping("edit")
@@ -57,7 +57,7 @@ public class UserController {
  
 		model.addAttribute("user", userService.getUserByEmailAuth(userDetails)); 
 
-		return "editUser";			
+		return "user/editUser";			
 		
 	}
 
@@ -65,7 +65,7 @@ public class UserController {
 	public String editUser(@Valid @ModelAttribute("user") UserDTO userDTO, BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
 			if(bindingResult.getAllErrors().size() > 1) {
-				return "editUser";				
+				return "user/editUser";				
 			}
 		}
 		
@@ -74,8 +74,8 @@ public class UserController {
 		try {
 			userService.updateUser(userDTO, userDetails);			
 		}catch(Exception ex) {
-			bindingResult.rejectValue("email", "such.email.exists");			
-			return "editUser";
+			bindingResult.rejectValue("email", "valid.user.email.exists");			
+			return "user/editUser";
 		}
 		
 		return "redirect:/logout";

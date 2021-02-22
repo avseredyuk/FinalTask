@@ -18,15 +18,8 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class HomeController {
 	
-	@Autowired
-	private final UserService userService;
-	private static final Logger log = LoggerFactory.getLogger(RegistrationController.class);
+	private static final Logger log = LoggerFactory.getLogger(HomeController.class);
 	
-
-	@GetMapping("/")
-	public String redirectToWelcome(Model model) {
-		return "redirect:/welcome";
-	}
 	
 	@GetMapping("/welcome")
 	public String welcome(Model model) {

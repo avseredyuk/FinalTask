@@ -64,7 +64,7 @@ public class User {
 	private Role role;
 
 	
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private Set<Session> sessions;
 	
 	

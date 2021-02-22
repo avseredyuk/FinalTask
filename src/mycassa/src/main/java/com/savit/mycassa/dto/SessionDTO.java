@@ -33,5 +33,12 @@ public class SessionDTO {
 	
 	public  String status;
 	
+	public static SessionDTO map(Session session) {
+		return SessionDTO.builder()
+				.id(session.getId())
+				.startedAt(session.getStartedAt())
+				.status(session.getStatusSession().name()).build();
+	}
+	
 	//TODO: notEndedSession 52 line remak to session/check
 }

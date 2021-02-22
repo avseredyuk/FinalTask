@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -90,8 +91,13 @@ public class ShiftService {
 	public ByteArrayInputStream getReportX(Long shiftId) throws CantPrintCheckException {
 		
 		Shift shift =  shiftRepository.findByIdAndStatusShift(shiftId, StatusShift.OPENED).orElseThrow(OpenedShiftNotExistsException::new);		
-		Long shiftAmount = getTotalAmount(shift.getSessions());
-		return CheckBuilder.buildXReport(shift, shift.getSessions(), shiftAmount);
+		
+		List<Session> closedSessions = shift.getSessions().stream()
+				.filter(a -> StatusSession.CLOSED.equals(a.getStatusSession()))
+				.collect(Collectors.toList());
+		
+		Long shiftAmount = getTotalAmount(closedSessions);
+		return CheckBuilder.buildXReport(shift, closedSessions, shiftAmount);
 	}
 	
 	

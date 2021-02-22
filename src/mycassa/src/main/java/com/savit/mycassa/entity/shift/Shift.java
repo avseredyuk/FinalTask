@@ -54,7 +54,7 @@ public class Shift {
 	@Enumerated(EnumType.STRING)
 	private StatusShift statusShift;
 	
-	@OneToMany(mappedBy = "shift", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "shift", cascade = CascadeType.ALL)
 	private List<Session> sessions;
 	
 

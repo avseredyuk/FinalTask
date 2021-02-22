@@ -32,7 +32,7 @@
 			<div th:if="${NoSuchOpenedSessionsError != null}" class="text-center d-flex justify-content-center mt-5">
 				<div class="alert alert-danger w-50" role="alert">
 					<div>
-						<strong th:text="#{NoSuchOpenedSessionsError}"></strong>
+						<strong th:text="#{exception.session.closed.or.waiting}"></strong>
 					</div>
 				</div>
 			</div>
@@ -40,7 +40,7 @@
 			<div th:if="${openedShiftNotExists != null}" class="text-center d-flex justify-content-center mt-5">
 				<div class="alert alert-danger w-50" role="alert">
 					<div>
-						<strong th:text="#{OpenedShiftNotExists}"></strong>
+						<strong th:text="#{exception.shift.opened.not.exists}"></strong>
 					</div>
 				</div>
 			</div>

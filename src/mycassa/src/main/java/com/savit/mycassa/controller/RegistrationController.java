@@ -33,11 +33,6 @@ public class RegistrationController extends ResponseEntityExceptionHandler {
 	@Autowired
 	private final UserService userService;
 
-	@InitBinder
-	public void initBinder(WebDataBinder webDataBinder) {
-		StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(true);
-		webDataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
-	}
 	@GetMapping
 	public String showForm(Model model) {
 		model.addAttribute("user", new UserDTO());
@@ -55,7 +50,7 @@ public class RegistrationController extends ResponseEntityExceptionHandler {
 		try {
 			userService.signUpUser(userDTO);			
 		}catch(Exception ex) {
-			bindingResult.rejectValue("email", "such.email.exists");			
+			bindingResult.rejectValue("email", "valid.user.email.exists");			
 			return "registration";
 		}
 

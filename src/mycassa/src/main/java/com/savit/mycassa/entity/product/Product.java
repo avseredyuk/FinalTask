@@ -60,7 +60,8 @@ public class Product {
 	@Enumerated(EnumType.STRING)
 	private Measure measure;
 	
-	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
 	private Set<Sale> sales;
 
 	public Product(String title, Long price, Long quantityInStore, Measure measure) {
@@ -76,7 +77,7 @@ public class Product {
 		this.price = price;
 		this.quantityInStore = quantityInStore;
 		this.measure = measure;
-		this.sales = sales;
+		this.sales = sales; 
 	}
 	
 	

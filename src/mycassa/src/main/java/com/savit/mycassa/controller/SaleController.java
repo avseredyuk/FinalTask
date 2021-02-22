@@ -48,7 +48,7 @@ public class SaleController {
 		model.addAttribute("sale", new SaleDTO());
 		model.addAttribute("product", productService.getProductByEan(ean));
 
-		return "addproduct";
+		return "sale/newSale";
 	}
 
 	@PreAuthorize("hasAuthority('CASHIER')")
@@ -57,10 +57,8 @@ public class SaleController {
 			BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
 		if (bindingResult.hasErrors()) {
-			return "addproduct";
+			return "sale/newSale";
 		}
-
-		log.info("saleDTO: [{}], ean:{}", saleDTO, ean);
 		
 		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -75,27 +73,7 @@ public class SaleController {
 		}
 		return "redirect:/products";
 	}
-	
 
-	
-	
-	
-	
-
-	
-//	//TODO:SetAuthorize review
-//	@PreAuthorize("hasAuthority('SENIOR_CASHIER')")
-//	@GetMapping("/sales/deleteall/{session_id}")
-//	public String deleteAllSessionSales(@PathVariable Long session_id) {
-//		
-//		saleService.deleteAllSales(session_id);
-//		
-//		return "redirect:/session/requests";
-//	}
-	
-	
-	
-	
 	
 	
 

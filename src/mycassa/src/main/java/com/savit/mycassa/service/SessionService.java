@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.savit.mycassa.dto.CheckDTO;
 import com.savit.mycassa.dto.SessionDTO;
 import com.savit.mycassa.dto.SessionsDTO;
-import com.savit.mycassa.dto.TimeBordersDTO;
 import com.savit.mycassa.entity.product.Sale;
 import com.savit.mycassa.entity.session.Session;
 import com.savit.mycassa.entity.session.StatusSession;
@@ -73,25 +72,15 @@ public class SessionService {
 				.user(userRepository.findByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new))
 				.build());
 
-		SessionDTO dto =  SessionDTO.builder().id(session.getId()).status(session.getStatusSession().name())
-				.startedAt(session.getStartedAt()).build();
-		
-		return dto;
-		
-//		return SessionDTO.builder().id(session.getId()).status(session.getStatusSession().name())
-//				.startedAt(session.getStartedAt()).build();
+		return SessionDTO.map(session);
 	}
 
 	public SessionDTO getNotEndedSessionAuth(UserDetails userDetails) {
-
-		Session session = sessionRepository.findByUserEmailAndNotEnded(userDetails.getUsername())
-				.orElseThrow(SessionNotStartedYetException::new);
-
-		return SessionDTO.builder().id(session.getId()).status(session.getStatusSession().name())
-				.startedAt(session.getStartedAt()).build();
-
+		return SessionDTO.map(sessionRepository.findByUserEmailAndNotEnded(userDetails.getUsername())
+												.orElseThrow(SessionNotStartedYetException::new));
 	}
 
+	@Transactional
 	public void updateStatusSessionAuth(UserDetails userDetails, StatusSession status) {
 
 		Session session = sessionRepository.findByUserEmailAndNotEnded(userDetails.getUsername())
@@ -119,7 +108,7 @@ public class SessionService {
 	}
 
 	@Transactional
-	public ByteArrayInputStream getCheck(Long session_id) throws CantPrintCheckException{
+	public ByteArrayInputStream getCheckAndCloseSession(Long session_id) throws CantPrintCheckException{
 
 		Session session = sessionRepository.findById(session_id).orElseThrow(SessionNotStartedYetException::new);
 		session.setEndedAt(LocalDateTime.now());
@@ -130,7 +119,7 @@ public class SessionService {
 				.reduce(0L, (partial, current) -> partial + current);
 
 
-		return CheckBuilder.buildSessionPDFCheck(session, session.getSales(), totalSessionAmount);//FIXME
+		return CheckBuilder.buildSessionPDFCheck(session, session.getSales(), totalSessionAmount);
 
 
 	}
@@ -143,45 +132,28 @@ public class SessionService {
 			throw new SessionNotStartedYetException();
 		}
 
-		Long totalPrice = 0L;
 		List<Sale> sales = session.getSales();
-		
-		// TODO: remake to stream:
-		for (Sale sale : sales) {
-			totalPrice += sale.getQuantity() * sale.getFixedPrice();
-		}
 
+		Long totalPrice = sales.stream()
+				.map(sale -> sale.getQuantity() * sale.getFixedPrice())
+				.reduce(0L, (partial, current) -> partial + current);
+				
 		return new CheckDTO(String.valueOf(session.getId()), session.getStartedAt(), session.getStatusSession().name(),
 				sales, totalPrice);
-
 	}
 
 	@Transactional
 	public void deleteSaleFromCheck(Long sessionId, Long saleId) {
 
-		saleRepository.delete(saleRepository.findById(saleId).orElseThrow(SaleNotExistsException::new));
-
-		Session session = sessionRepository.findById(sessionId).orElseThrow(SessionNotStartedYetException::new);
+		saleRepository.delete(saleRepository.findById(saleId).orElseThrow(() -> new SaleNotExistsException(sessionId)));
+ 
+		Session session = sessionRepository.findByIdAndByStatusSession(sessionId, StatusSession.WAITING).orElseThrow(SessionNotStartedYetException::new);
 
 		session.setStatusSession(StatusSession.OPENED);
 	}
 
 	public SessionsDTO getSessionsByStatus(StatusSession status) {
 		return new SessionsDTO(sessionRepository.findByStatusSession(status));
-	}
-
-	public SessionsDTO getSessionsForStatistics(TimeBordersDTO borders) {
-		List<Session> sessions = sessionRepository.findByStatusSessionAndByTimeBorders(StatusSession.CLOSED,
-				borders.getTimeFrom(), borders.getTimeTo());
-		return new SessionsDTO(sessions);
-	}
-
-	public ByteArrayInputStream getSessionReportDocAuth(UserDetails userDetails, SessionsDTO sessionsDTO)
-			throws UserNotFoundException, Exception {
-//		return CheckBuilder.buildSessionsWithTimeBordersPdfReport(
-//				userRepository.findByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new),
-//				sessionsDTO.getSessions());
-		return null;//FIXME
 	}
 
 }

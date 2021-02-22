@@ -48,7 +48,7 @@ public class ProductController {
 		model.addAttribute("products",
 				productService.getAllProducts(filterField, direction, page, size, searchQuery));
 
-		return "products";
+		return "product/products";
 
 	}
 
@@ -59,17 +59,17 @@ public class ProductController {
 
 		model.addAttribute("product", productDTO);
 
-		return "editProduct";
+		return "product/editProduct";
 	}
 
 	@PostMapping("{ean}/edit")
 	public String updateProduct(@PathVariable String ean, @Valid @ModelAttribute("product") ProductDTO productDTO,
 			BindingResult bindingResult) {
 		if (bindingResult.hasFieldErrors("quantityInStore") || 
-				bindingResult.hasFieldErrors("cost") || 
+				bindingResult.hasFieldErrors("price") || 
 				bindingResult.hasFieldErrors("title")) {
 			
-				return "editProduct";
+				return "product/editProduct";
 		}
 
 		productService.updateProduct(productDTO, ean);
@@ -80,21 +80,19 @@ public class ProductController {
 	@GetMapping("/new")
 	public String getNewProductPage(Model model) {
 		model.addAttribute("product", new ProductDTO());
-		return "newProduct";
+		return "product/newProduct";
 	}
 
 	@PostMapping("/new")
 	public String saveProduct(@Valid @ModelAttribute("product") ProductDTO productDTO, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
-			return "newProduct";
+			return "product/newProduct";
 		}
-		
 		try {
 			productService.saveProduct(productDTO);			
 		}catch(Exception ex) {
 			throw new ProductNotSavedException();
 		}
-
 		return "redirect:/products";
 	}
 

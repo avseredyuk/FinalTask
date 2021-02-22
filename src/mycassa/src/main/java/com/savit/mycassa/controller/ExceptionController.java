@@ -9,6 +9,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.savit.mycassa.util.exception.CashierHasNotPermissionException;
 import com.savit.mycassa.util.exception.OpenedShiftNotExistsException;
 import com.savit.mycassa.util.exception.ProductNotFoundException;
+import com.savit.mycassa.util.exception.ProductNotSavedException;
+import com.savit.mycassa.util.exception.SaleNotExistsException;
 import com.savit.mycassa.util.exception.SessionNotStartedYetException;
 import com.savit.mycassa.util.exception.ShiftCloseException;
 
@@ -23,11 +25,13 @@ public class ExceptionController {
 //	}
 
 
-	@ExceptionHandler({SessionNotStartedYetException.class, OpenedShiftNotExistsException.class})
+	@ExceptionHandler({SessionNotStartedYetException.class, 
+						OpenedShiftNotExistsException.class})
 	public String handleAndRedirectProfile(HttpServletRequest req, Exception e, RedirectAttributes redirectAttributes){
 		
 		String errorKey = (e instanceof SessionNotStartedYetException) ? "NoSuchOpenedSessionsError"
-				: "openedShiftNotExists";
+				: "openedShiftNotExists" ;
+
 		redirectAttributes.addFlashAttribute(errorKey, true);
 		return "redirect:/profile";
 	}
@@ -40,9 +44,11 @@ public class ExceptionController {
 	}
 	
 	
-	@ExceptionHandler({ProductNotFoundException.class})
-	public String handleAndRedirectProducts(HttpServletRequest req, ProductNotFoundException e, RedirectAttributes redirectAttributes){
-		redirectAttributes.addFlashAttribute("productNotFoundError", true);
+	@ExceptionHandler({ProductNotFoundException.class,ProductNotSavedException.class})
+	public String handleAndRedirectProducts(HttpServletRequest req, Exception e, RedirectAttributes redirectAttributes){
+		
+		String errorKey = (e instanceof ProductNotFoundException) ? "productNotFoundError" : "productNotSavedError";
+		redirectAttributes.addFlashAttribute(errorKey, true);
 		return "redirect:/products";
 
 	}
@@ -52,6 +58,12 @@ public class ExceptionController {
 		redirectAttributes.addFlashAttribute("shiftCloseError", true);
 		return "redirect:/shifts/current";
 
+	}
+	
+	@ExceptionHandler({SaleNotExistsException.class})
+	public String handleAndRedirectNewSale(HttpServletRequest req, SaleNotExistsException e, RedirectAttributes redirectAttributes){
+		redirectAttributes.addFlashAttribute("saleNotExistsError", true);
+		return "redirect:/session/" + e.getSessionId() + "/check/overview";
 	}
 	
 }

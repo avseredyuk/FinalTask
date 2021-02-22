@@ -41,7 +41,7 @@ public class SessionController {
 		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 		model.addAttribute("sessionDTO", sessionService.getNotEndedSessionAuth(userDetails));
-		return "notEndedSession";
+		return "session/notEndedSession";
 	}
 	
 	
@@ -68,14 +68,14 @@ public class SessionController {
 		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 		sessionService.updateStatusSessionAuth(userDetails, StatusSession.WAITING);
-		return "redirect:/session/" + sessionId + "/check/overview";
+		return String.format("redirect:/session/%s/check/overview",sessionId);
 	}
 
 	@PreAuthorize("hasAuthority('SENIOR_CASHIER')")
 	@GetMapping("requests")
 	public String getwaitingSessionsFromCashiers(Model model) {
 		model.addAttribute("sessions", sessionService.getSessionsByStatus(StatusSession.WAITING));
-		return "waitingSessions";
+		return "session/waitingSessions";
 	}
 
 	@PreAuthorize("hasAuthority('CASHIER')")
@@ -85,7 +85,7 @@ public class SessionController {
 		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 		SessionDTO sessionDTO = sessionService.getNotEndedSessionAuth(userDetails);
-		return "redirect:/session/" + String.valueOf(sessionDTO.getId()) + "/check/overview";
+		return String.format("redirect:/session/%d/check/overview",sessionDTO.getId() );
 	}
 
 	@PreAuthorize("hasAnyAuthority('CASHIER', 'SENIOR_CASHIER')")
@@ -95,7 +95,7 @@ public class SessionController {
 
 		model.addAttribute("check", sessionService.getCheckDTO(Long.parseLong(sessionId)));
 
-		return "checkOverview";
+		return "session/checkOverview";
 	}
 
 	@PreAuthorize("hasAuthority('CASHIER')")
@@ -107,7 +107,7 @@ public class SessionController {
 		headers.add("Content-Disposition", "inline; filename=check.pdf");
 
 		return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)
-				.body(new InputStreamResource(sessionService.getCheck(Long.parseLong(sessionId))));
+				.body(new InputStreamResource(sessionService.getCheckAndCloseSession(Long.parseLong(sessionId))));
 	}
 	
 	
@@ -135,7 +135,5 @@ public class SessionController {
 	}
 
 	// TODO logging
-	// TODO group .html files by their topics
-	// TODO refactor conrollers method names
 
 }

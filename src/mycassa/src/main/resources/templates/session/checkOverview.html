@@ -9,7 +9,7 @@
 		integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 
-	<title th:text="#{sign.up}">Sign up</title>
+	<title th:text="#{title.session.check.overview}">Overview</title>
 </head>
 
 <body>
@@ -28,10 +28,9 @@
 
 	<div class="sectionMainContent">
 
-	<div th:if="${error != null}" class="text-center d-flex justify-content-center mt-5">
+	<div th:if="${saleNotExistsError != null}" class="text-center d-flex justify-content-center mt-5">
 			<div class="alert alert-danger w-50" role="alert">
-					<strong th:text="${error}"></strong>
-
+					<strong th:text="#{exception.sale.not.exists}"></strong>
 			</div>
 	</div>
 
@@ -40,23 +39,22 @@
 		<div class="d-flex flex-column">
 
 			<div class="d-flex justify-content-start mt-5">
-				<div sec:authorize="hasAuthority('CASHIER')">
-					<a th:href="@{/products}" class="btn btn-danger" th:text="back">Back</a>
+				<div sec:authorize="hasAuthority('CASHIER')" th:if="${check.status == 'OPENED'}">
+					<a th:href="@{/products}" class="mb-2" th:text="#{session.check.back}"></a>
 				</div>
 
 			</div>
 
 			<div class="shadow p-3 bg-light rounded">
-				<div class="d-flex justify-content-center">
+				<div th:if="${check.totalPrice!=0}" class="d-flex justify-content-center">
 					<table class="table table-hover">
 						<thead class="thead-light">
 							<tr>
 								<th th:text="#{product.ean}">Ean</th>
 								<th class="titleColumn" th:text="#{product.title}">Title</th>
-								<th th:text="#{product.price.mult.quantity}">Price * quantity</th>
-								<th th:text="#{product.cost.total}">Total</th>
-								<th sec:authorize="hasAnyAuthority('SENIOR_CASHIER')" 
-								th:text="#{delete}"/>
+								<th th:text="#{session.check.price.mult.quantity}">Price * quantity</th>
+								<th th:text="#{session.check.price.total}">Total</th>
+								<th sec:authorize="hasAnyAuthority('SENIOR_CASHIER')"  th:text="#{session.check.delete.product}"/>
 							</tr>
 						</thead>
 						<tbody>
@@ -79,26 +77,26 @@
 				<div class="d-flex justify-content-end">
 					<div>
 						<h3 class="d-flex justify-content-end mt-2 mr-3"
-							th:text="#{total.price} + ': ' + ${check.totalPrice} + ' ' + #{currency.uah}">
+							th:text="#{session.check.price.total.global} + ': ' + ${check.totalPrice} + ' ' + #{session.check.currency.uah}">
 							<h3>
 					</div>
 
 				</div>
 				<div th:if="${check.status == 'OPENED'}" class="d-flex justify-content-end">
-					<div sec:authorize="hasAuthority('CASHIER')">
-						<a th:href="@{/session/{sessionId}/editrequest(sessionId=${check.sessionId})}" class="btn btn-warning mr-2" th:text="#{call.senior.cashier}">Call senior cassier</a>
+					<div sec:authorize="hasAuthority('CASHIER')" th:if="${check.totalPrice!=0}">
+						<a th:href="@{/session/{sessionId}/editrequest(sessionId=${check.sessionId})}" class="btn btn-warning mr-2" th:text="#{session.check.call.senior}">Call senior cassier</a>
 					</div>
 					<div sec:authorize="hasAuthority('CASHIER')">
-						<a th:href="@{/session/{sessionId}/check/print(sessionId=${check.sessionId})}" class="btn btn-success mr-3" th:text="#{print.check}">Print check</a>
+						<a th:href="@{/session/{sessionId}/check/print(sessionId=${check.sessionId})}" class="btn btn-success mr-3" th:text="#{session.check.print}">Print check</a>
 					</div>
 				</div>
 				
 				<div th:if="${check.status == 'WAITING'}" class="d-flex justify-content-end">
 					<div sec:authorize="hasAuthority('CASHIER')">
-						<a th:href="@{/session/{sessionId}/check/overview(sessionId=${check.sessionId})}" class="bi bi-arrow-repeat" ></a>
+						<a th:href="@{/session/{sessionId}/check/overview(sessionId=${check.sessionId})}" class="btn btn-warning bi bi-arrow-repeat" th:text="'&nbsp;' + #{session.check.reload}"></a>
 					</div>
 					<div sec:authorize="hasAuthority('SENIOR_CASHIER')">
-						<a th:href="@{/session/{sessionId}/close(sessionId=${check.sessionId})}" class="btn btn-danger mr-2 " th:text="#{cancel.check}">Сancel a check</a>
+						<a th:href="@{/session/{sessionId}/close(sessionId=${check.sessionId})}" class="btn btn-danger mr-2 " th:text="#{session.check.cancel}">Сancel a check</a>
 					</div>
 					
 				</div>

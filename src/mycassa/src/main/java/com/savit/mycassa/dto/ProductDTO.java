@@ -21,26 +21,29 @@ import lombok.ToString;
 @Builder
 @ToString
 public class ProductDTO {
-	//TODO: add labels for="id" for input
+
 	Long id;
 	
 	
-	@NotBlank(message = "{title.valid.notblank}")
-	@Size(max = 100, message = "{title.valid.max}")
+	@NotBlank(message = "{valid.product.title.notblank}")
+	@Size(min = 1, max = 100, message = "{valid.product.title.size}")
 	private String title;
 	
 	private String ean;
 	
-	@NotNull(message = "{cost.valid.notnull}")
-	@Positive
+	@NotNull(message = "{valid.product.price.notnull}")
+	@Min(value = 1, message="{valid.product.price.minmax}")
+	@Max(value = 1000000, message="{valid.product.price.minmax}")
+	@Positive(message = "valid.product.quantity.notnull")
 	private Long price;
 	
-	@NotNull(message = "{quantityInStore.valid.notnull}")
-	@Positive(message = "{quantityInStore.valid.positive}")
+	@NotNull(message = "{valid.product.quantity.notnull}")
+	@Min(value = 1, message="{valid.product.price.minmax}")
+	@Max(value = 1000000, message="{valid.product.price.minmax}")
+	@Positive(message = "{valid.product.quantity.positive}")
 	private Long quantityInStore;
 	
-	@NotBlank(message = "{measure.valid.notblank}")
-//	@Pattern(regexp = "(KILOGRAM|PIECE)", message = "{measure.valid.pattern}")
+	
 	private String measure;
 
 }

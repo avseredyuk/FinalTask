@@ -39,11 +39,11 @@ public class Sale {
 	private Long fixedPrice;
 	
 	
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "session_id")
     private Session session;
 

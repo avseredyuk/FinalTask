@@ -39,9 +39,6 @@ public class SaleService {
 	
 	@Autowired
 	private final SessionRepository sessionRepository;
-	
-	@Autowired
-	private final UserRepository userRepository;
 
 	@Transactional
 	public void newProductSaleAuth(String ean, SaleDTO saleDTO, UserDetails userDetails) {
@@ -57,15 +54,6 @@ public class SaleService {
 		saleRepository.save(new Sale(saleDTO.getQuantityToBuy(), saleDTO.getFixedPrice(), product, session));
 		
 	}
-	
-
-	public ByteArrayInputStream getProductSalesReportDocAuth(UserDetails userDetails, String ean) throws CantPrintCheckException {
-		
-		User user = userRepository.findByEmail(userDetails.getUsername()).get();
-//		return CheckBuilder.buildProductSalesPdfReport(user, saleRepository.findByEanAndByStatusSession(ean, StatusSession.CLOSED));
-		return null;//FIXME
-	}
-
 
 	
 
