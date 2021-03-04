@@ -87,19 +87,4 @@ EAN13-код(ean) |  Уникальный 13-значный код на данн
 
 ![](./schema.png)
 
-## Инструкция по запуску базы данных на для проекта на Linux:
-
-1. скачать [schema_sql](https://github.com/DavidSavitskij/FinalTask_EE/blob/main/mycassa/mycassa/src/main/resources/schema_sql) - базы данных
-2. Перенести файл schema_sql в директорию: /var/lib/postgresql
-3. в терминале прописать такие команды :
-   1. sudo -i -u postgres
-   2. psql
-   3. CREATE DATABASE main;
-   4. CREATE DATABASE test;
-   5. \q
-   6. psql main < schema_sql
-   7. psql main < test
-4. Перейти в файл [statements.properties](https://github.com/DavidSavitskij/FinalTask_EE/blob/main/mycassa/mycassa/src/main/resources/statements.properties) и задать для соответственных полей данные
-
-
 
