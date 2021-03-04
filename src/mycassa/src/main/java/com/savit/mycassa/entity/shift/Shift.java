@@ -47,6 +47,7 @@ public class Shift {
 	@DateTimeFormat(pattern = "dd-MM-yyyy HH-mm-ss")
 	private LocalDateTime endedAt;
 	
+	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private StatusShift statusShift;
 	

@@ -40,11 +40,11 @@ public class Sale {
 	
 	
     @ManyToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
     
     @ManyToOne
-    @JoinColumn(name = "session_id")
+    @JoinColumn(name = "session_id", nullable = false)
     private Session session;
 
 	public Sale(Long quantity, Long fixedPrice, Product product, Session session) {

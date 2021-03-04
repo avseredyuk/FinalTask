@@ -53,7 +53,7 @@ public class SaleService {
 	@Transactional
 	public void deleteSaleFromCheck(Long saleId) {
 
-		Sale sale = saleRepository.findById(saleId).orElseThrow(SaleNotExistsException::new);
+		Sale sale = saleRepository.findById(saleId).orElseThrow(SaleNotExistsException::new);//in not closed session! TODO
 		
 		Session session = sale.getSession();
 		if(StatusSession.WAITING.equals(session.getStatusSession())) {

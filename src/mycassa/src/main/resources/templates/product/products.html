@@ -116,7 +116,7 @@
 
 					<nav>
 						<ul class="pagination flex-wrap" th:with="pageUrlPrefix = '/products?filterField=' + 
-					${products.filterField} + '&amp;direction=' + ${products.direction} + ${products.searchQuery != null && products.searchQuery != ''  ? '&amp;searchQuery=01' : ''}">
+					${products.filterField} + '&amp;direction=' + ${products.direction} + ${products.searchQuery != null && products.searchQuery != ''  ? '&amp;searchlkmlmQuery=01' : ''}" lllklk>
 							<li th:class="${!products.products.isFirst() ? 'page-item' : 'page-item disabled'}">
 								<a th:href="@{${pageUrlPrefix}(page='1')}" class="page-link"><b>&laquo;</b></a>
 							</li>

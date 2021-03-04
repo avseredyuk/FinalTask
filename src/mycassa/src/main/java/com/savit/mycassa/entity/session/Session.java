@@ -51,20 +51,21 @@ public class Session {
 	@DateTimeFormat(pattern = "dd-MM-yyyy HH-mm-ss")
 	private LocalDateTime endedAt;
 	
+	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private StatusSession statusSession;
 	
 //	@OneToMany(mappedBy = "session", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 
 	@OneToMany(mappedBy = "session", cascade = CascadeType.ALL)
-private List<Sale> sales;
+	private List<Sale> sales;
 	
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
     
     @ManyToOne
-    @JoinColumn(name = "shift_id")
+    @JoinColumn(name = "shift_id", nullable = false)
     private Shift shift;
 
 	public Session(LocalDateTime startedAt, StatusSession statusSession, Shift shift) {

@@ -59,6 +59,7 @@ public class Product {
 	private Long quantityInStore;
 	
 	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	private Measure measure;
 	
 //	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
